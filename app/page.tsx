@@ -22,7 +22,7 @@ const albums: CoverFlowItem[] = [
 export default function Home() {
   const [copied, setCopied] = useState(false);
   const [itemSize, setItemSize] = useState({ width: 400, height: 400 });
-  const installCommand = useMemo(() => "npx shadcn add coverflow", []);
+  const installCommand = useMemo(() => "Coming Soon", []);
 
   useEffect(() => {
     const handleResize = () => {
