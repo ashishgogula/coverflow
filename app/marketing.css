@@ -1,0 +1,133 @@
+@tailwind components;
+
+@layer components {
+  .m-shell {
+    @apply min-h-screen bg-background text-foreground;
+  }
+
+  .m-wrap {
+    @apply mx-auto w-full max-w-[1180px] px-6;
+  }
+
+  .m-nav {
+    @apply sticky top-0 z-[100];
+  }
+
+  .m-navInner {
+    @apply m-wrap flex h-16 items-center justify-between;
+  }
+
+  .m-navSurface {
+    @apply border-b border-border/20 bg-background/60;
+    backdrop-filter: saturate(180%) blur(24px);
+  }
+
+  .m-navBrand {
+    @apply inline-flex items-center gap-2 text-[15px] font-medium tracking-tight text-foreground/90 transition-colors hover:text-foreground;
+  }
+
+  .m-navLinks {
+    @apply hidden items-center gap-8 text-[13px] font-medium text-muted-foreground md:flex;
+  }
+
+  .m-navLink {
+    @apply transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/20 focus-visible:ring-offset-2 focus-visible:ring-offset-background;
+  }
+  
+  /* Bento Grid System */
+  .m-bentoGrid {
+    @apply grid grid-cols-1 gap-4 md:grid-cols-6 md:gap-6;
+  }
+
+  .m-bentoCard {
+    @apply relative overflow-hidden rounded-[32px] bg-secondary/30 p-8 transition-all duration-500 hover:bg-secondary/50;
+    backdrop-filter: blur(10px);
+  }
+  
+  .dark .m-bentoCard {
+    @apply bg-white/[0.03] hover:bg-white/[0.06];
+    box-shadow: inset 0 1px 0 0 rgba(255,255,255,0.05);
+  }
+
+  .m-bentoCardWide {
+    @apply md:col-span-4 md:row-span-2;
+  }
+  
+  .m-bentoCardTall {
+    @apply md:col-span-2 md:row-span-2;
+  }
+  
+  .m-bentoCardSmall {
+    @apply md:col-span-2 md:row-span-1;
+  }
+
+  .m-bentoTitle {
+    @apply text-xl font-semibold tracking-tight md:text-2xl;
+  }
+  
+  .m-bentoBody {
+    @apply mt-2 text-[15px] leading-relaxed text-muted-foreground;
+  }
+  
+  .m-bentoIcon {
+    @apply mb-6 flex h-12 w-12 items-center justify-center rounded-full bg-foreground text-background;
+  }
+
+  .m-navRight {
+    @apply flex items-center gap-3;
+  }
+
+  .m-hero {
+    @apply pt-24 md:pt-32;
+  }
+
+  .m-heroGrid {
+    @apply grid grid-cols-1 gap-10 md:grid-cols-12 md:gap-12;
+  }
+
+  .m-kicker {
+    @apply inline-flex items-center gap-2 text-xs font-medium text-muted-foreground;
+  }
+
+  .m-h1 {
+    font-variation-settings: "opsz" 32;
+    letter-spacing: -0.045em;
+    @apply text-[56px] leading-[0.95] font-semibold md:text-[88px] md:leading-[0.92] tracking-tighter;
+  }
+
+  .m-sub {
+    @apply mt-6 text-base leading-relaxed text-muted-foreground md:text-xl md:leading-relaxed font-normal text-balance;
+  }
+
+  .m-ctaRow {
+    @apply mt-10 flex flex-col gap-3 sm:flex-row sm:items-center;
+  }
+
+  .m-btn {
+    @apply inline-flex h-12 items-center justify-center gap-2 rounded-full px-8 text-[15px] font-medium transition-all duration-300 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/20 focus-visible:ring-offset-2 focus-visible:ring-offset-background;
+  }
+
+  .m-btnPrimary {
+    @apply bg-foreground text-background hover:opacity-90 hover:scale-[1.02] shadow-xl shadow-foreground/5;
+  }
+
+  .m-btnSecondary {
+    @apply bg-secondary/50 text-secondary-foreground hover:bg-secondary border border-transparent hover:border-border/10;
+  }
+
+  .m-code {
+    @apply font-mono text-xs text-muted-foreground sm:text-sm;
+  }
+  
+  .m-divider {
+    @apply my-24 border-t border-border/40;
+  }
+
+  .m-foot {
+    @apply mt-24 border-t border-border/40 py-12;
+  }
+
+  .m-footInner {
+    @apply m-wrap flex flex-col gap-6 md:flex-row md:items-center md:justify-between;
+  }
+}
