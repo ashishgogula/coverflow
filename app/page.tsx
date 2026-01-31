@@ -1,6 +1,7 @@
 "use client";
 
 import { CoverFlow, CoverFlowItem } from "@/components/coverflow";
+import { Navbar } from "@/components/navbar";
 import { ThemeToggle } from "@/components/theme-toggle";
 import {
   Github,
@@ -13,8 +14,6 @@ import {
   Smartphone,
   Moon,
   Plus,
-  MoveVertical,
-  Sparkles,
   Star,
 } from "lucide-react";
 import Link from "next/link";
@@ -170,71 +169,7 @@ export default function Home() {
 
   return (
     <div className="m-shell">
-      <motion.header
-        className="m-nav m-wrap"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-      >
-        <div className="m-navSurface">
-          <div className="m-navInner px-6">
-            <div className="m-navBrand">
-              <div className="flex h-12 w-12 items-center justify-center rounded-md  overflow-hidden relative text-foreground">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="lucide lucide-gallery-horizontal-flow"
-                >
-                  <path d="M1.5 8v8" />
-                  <path d="M5 6v12" />
-                  <rect x="8.5" y="4" width="7" height="16" rx="2" />
-                  <path d="M19 6v12" />
-                  <path d="M22.5 8v8" />
-                </svg>
-              </div>
-              <Link href="/" className="font-bold">
-                Cover Flow
-              </Link>
-            </div>
-            <nav className="m-navLinks" aria-label="Primary">
-              <Link className="m-navLink" href="#demo">
-                Demo
-              </Link>
-              <Link className="m-navLink" href="#principles">
-                Principles
-              </Link>
-              <Link
-                className="m-navLink"
-                href="https://github.com/your-repo/coverflow"
-                target="_blank"
-                rel="noreferrer"
-              >
-                GitHub
-              </Link>
-              <Link
-                className="m-navLink"
-                href="https://github.com/sponsors/your-handle"
-                target="_blank"
-                rel="noreferrer"
-              >
-                Sponsor
-              </Link>
-            </nav>
-            <div className="m-navRight">
-              <ThemeToggle />
-            </div>
-            <Plus className="m-plusIcon m-plusIcon-bl " />
-            <Plus className="m-plusIcon m-plusIcon-br " />
-          </div>
-        </div>
-      </motion.header>
+      <Navbar />
 
       <main>
         <div className="m-wrap border-x border-dashed border-t-0 min-h-screen relative">
@@ -245,12 +180,18 @@ export default function Home() {
               animate="visible"
               variants={staggerContainer}
             >
-              <motion.div variants={fadeUp} className="m-kicker mb-6">
-                A classic interaction, reimagined.
+              
+              <motion.div variants={fadeUp} className="mb-6">
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-secondary/50 border border-border/40 backdrop-blur-sm transition-colors hover:bg-secondary/80 hover:border-border/80 cursor-default">
+                  <span className="flex h-1.5 w-1.5 rounded-full bg-foreground/70" />
+                  <span className="text-xs font-medium text-muted-foreground">
+                     A classic interaction, reimagined.
+                  </span>
+                </div>
               </motion.div>
-              <motion.h1 variants={fadeUp} className="m-h1 mb-8 max-w-[20ch]">
-                Cover Flow for React.
-              </motion.h1>
+              <motion.h2 variants={fadeUp} className="m-h1 mb-4 max-w-[20ch]">
+                iOS-like Cover Flow for React.
+              </motion.h2>
               <motion.p variants={fadeUp} className="m-sub mb-12 max-w-[60ch]">
                 Fluid, physical motion with zero layout shifts.
                 <br className="hidden md:block" />
@@ -435,7 +376,8 @@ export default function Home() {
           </div>
 
           <motion.div
-            className="py-16 relative border-t border-dashed border-border/70"
+            className="py-16 relative border-dashed border-border/70 scroll-mt-24"
+            id="support"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}

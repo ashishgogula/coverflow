@@ -58,7 +58,9 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-family:
+      -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+      sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -97,7 +99,7 @@
   .m-navLink {
     @apply transition-colors hover:text-foreground;
   }
-  
+
   /* Bento Grid System */
   .m-bentoGrid {
     @apply grid grid-cols-1 gap-4 md:grid-cols-6 md:gap-6;
@@ -107,20 +109,20 @@
     @apply relative overflow-hidden rounded-[32px] bg-secondary/30 p-8 transition-all duration-500 hover:bg-secondary/50;
     backdrop-filter: blur(10px);
   }
-  
+
   .dark .m-bentoCard {
     @apply bg-white/[0.03] hover:bg-white/[0.06];
-    box-shadow: inset 0 1px 0 0 rgba(255,255,255,0.05);
+    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
   }
 
   .m-bentoCardWide {
     @apply md:col-span-4 md:row-span-2;
   }
-  
+
   .m-bentoCardTall {
     @apply md:col-span-2 md:row-span-2;
   }
-  
+
   .m-bentoCardSmall {
     @apply md:col-span-2 md:row-span-1;
   }
@@ -128,30 +130,42 @@
   .m-bentoTitle {
     @apply text-xl font-semibold tracking-tight md:text-2xl;
   }
-  
+
   .m-bentoBody {
     @apply mt-2 text-[15px] leading-relaxed text-muted-foreground;
   }
-  
+
   .m-bentoIcon {
     @apply mb-6 flex h-12 w-12 items-center justify-center rounded-full bg-foreground text-background;
   }
 
   .m-navRight {
-    @apply flex items-center gap-3;
+    @apply flex items-center gap-1;
   }
 
   /* Grid System */
   .m-gridContainer {
     @apply relative border-x border-dashed border-border;
-    background-image: radial-gradient(hsl(var(--foreground)/0.3) 1px, transparent 0);
+    background-image: radial-gradient(
+      hsl(var(--foreground) / 0.3) 1px,
+      transparent 0
+    );
     background-size: 40px 40px;
     background-position: -19px -19px;
-    mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
+    mask-image: linear-gradient(
+      to bottom,
+      transparent,
+      black 10%,
+      black 90%,
+      transparent
+    );
   }
 
   .dark .m-gridContainer {
-    background-image: radial-gradient(rgba(255,255,255,0.35) 1px, transparent 0);
+    background-image: radial-gradient(
+      rgba(255, 255, 255, 0.35) 1px,
+      transparent 0
+    );
   }
 
   .m-gridOverlay {
@@ -171,10 +185,18 @@
     @apply absolute h-6 w-6 text-muted-foreground/50 stroke-1;
   }
 
-  .m-plusIcon-tl { @apply -top-3 -left-3; }
-  .m-plusIcon-tr { @apply -top-3 -right-3; }
-  .m-plusIcon-bl { @apply -bottom-3 -left-3; }
-  .m-plusIcon-br { @apply -bottom-3 -right-3; }
+  .m-plusIcon-tl {
+    @apply -top-3 -left-3;
+  }
+  .m-plusIcon-tr {
+    @apply -top-3 -right-3;
+  }
+  .m-plusIcon-bl {
+    @apply -bottom-3 -left-3;
+  }
+  .m-plusIcon-br {
+    @apply -bottom-3 -right-3;
+  }
 
   .m-sectionBorder {
     @apply relative border-y border-dashed border-border;
@@ -194,8 +216,8 @@
 
   .m-h1 {
     font-variation-settings: "opsz" 32;
-    letter-spacing: -0.045em;
-    @apply text-[40px] leading-[1.1] font-semibold md:text-[88px] md:leading-[0.92] tracking-tighter;
+    letter-spacing: -0.04em;
+    @apply text-[34px] leading-[1.18] font-semibold md:text-[68px] md:leading-[0.98] tracking-tight;
   }
 
   .m-sub {
@@ -207,7 +229,7 @@
   }
 
   .m-btn {
-    @apply inline-flex h-12 items-center justify-center gap-2 rounded-full px-8 text-[15px] font-medium transition-all duration-300 active:scale-[0.98] focus-visible:outline-none ;
+    @apply inline-flex h-12 items-center justify-center gap-2 rounded-full px-8 text-[15px] font-medium transition-all duration-300 active:scale-[0.98] focus-visible:outline-none;
   }
 
   .m-btnPrimary {
@@ -221,7 +243,7 @@
   .m-code {
     @apply font-mono text-xs text-muted-foreground sm:text-sm;
   }
-  
+
   .m-divider {
     @apply my-24 border-t border-border/40;
   }

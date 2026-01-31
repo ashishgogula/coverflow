@@ -4,6 +4,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { Github, Heart, Check, Copy } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import { Navbar } from "@/components/navbar";
 
 export default function GetStarted() {
   const [copied, setCopied] = useState(false);
@@ -17,42 +18,7 @@ export default function GetStarted() {
 
   return (
     <div className="m-shell">
-      <header className="m-nav">
-        <div className="m-navSurface">
-          <div className="m-navInner">
-            <div className="m-navBrand">
-              <Link href="/">Cover Flow</Link>
-            </div>
-            <nav className="m-navLinks" aria-label="Primary">
-              <Link className="m-navLink" href="/#demo">
-                Demo
-              </Link>
-              <Link className="m-navLink" href="/#principles">
-                Principles
-              </Link>
-              <Link
-                className="m-navLink"
-                href="https://github.com/your-repo/coverflow"
-                target="_blank"
-                rel="noreferrer"
-              >
-                GitHub
-              </Link>
-              <Link
-                className="m-navLink"
-                href="https://github.com/sponsors/your-handle"
-                target="_blank"
-                rel="noreferrer"
-              >
-                Sponsor
-              </Link>
-            </nav>
-            <div className="m-navRight">
-              <ThemeToggle />
-            </div>
-          </div>
-        </div>
-      </header>
+      <Navbar />
 
       <main>
         <div className="m-wrap border-x border-dashed border-border min-h-screen relative">
