@@ -91,6 +91,7 @@ export default function GetStarted() {
                         itemWidth={250}
                         itemHeight={250}
                         initialIndex={2}
+                        enableReflection={true}
                       />
                     </div>
                     <div className="p-6 overflow-x-auto">
@@ -175,6 +176,12 @@ export function Demo() {
                               <td className="p-4 font-mono text-xs text-blue-500">number</td>
                               <td className="p-4 font-mono text-xs text-muted-foreground">0</td>
                               <td className="p-4 text-muted-foreground">Index of the initially selected item.</td>
+                           </tr>
+                           <tr className="group hover:bg-secondary/20 transition-colors">
+                              <td className="p-4 font-mono text-foreground">enableReflection</td>
+                              <td className="p-4 font-mono text-xs text-blue-500">boolean</td>
+                              <td className="p-4 font-mono text-xs text-muted-foreground">true</td>
+                              <td className="p-4 text-muted-foreground">Enable or disable reflection effect.</td>
                            </tr>
                            <tr className="group hover:bg-secondary/20 transition-colors">
                               <td className="p-4 font-mono text-foreground">onItemClick</td>

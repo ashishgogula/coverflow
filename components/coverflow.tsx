@@ -41,7 +41,7 @@ export function CoverFlow({
   centerGap = 250,
   rotation = 50,
   initialIndex = 0,
-  enableReflection = true,
+  enableReflection = false,
   className,
   onItemClick,
   onIndexChange,
