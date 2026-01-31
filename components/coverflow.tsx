@@ -153,7 +153,7 @@ export function CoverFlow({
         ))}
       </div>
 
-      <div className="absolute bottom-0 left-0 right-0 flex flex-col items-center justify-center pointer-events-none z-40 transition-opacity duration-300">
+      <div className="absolute bottom-8 left-0 right-0 flex flex-col items-center justify-center pointer-events-none z-40 transition-opacity duration-300">
          <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ 

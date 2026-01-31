@@ -5,6 +5,15 @@ import { Github, Heart, Check, Copy } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { Navbar } from "@/components/navbar";
+import { CoverFlow, CoverFlowItem } from "@/components/coverflow";
+
+const animeItems: CoverFlowItem[] = [
+  { id: 1, image: "/anime/Obanai.jpeg", title: "Obanai Iguro" },
+  { id: 2, image: "/anime/Shinobu.jpeg", title: "Shinobu Kocho" },
+  { id: 3, image: "/anime/Tanjiro.jpeg", title: "Tanjiro Kamado" },
+  { id: 4, image: "/anime/giyu.jpeg", title: "Giyu Tomioka" },
+  { id: 5, image: "/anime/𝗦𝗵𝗶𝗻𝗮𝘇𝘂𝗴𝗮𝘄𝗮 ✩.jpeg", title: "Sanemi Shinazugawa" },
+];
 
 export default function GetStarted() {
   const [copied, setCopied] = useState(false);
@@ -75,22 +84,40 @@ export default function GetStarted() {
 
                <div className="space-y-8">
                   <h3 className="text-2xl font-medium tracking-tight">Usage</h3>
-                  <div className="rounded-2xl border border-border/40 bg-secondary/20 p-6 overflow-x-auto shadow-sm">
+                  <div className="rounded-2xl border border-border/40 bg-secondary/20 overflow-hidden shadow-sm">
+                    <div className="h-[500px] w-full border-b border-border/40 relative bg-background">
+                      <CoverFlow 
+                        items={animeItems}
+                        itemWidth={250}
+                        itemHeight={250}
+                        initialIndex={2}
+                      />
+                    </div>
+                    <div className="p-6 overflow-x-auto">
 <pre className="text-sm font-mono text-muted-foreground leading-relaxed">
 {`import { CoverFlow } from "@/components/coverflow";
 
+const items = [
+  { id: 1, image: "/Obanai.jpeg", title: "Obanai Iguro" },
+  { id: 2, image: "/Shinobu.jpeg", title: "Shinobu Kocho" },
+  { id: 3, image: "/Tanjiro.jpeg", title: "Tanjiro Kamado" },
+  { id: 4, image: "/giyu.jpeg", title: "Giyu Tomioka" },
+  { id: 5, image: "/Sanemi.jpeg", title: "Sanemi Shinazugawa" },
+];
+
 export function Demo() {
   return (
-    <div className="h-[500px] w-full">
+    <div className="h-[400px] w-full">
       <CoverFlow 
-        items={albums} 
-        itemWidth={400} 
-        itemHeight={400} 
+        items={items} 
+        itemWidth={250} 
+        itemHeight={250} 
       />
     </div>
   );
 }`}
 </pre>
+                    </div>
                   </div>
                </div>
 
