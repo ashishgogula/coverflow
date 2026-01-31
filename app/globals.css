@@ -249,7 +249,7 @@
   }
 
   .m-foot {
-    @apply border-t border-border/40 py-12;
+    @apply border-t border-border/40 py-4;
   }
 
   .m-footInner {

@@ -422,7 +422,7 @@ export default function Home() {
           </motion.div>
 
           <motion.footer
-            className="m-foot border-t border-dashed border-border/70 relative"
+            className="m-foot border-t border-b border-dashed border-border/70 relative mb-4"
             aria-label="Footer"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
@@ -430,25 +430,8 @@ export default function Home() {
             transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
           >
             <div className="m-footInner px-6">
-              <div className="text-sm font-medium">Cover Flow</div>
-              <div className="flex items-center gap-6 text-sm text-muted-foreground">
-                <Link
-                  className="transition-colors hover:text-foreground"
-                  href="https://github.com/ashishgogula/coverflow"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  GitHub
-                </Link>
-                <Link
-                  className="transition-colors hover:text-foreground"
-                  href="https://github.com/sponsors/ashishgogula"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Sponsor
-                </Link>
-              </div>
+              <div className="text-sm font-medium">Built by Ashish Gogula</div>
+             
             </div>
           </motion.footer>
         </div>
