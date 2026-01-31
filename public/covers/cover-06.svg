@@ -9,11 +9,11 @@
   <rect x="48" y="48" width="1104" height="1104" rx="56" fill="none" stroke="rgba(0,0,0,0.06)"/>
   <g fill="rgba(0,0,0,0.86)" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial" letter-spacing="-0.02em">
     <text x="96" y="160" font-size="42" opacity="0.6">Cover Flow</text>
-    <text x="96" y="230" font-size="78" font-weight="600">Coffee</text>
-    <text x="96" y="312" font-size="78" font-weight="600">House</text>
+    <text x="96" y="230" font-size="78" font-weight="600">Golden</text>
+    <text x="96" y="312" font-size="78" font-weight="600">Hour</text>
   </g>
-  <g opacity="0.12">
-    <circle cx="900" cy="820" r="320" fill="#a16207"/>
+  <g opacity="0.14">
+    <circle cx="900" cy="820" r="320" fill="#fb7185"/>
     <circle cx="990" cy="740" r="220" fill="#f59e0b"/>
   </g>
 </svg>

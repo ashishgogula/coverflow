@@ -3,6 +3,9 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
   :root {
     --background: 0 0% 98%;
     --foreground: 0 0% 3.9%;
@@ -84,7 +87,7 @@
   }
 
   .m-navBrand {
-    @apply inline-flex items-center gap-2 text-[15px] font-medium tracking-tight text-foreground/90 transition-colors hover:text-foreground;
+    @apply inline-flex items-center text-[15px] font-medium tracking-tight text-foreground/90 transition-colors hover:text-foreground;
   }
 
   .m-navLinks {
@@ -165,7 +168,7 @@
   }
 
   .m-plusIcon {
-    @apply absolute h-6 w-6 text-foreground stroke-1;
+    @apply absolute h-6 w-6 text-muted-foreground/50 stroke-1;
   }
 
   .m-plusIcon-tl { @apply -top-3 -left-3; }

@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: "Cover Flow",
   description: "iTunes-style 3D carousel rebuilt with Next.js and Motion",
   icons: {
-    icon: "/favicon.ico",
+    icon: "/favicon.svg",
   },
 };
 
