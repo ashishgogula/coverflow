@@ -91,7 +91,7 @@ export default function Home() {
       </header>
 
       <main>
-        <div className="m-wrap border-x border-dashed border-border min-h-screen relative">
+        <div className="m-wrap border-x  border-dashed border-border min-h-screen relative">
            <div className="m-gridLines">
               <div className="m-gridLine" />
               <div className="m-gridLine" />
@@ -158,7 +158,7 @@ export default function Home() {
              <Plus className="m-plusIcon m-plusIcon-bl" />
              <Plus className="m-plusIcon m-plusIcon-br" />
              
-             <div className="max-w-[1400px] mx-auto px-4 md:px-8 py-24" id="demo">
+             <div className="max-w-[1400px] mx-auto px-4 md:px-8 pb-24" id="demo">
                 <div className="relative w-full aspect-[16/9] md:aspect-[2/1] flex flex-col items-center justify-center">
                    <CoverFlow
                      items={albums}
@@ -173,29 +173,28 @@ export default function Home() {
              </div>
            </div>
 
-           <div className="py-24 relative m-sectionBorder border-t-0">
+           <div className="py-24 relative m-sectionBorder border-top">
              <Plus className="m-plusIcon m-plusIcon-bl" />
              <Plus className="m-plusIcon m-plusIcon-br" />
 
              {/* Bento Grid Features */}
              <div className="m-bentoGrid px-6" id="principles">
                 {/* Large Feature: Physics */}
-                <div className="m-bentoCard m-bentoCardWide flex flex-col justify-between">
+                <div className="m-bentoCard m-bentoCardWide flex flex-col justify-between overflow-hidden">
+                   <div className="absolute inset-0 flex items-center justify-center opacity-[0.03]">
+                      <Zap className="h-[500px] w-[500px]" />
+                   </div>
                    <div className="relative z-10">
-                      <div className="m-bentoIcon">
-                         <Zap className="h-6 w-6" />
-                      </div>
                       <h3 className="m-bentoTitle">Fluid Physics Engine</h3>
                       <p className="m-bentoBody max-w-[40ch]">
                          Driven by real-time spring physics, not linear timelines. The motion feels weighty, responsive, and interruptible at any frame.
                       </p>
                    </div>
-                   <div className="absolute right-0 top-0 h-full w-1/2 opacity-20 bg-gradient-to-l from-foreground/10 to-transparent pointer-events-none" />
                 </div>
 
                 {/* Tall Feature: Keyboard */}
-                <div className="m-bentoCard m-bentoCardTall flex flex-col justify-end">
-                   <div className="absolute inset-0 flex items-center justify-center opacity-10">
+                <div className="m-bentoCard m-bentoCardTall flex flex-col justify-between overflow-hidden">
+                   <div className="absolute inset-0 flex items-center justify-center opacity-[0.03]">
                       <Command className="h-48 w-48" />
                    </div>
                    <div className="relative z-10">
@@ -203,49 +202,49 @@ export default function Home() {
                       <p className="m-bentoBody">
                          Fully accessible with arrow key navigation and focus management.
                       </p>
-                      <div className="mt-6 flex gap-2">
-                         <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-background/50 font-mono text-sm shadow-sm">←</div>
-                         <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-background/50 font-mono text-sm shadow-sm">→</div>
-                      </div>
+                   </div>
+                   <div className="flex justify-center gap-3 mt-8 opacity-80">
+                         <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-border bg-background/50 font-mono text-lg shadow-sm">←</div>
+                         <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-border bg-background/50 font-mono text-lg shadow-sm">→</div>
                    </div>
                 </div>
 
                 {/* Small Feature: Layout */}
-                <div className="m-bentoCard m-bentoCardSmall">
-                   <div className="flex items-center gap-4 mb-4">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-500/10 text-blue-500">
-                         <Layers className="h-5 w-5" />
-                      </div>
+                <div className="m-bentoCard m-bentoCardSmall flex flex-col justify-between overflow-hidden">
+                   <div className="absolute inset-0 flex items-center justify-center opacity-[0.03]">
+                      <Layers className="h-40 w-40" />
                    </div>
-                   <h3 className="text-lg font-semibold">Zero Layout Shift</h3>
-                   <p className="text-sm text-muted-foreground mt-2">
-                      Isolated transforms ensure the surrounding layout never jumps.
-                   </p>
+                   <div className="relative z-10">
+                      <h3 className="text-lg font-semibold mb-2">Zero Layout Shift</h3>
+                      <p className="text-sm text-muted-foreground">
+                         Isolated transforms ensure the surrounding layout never jumps.
+                      </p>
+                   </div>
                 </div>
 
                 {/* Small Feature: Mobile */}
-                <div className="m-bentoCard m-bentoCardSmall">
-                   <div className="flex items-center gap-4 mb-4">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-orange-500/10 text-orange-500">
-                         <Smartphone className="h-5 w-5" />
-                      </div>
+                <div className="m-bentoCard m-bentoCardSmall flex flex-col justify-between overflow-hidden">
+                   <div className="absolute inset-0 flex items-center justify-center opacity-[0.03]">
+                      <Smartphone className="h-40 w-40" />
                    </div>
-                   <h3 className="text-lg font-semibold">Touch Ready</h3>
-                   <p className="text-sm text-muted-foreground mt-2">
-                      1:1 gesture tracking with velocity-aware throwing.
-                   </p>
+                   <div className="relative z-10">
+                      <h3 className="text-lg font-semibold mb-2">Touch Ready</h3>
+                      <p className="text-sm text-muted-foreground">
+                         1:1 gesture tracking with velocity-aware throwing.
+                      </p>
+                   </div>
                 </div>
 
                  {/* Small Feature: Dark Mode */}
-                 <div className="m-bentoCard m-bentoCardSmall md:col-span-6 md:row-span-1 flex items-center justify-between">
-                   <div>
-                      <h3 className="text-lg font-semibold">Dark Mode Native</h3>
-                      <p className="text-sm text-muted-foreground mt-1">
+                 <div className="m-bentoCard m-bentoCardSmall flex flex-col justify-between overflow-hidden">
+                   <div className="absolute inset-0 flex items-center justify-center opacity-[0.03]">
+                      <Moon className="h-40 w-40" />
+                   </div>
+                   <div className="relative z-10">
+                      <h3 className="text-lg font-semibold mb-1">Dark Mode Native</h3>
+                      <p className="text-sm text-muted-foreground">
                          Optimized for deep blacks and vibrant highlights.
                       </p>
-                   </div>
-                   <div className="flex h-12 w-12 items-center justify-center rounded-full bg-secondary text-foreground">
-                      <Moon className="h-6 w-6" />
                    </div>
                 </div>
              </div>

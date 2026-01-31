@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
-import "./marketing.css";
 
 export const metadata: Metadata = {
   title: "Cover Flow",

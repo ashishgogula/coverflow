@@ -90,8 +90,7 @@ export default function MyPage() {
 ```
 .
 ├── app/
-│   ├── globals.css      # Base Tailwind and theme variables
-│   ├── marketing.css    # Semantic design system & Bento grid styles
+│   ├── globals.css      # Base Tailwind, theme variables, and semantic design system
 │   ├── layout.tsx       # Root layout with ThemeProvider
 │   └── page.tsx         # Landing page demo
 ├── components/

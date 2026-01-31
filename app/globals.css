@@ -5,23 +5,23 @@
 @layer base {
   :root {
     --background: 0 0% 98%;
-    --foreground: 0 0% 11%;
+    --foreground: 0 0% 3.9%;
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 11%;
+    --card-foreground: 0 0% 3.9%;
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 11%;
+    --popover-foreground: 0 0% 3.9%;
     --primary: 0 0% 9%;
     --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 96.1%;
+    --secondary: 0 0% 93%;
     --secondary-foreground: 0 0% 9%;
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 45.1%;
-    --accent: 0 0% 96.1%;
+    --muted: 0 0% 93%;
+    --muted-foreground: 0 0% 40%;
+    --accent: 0 0% 93%;
     --accent-foreground: 0 0% 9%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 89.8%;
-    --input: 0 0% 89.8%;
+    --border: 0 0% 85%;
+    --input: 0 0% 85%;
     --ring: 0 0% 3.9%;
     --radius: 0.5rem;
   }
@@ -58,6 +58,177 @@
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+@layer components {
+  .m-shell {
+    @apply min-h-screen bg-background text-foreground;
+  }
+
+  .m-wrap {
+    @apply mx-auto w-full max-w-[1180px];
+  }
+
+  .m-nav {
+    @apply sticky top-0 z-[100];
+  }
+
+  .m-navInner {
+    @apply m-wrap flex h-16 items-center justify-between border-x border-dashed border-border;
+  }
+
+  .m-navSurface {
+    @apply border-b border-dashed border-border bg-background/80;
+    backdrop-filter: blur(16px);
+  }
+
+  .m-navBrand {
+    @apply inline-flex items-center gap-2 text-[15px] font-medium tracking-tight text-foreground/90 transition-colors hover:text-foreground;
+  }
+
+  .m-navLinks {
+    @apply hidden items-center gap-8 text-[13px] font-medium text-muted-foreground md:flex;
+  }
+
+  .m-navLink {
+    @apply transition-colors hover:text-foreground;
+  }
+  
+  /* Bento Grid System */
+  .m-bentoGrid {
+    @apply grid grid-cols-1 gap-4 md:grid-cols-6 md:gap-6;
+  }
+
+  .m-bentoCard {
+    @apply relative overflow-hidden rounded-[32px] bg-secondary/30 p-8 transition-all duration-500 hover:bg-secondary/50;
+    backdrop-filter: blur(10px);
+  }
+  
+  .dark .m-bentoCard {
+    @apply bg-white/[0.03] hover:bg-white/[0.06];
+    box-shadow: inset 0 1px 0 0 rgba(255,255,255,0.05);
+  }
+
+  .m-bentoCardWide {
+    @apply md:col-span-4 md:row-span-2;
+  }
+  
+  .m-bentoCardTall {
+    @apply md:col-span-2 md:row-span-2;
+  }
+  
+  .m-bentoCardSmall {
+    @apply md:col-span-2 md:row-span-1;
+  }
+
+  .m-bentoTitle {
+    @apply text-xl font-semibold tracking-tight md:text-2xl;
+  }
+  
+  .m-bentoBody {
+    @apply mt-2 text-[15px] leading-relaxed text-muted-foreground;
+  }
+  
+  .m-bentoIcon {
+    @apply mb-6 flex h-12 w-12 items-center justify-center rounded-full bg-foreground text-background;
+  }
+
+  .m-navRight {
+    @apply flex items-center gap-3;
+  }
+
+  /* Grid System */
+  .m-gridContainer {
+    @apply relative border-x border-dashed border-border;
+    background-image: radial-gradient(hsl(var(--foreground)/0.3) 1px, transparent 0);
+    background-size: 40px 40px;
+    background-position: -19px -19px;
+    mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
+  }
+
+  .dark .m-gridContainer {
+    background-image: radial-gradient(rgba(255,255,255,0.35) 1px, transparent 0);
+  }
+
+  .m-gridOverlay {
+    @apply absolute inset-0 pointer-events-none;
+    /* Removed the previous gradient grid to avoid double lines with the new explicit ones */
+  }
+
+  .m-gridLines {
+    @apply absolute inset-0 grid grid-cols-1 md:grid-cols-3 pointer-events-none select-none;
+  }
+
+  .m-gridLine {
+    @apply border-dashed border-border h-full block first:border-l-0 last:border-r-0;
+  }
+
+  .m-plusIcon {
+    @apply absolute h-6 w-6 text-foreground stroke-1;
+  }
+
+  .m-plusIcon-tl { @apply -top-3 -left-3; }
+  .m-plusIcon-tr { @apply -top-3 -right-3; }
+  .m-plusIcon-bl { @apply -bottom-3 -left-3; }
+  .m-plusIcon-br { @apply -bottom-3 -right-3; }
+
+  .m-sectionBorder {
+    @apply relative border-y border-dashed border-border;
+  }
+
+  .m-hero {
+    @apply pt-24 md:pt-32;
+  }
+
+  .m-heroGrid {
+    @apply grid grid-cols-1 gap-10 md:grid-cols-12 md:gap-12;
+  }
+
+  .m-kicker {
+    @apply inline-flex items-center gap-2 text-xs font-medium text-muted-foreground;
+  }
+
+  .m-h1 {
+    font-variation-settings: "opsz" 32;
+    letter-spacing: -0.045em;
+    @apply text-[40px] leading-[1.1] font-semibold md:text-[88px] md:leading-[0.92] tracking-tighter;
+  }
+
+  .m-sub {
+    @apply mt-6 text-base leading-relaxed text-muted-foreground md:text-xl md:leading-relaxed font-normal text-balance;
+  }
+
+  .m-ctaRow {
+    @apply mt-10 flex flex-col gap-3 sm:flex-row sm:items-center;
+  }
+
+  .m-btn {
+    @apply inline-flex h-12 items-center justify-center gap-2 rounded-full px-8 text-[15px] font-medium transition-all duration-300 active:scale-[0.98] focus-visible:outline-none ;
+  }
+
+  .m-btnPrimary {
+    @apply bg-foreground text-background hover:opacity-90 hover:scale-[1.02] shadow-xl shadow-foreground/5;
+  }
+
+  .m-btnSecondary {
+    @apply bg-secondary/50 text-secondary-foreground hover:bg-secondary border border-transparent hover:border-border/10;
+  }
+
+  .m-code {
+    @apply font-mono text-xs text-muted-foreground sm:text-sm;
+  }
+  
+  .m-divider {
+    @apply my-24 border-t border-border/40;
+  }
+
+  .m-foot {
+    @apply border-t border-border/40 py-12;
+  }
+
+  .m-footInner {
+    @apply m-wrap flex flex-col gap-6 md:flex-row md:items-center md:justify-between;
   }
 }
 

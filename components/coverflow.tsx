@@ -105,7 +105,7 @@ export function CoverFlow({
     <div
       ref={containerRef}
       className={
-        "relative w-full h-full flex flex-col justify-center items-center overflow-hidden bg-transparent perspective-1000 focus:outline-none focus-visible:ring-2 focus-visible:ring-foreground/20 " +
+        "relative w-full h-full flex flex-col justify-center items-center overflow-hidden bg-transparent perspective-1000 focus:outline-none " +
         (className ?? "")
       }
       role="region"
@@ -148,7 +148,7 @@ export function CoverFlow({
         ))}
       </div>
 
-      <div className="absolute bottom-12 left-0 right-0 flex flex-col items-center justify-center pointer-events-none z-40 transition-opacity duration-300">
+      <div className="absolute bottom-0 left-0 right-0 flex flex-col items-center justify-center pointer-events-none z-40 transition-opacity duration-300">
          <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ 
