@@ -27,6 +27,7 @@ export interface CoverFlowProps {
   centerGap?: number;
   rotation?: number;
   initialIndex?: number;
+  enableReflection?: boolean;
   className?: string;
   onItemClick?: (item: CoverFlowItem, index: number) => void;
   onIndexChange?: (index: number) => void;
@@ -40,6 +41,7 @@ export function CoverFlow({
   centerGap = 250,
   rotation = 50,
   initialIndex = 0,
+  enableReflection = true,
   className,
   onItemClick,
   onIndexChange,
@@ -142,6 +144,7 @@ export function CoverFlow({
             centerGap={centerGap}
             rotation={rotation}
             isActive={index === activeIndex}
+            enableReflection={enableReflection}
             onClick={() => {
               if (index === activeIndex) {
                 onItemClick?.(item, index);
@@ -187,6 +190,7 @@ interface CardProps {
   centerGap: number;
   rotation: number;
   isActive: boolean;
+  enableReflection: boolean;
   onClick: () => void;
 }
 
@@ -200,6 +204,7 @@ function CoverFlowItemCard({
   centerGap,
   rotation,
   isActive,
+  enableReflection,
   onClick,
 }: CardProps) {
   const position = useTransform(scrollX, (value) => {
@@ -300,21 +305,28 @@ function CoverFlowItemCard({
          </div>
       </div>
 
-      <div 
-        className="absolute top-full left-0 right-0 h-full overflow-hidden pointer-events-none"
-        style={{ transform: "scaleY(-1) translateY(0px)", transformOrigin: "top" }}
-      >
-         <div className="relative w-full h-full opacity-40">
-             <Image 
-                src={item.image} 
-                alt="" 
-                fill
-                className="object-cover blur-[1px]"
-                sizes={`${width}px`}
-             />
-             <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent" />
-         </div>
-      </div>
+      {enableReflection && (
+        <div 
+          className="absolute left-0 right-0 overflow-hidden pointer-events-none"
+          style={{ 
+            top: "100%", 
+            width: width,
+            height: height * 0.35, 
+            marginTop: "2px"
+          }}
+        >
+           <div className="relative w-full h-full opacity-40" style={{ transform: "scaleY(-1)" }}>
+               <Image 
+                  src={item.image} 
+                  alt="" 
+                  fill
+                  className="object-cover blur-[1px]"
+                  sizes={`${width}px`}
+               />
+               <div className="absolute inset-0 bg-gradient-to-b from-background/90 to-transparent" />
+           </div>
+        </div>
+      )}
     </motion.div>
   );
 }
