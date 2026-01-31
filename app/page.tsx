@@ -2,7 +2,7 @@
 
 import { CoverFlow, CoverFlowItem } from "@/components/coverflow";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { Github, Heart, Check, Copy, Layers, Command, Zap, Smartphone, Moon } from "lucide-react";
+import { Github, Heart, Check, Copy, Layers, Command, Zap, Smartphone, Moon, Plus } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState, useEffect } from "react";
 
@@ -22,20 +22,27 @@ const albums: CoverFlowItem[] = [
 export default function Home() {
   const [copied, setCopied] = useState(false);
   const [itemSize, setItemSize] = useState({ width: 400, height: 400 });
-  const installCommand = useMemo(() => "Coming Soon", []);
+  const installCommand = useMemo(() => "npx shadcn add coverflow", []);
 
   useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
     const handleResize = () => {
-      if (window.innerWidth < 768) {
-        setItemSize({ width: 240, height: 240 });
-      } else {
-        setItemSize({ width: 400, height: 400 });
-      }
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        if (window.innerWidth < 768) {
+          setItemSize({ width: 240, height: 240 });
+        } else {
+          setItemSize({ width: 400, height: 400 });
+        }
+      }, 100);
     };
 
     handleResize(); // Initial check
     window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    return () => {
+        window.removeEventListener("resize", handleResize);
+        clearTimeout(timeoutId);
+    }
   }, []);
 
   const copyCommand = () => {
@@ -50,7 +57,7 @@ export default function Home() {
         <div className="m-navSurface">
           <div className="m-navInner">
             <div className="m-navBrand">
-              <span>Cover Flow</span>
+              <Link href="/">Cover Flow</Link>
             </div>
             <nav className="m-navLinks" aria-label="Primary">
               <Link className="m-navLink" href="#demo">
@@ -84,75 +91,94 @@ export default function Home() {
       </header>
 
       <main>
-        <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden">
-          <div className="m-wrap relative z-10 flex flex-col items-center text-center">
-            <div className="m-kicker mb-6">A classic interaction, reimagined.</div>
-            <h1 className="m-h1 mb-8 max-w-[20ch]">
-              Cover Flow for React.
-            </h1>
-            <p className="m-sub mb-12 max-w-[60ch]">
-              Fluid, physical motion with zero layout shifts. 
-              <br className="hidden md:block" />
-              Built for the modern web with Motion and Tailwind.
-            </p>
-            
-            <div className="flex flex-col items-center gap-8 mb-20">
-               <div className="flex flex-wrap items-center justify-center gap-4">
-                  <a className="m-btn m-btnPrimary" href="#demo">
-                    View Demo
-                  </a>
-                  <button
-                    type="button"
-                    onClick={copyCommand}
-                    className="m-btn m-btnSecondary font-mono text-xs"
-                  >
-                    {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
-                    {installCommand}
-                  </button>
-               </div>
-               
-               <div className="flex items-center gap-6 text-sm font-medium text-muted-foreground">
-                  <Link
-                    href="https://github.com/your-repo/coverflow"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="flex items-center gap-2 hover:text-foreground transition-colors"
-                  >
-                    <Github className="h-4 w-4" />
-                    GitHub
-                  </Link>
-                  <Link
-                    href="https://github.com/sponsors/your-handle"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="flex items-center gap-2 hover:text-foreground transition-colors"
-                  >
-                    <Heart className="h-4 w-4" />
-                    Sponsor
-                  </Link>
-               </div>
-             </div>
-          </div>
+        <div className="m-wrap border-x border-dashed border-border min-h-screen relative">
+           <div className="m-gridLines">
+              <div className="m-gridLine" />
+              <div className="m-gridLine" />
+           </div>
 
-          <div className="w-full max-w-[1400px] mx-auto px-4 md:px-8 mb-24" id="demo">
-             <div className="relative w-full aspect-[16/9] md:aspect-[2/1] flex flex-col items-center justify-center">
-                <CoverFlow
-                  items={albums}
-                  itemWidth={itemSize.width}
-                  itemHeight={itemSize.height}
-                  className="w-full h-full z-10"
-                />
-             </div>
-             <div className="text-center mt-8 text-sm text-muted-foreground/60 font-medium tracking-wide">
-                Drag to browse • Arrow keys to navigate
-             </div>
-          </div>
+           <section className="relative py-20 m-sectionBorder">
+              <Plus className="m-plusIcon m-plusIcon-tl z-[999]" />
+              <Plus className="m-plusIcon m-plusIcon-tr z-[999]" />
+              <Plus className="m-plusIcon m-plusIcon-bl z-[999]" />
+              <Plus className="m-plusIcon m-plusIcon-br z-[999]" />
 
-          <div className="m-wrap">
-             <div className="m-divider" />
+              <div className="relative z-10 flex flex-col items-center text-center px-4">
+                <div className="m-kicker mb-6">A classic interaction, reimagined.</div>
+                <h1 className="m-h1 mb-8 max-w-[20ch]">
+                  Cover Flow for React.
+                </h1>
+                <p className="m-sub mb-12 max-w-[60ch]">
+                  Fluid, physical motion with zero layout shifts. 
+                  <br className="hidden md:block" />
+                  Built for the modern web with Motion and Tailwind.
+                </p>
+                
+                <div className="flex flex-col items-center gap-8">
+                   <div className="flex flex-wrap items-center justify-center gap-4">
+                      <Link className="m-btn m-btnPrimary" href="/get-started">
+                        Get Started
+                      </Link>
+                      <button
+                        type="button"
+                        onClick={copyCommand}
+                        className="m-btn m-btnSecondary font-mono text-xs"
+                      >
+                        {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
+                        {installCommand}
+                      </button>
+                   </div>
+                   
+                   <div className="flex items-center gap-6 text-sm font-medium text-muted-foreground">
+                      <Link
+                        href="https://github.com/your-repo/coverflow"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="flex items-center gap-2 hover:text-foreground transition-colors"
+                      >
+                        <Github className="h-4 w-4" />
+                        GitHub
+                      </Link>
+                      <Link
+                        href="https://github.com/sponsors/your-handle"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="flex items-center gap-2 hover:text-foreground transition-colors"
+                      >
+                        <Heart className="h-4 w-4" />
+                        Sponsor
+                      </Link>
+                   </div>
+                 </div>
+              </div>
+           </section>
+
+           <div className="w-full  border-dashed border-border/70 relative">
+
+             <Plus className="m-plusIcon m-plusIcon-bl" />
+             <Plus className="m-plusIcon m-plusIcon-br" />
              
+             <div className="max-w-[1400px] mx-auto px-4 md:px-8 py-24" id="demo">
+                <div className="relative w-full aspect-[16/9] md:aspect-[2/1] flex flex-col items-center justify-center">
+                   <CoverFlow
+                     items={albums}
+                     itemWidth={itemSize.width}
+                     itemHeight={itemSize.height}
+                     className="w-full h-full z-10"
+                   />
+                </div>
+                <div className="text-center mt-8 text-sm text-muted-foreground/60 font-medium tracking-wide">
+                   Drag to browse • Arrow keys to navigate
+                </div>
+             </div>
+           </div>
+
+           <div className="py-24 relative m-sectionBorder border-t-0">
+             <Plus className="m-plusIcon m-plusIcon-bl" />
+             <Plus className="m-plusIcon m-plusIcon-br" />
+
              {/* Bento Grid Features */}
-             <div className="m-bentoGrid" id="principles">
+             <div className="m-bentoGrid px-6" id="principles">
                 {/* Large Feature: Physics */}
                 <div className="m-bentoCard m-bentoCardWide flex flex-col justify-between">
                    <div className="relative z-10">
@@ -223,8 +249,33 @@ export default function Home() {
                    </div>
                 </div>
              </div>
-          </div>
-        </section>
+           </div>
+           
+           <footer className="m-foot border-t border-dashed border-border/70 relative" aria-label="Footer">
+              
+              <div className="m-footInner px-6">
+                <div className="text-sm font-medium">Cover Flow</div>
+                <div className="flex items-center gap-6 text-sm text-muted-foreground">
+                  <Link
+                    className="transition-colors hover:text-foreground"
+                    href="https://github.com/your-repo/coverflow"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    GitHub
+                  </Link>
+                  <Link
+                    className="transition-colors hover:text-foreground"
+                    href="https://github.com/sponsors/your-handle"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Sponsor
+                  </Link>
+                </div>
+              </div>
+           </footer>
+        </div>
       </main>
     </div>
   );

@@ -6,7 +6,7 @@
   }
 
   .m-wrap {
-    @apply mx-auto w-full max-w-[1180px] px-6;
+    @apply mx-auto w-full max-w-[1180px];
   }
 
   .m-nav {
@@ -14,12 +14,12 @@
   }
 
   .m-navInner {
-    @apply m-wrap flex h-16 items-center justify-between;
+    @apply m-wrap flex h-16 items-center justify-between border-x border-dashed border-border;
   }
 
   .m-navSurface {
-    @apply border-b border-border/20 bg-background/60;
-    backdrop-filter: saturate(180%) blur(24px);
+    @apply border-b border-dashed border-border bg-background/80;
+    backdrop-filter: blur(16px);
   }
 
   .m-navBrand {
@@ -77,6 +77,45 @@
     @apply flex items-center gap-3;
   }
 
+  /* Grid System */
+  .m-gridContainer {
+    @apply relative border-x border-dashed border-border;
+    background-image: radial-gradient(hsl(var(--foreground)/0.3) 1px, transparent 0);
+    background-size: 40px 40px;
+    background-position: -19px -19px;
+    mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
+  }
+
+  .dark .m-gridContainer {
+    background-image: radial-gradient(rgba(255,255,255,0.35) 1px, transparent 0);
+  }
+
+  .m-gridOverlay {
+    @apply absolute inset-0 pointer-events-none;
+    /* Removed the previous gradient grid to avoid double lines with the new explicit ones */
+  }
+
+  .m-gridLines {
+    @apply absolute inset-0 grid grid-cols-1 md:grid-cols-3 pointer-events-none select-none;
+  }
+
+  .m-gridLine {
+    @apply border-dashed border-border h-full block first:border-l-0 last:border-r-0;
+  }
+
+  .m-plusIcon {
+    @apply absolute h-6 w-6 text-foreground stroke-1;
+  }
+
+  .m-plusIcon-tl { @apply -top-3 -left-3; }
+  .m-plusIcon-tr { @apply -top-3 -right-3; }
+  .m-plusIcon-bl { @apply -bottom-3 -left-3; }
+  .m-plusIcon-br { @apply -bottom-3 -right-3; }
+
+  .m-sectionBorder {
+    @apply relative border-y border-dashed border-border;
+  }
+
   .m-hero {
     @apply pt-24 md:pt-32;
   }
@@ -92,7 +131,7 @@
   .m-h1 {
     font-variation-settings: "opsz" 32;
     letter-spacing: -0.045em;
-    @apply text-[56px] leading-[0.95] font-semibold md:text-[88px] md:leading-[0.92] tracking-tighter;
+    @apply text-[40px] leading-[1.1] font-semibold md:text-[88px] md:leading-[0.92] tracking-tighter;
   }
 
   .m-sub {
@@ -124,7 +163,7 @@
   }
 
   .m-foot {
-    @apply mt-24 border-t border-border/40 py-12;
+    @apply border-t border-border/40 py-12;
   }
 
   .m-footInner {
