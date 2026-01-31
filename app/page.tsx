@@ -2,7 +2,7 @@
 
 import { CoverFlow, CoverFlowItem } from "@/components/coverflow";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { Github, Heart, Check, Copy, Layers, Command, Zap, Smartphone, Moon, Plus } from "lucide-react";
+import { Github, Heart, Check, Copy, Layers, Command, Zap, Smartphone, Moon, Plus, MoveVertical, Sparkles, Star } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState, useEffect } from "react";
 import { motion, type Variants } from "motion/react";
@@ -23,6 +23,8 @@ const albums: CoverFlowItem[] = [
 export default function Home() {
   const [copied, setCopied] = useState(false);
   const [itemSize, setItemSize] = useState({ width: 400, height: 400 });
+  // Start at index 0, then animate to 5 after hero load
+  const [initialIndex, setInitialIndex] = useState(0);
   const installCommand = useMemo(() => "npx shadcn add coverflow", []);
 
   useEffect(() => {
@@ -40,6 +42,7 @@ export default function Home() {
 
     handleResize();
     window.addEventListener("resize", handleResize);
+    
     return () => {
         window.removeEventListener("resize", handleResize);
         clearTimeout(timeoutId);
@@ -210,15 +213,22 @@ export default function Home() {
            <div className="w-full border-dashed border-border/70 relative">
              <div className="max-w-[1400px] mx-auto px-4 md:px-8 pb-24" id="demo">
                 <motion.div 
-                  initial={{ opacity: 0, y: 24 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                  initial={{ opacity: 0, y: 54 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.5 }}
+                  onViewportEnter={() => {
+                    setTimeout(() => {
+                      setInitialIndex(5);
+                    }, 1200);
+                  }}
+                  transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
                   className="relative w-full aspect-[16/9] md:aspect-[2/1] flex flex-col items-center justify-center"
                 >
                    <CoverFlow
                      items={albums}
                      itemWidth={itemSize.width}
                      itemHeight={itemSize.height}
+                     initialIndex={initialIndex}
                      className="w-full h-full z-10"
                    />
                 </motion.div>
@@ -248,10 +258,10 @@ export default function Home() {
                 {/* Large Feature: Physics */}
                 <motion.div 
                   variants={cardVariant} 
-                  className="m-bentoCard m-bentoCardWide flex flex-col justify-between overflow-hidden min-h-[360px] md:min-h-auto"
+                  className="m-bentoCard m-bentoCardWide flex flex-col justify-between overflow-hidden min-h-[280px] md:min-h-[320px]"
                 >
                    <div className="absolute inset-0 flex items-center justify-center opacity-[0.03]">
-                      <Zap className="h-[300px] w-[300px] md:h-[500px] md:w-[500px]" />
+                      <Zap className="h-[200px] w-[200px] md:h-[400px] md:w-[400px]" />
                    </div>
                    <div className="relative z-10">
                       <h3 className="m-bentoTitle">Fluid Physics Engine</h3>
@@ -264,10 +274,10 @@ export default function Home() {
                 {/* Tall Feature: Keyboard */}
                 <motion.div 
                   variants={cardVariant} 
-                  className="m-bentoCard m-bentoCardTall flex flex-col justify-between overflow-hidden min-h-[360px] md:min-h-auto"
+                  className="m-bentoCard m-bentoCardTall flex flex-col justify-between overflow-hidden min-h-[280px] md:min-h-[320px]"
                 >
                    <div className="absolute inset-0 flex items-center justify-center opacity-[0.03]">
-                      <Command className="h-48 w-48" />
+                      <Command className="h-40 w-40" />
                    </div>
                    <div className="relative z-10">
                       <h3 className="m-bentoTitle">Keyboard First</h3>
@@ -275,23 +285,23 @@ export default function Home() {
                          Fully accessible with arrow key navigation and focus management.
                       </p>
                    </div>
-                   <div className="flex justify-center gap-3 mt-8 opacity-80">
-                         <div className="flex h-12 w-12 md:h-14 md:w-14 items-center justify-center rounded-xl border border-border bg-background/50 font-mono text-base md:text-lg shadow-sm">←</div>
-                         <div className="flex h-12 w-12 md:h-14 md:w-14 items-center justify-center rounded-xl border border-border bg-background/50 font-mono text-base md:text-lg shadow-sm">→</div>
+                   <div className="flex justify-center gap-3 mt-6 opacity-80">
+                         <div className="flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-xl border border-border bg-background/50 font-mono text-base shadow-sm">←</div>
+                         <div className="flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-xl border border-border bg-background/50 font-mono text-base shadow-sm">→</div>
                    </div>
                 </motion.div>
 
                 {/* Small Feature: Layout */}
                 <motion.div 
                   variants={cardVariant} 
-                  className="m-bentoCard m-bentoCardSmall flex flex-col justify-between overflow-hidden min-h-[280px] md:min-h-[320px]"
+                  className="m-bentoCard m-bentoCardSmall flex flex-col justify-between overflow-hidden min-h-[180px] md:min-h-[220px]"
                 >
                    <div className="absolute inset-0 flex items-center justify-center opacity-[0.03]">
-                      <Layers className="h-32 w-32 md:h-40 md:w-40" />
+                      <Layers className="h-24 w-24 md:h-32 md:w-32" />
                    </div>
                    <div className="relative z-10">
-                      <h3 className="text-lg md:text-xl font-semibold mb-2 md:mb-3 tracking-tight">Zero Layout Shift</h3>
-                      <p className="text-[15px] md:text-[17px] leading-relaxed text-muted-foreground font-medium tracking-wide opacity-90">
+                      <h3 className="text-lg font-semibold mb-2 tracking-tight">Zero Layout Shift</h3>
+                      <p className="text-[15px] leading-relaxed text-muted-foreground font-medium tracking-wide opacity-90">
                          Isolated transforms ensure the surrounding layout never jumps.
                       </p>
                    </div>
@@ -300,14 +310,14 @@ export default function Home() {
                 {/* Small Feature: Mobile */}
                 <motion.div 
                   variants={cardVariant} 
-                  className="m-bentoCard m-bentoCardSmall flex flex-col justify-between overflow-hidden min-h-[280px] md:min-h-[320px]"
+                  className="m-bentoCard m-bentoCardSmall flex flex-col justify-between overflow-hidden min-h-[180px] md:min-h-[220px]"
                 >
                    <div className="absolute inset-0 flex items-center justify-center opacity-[0.03]">
-                      <Smartphone className="h-32 w-32 md:h-40 md:w-40" />
+                      <Smartphone className="h-24 w-24 md:h-32 md:w-32" />
                    </div>
                    <div className="relative z-10">
-                      <h3 className="text-lg md:text-xl font-semibold mb-2 md:mb-3 tracking-tight">Touch Ready</h3>
-                      <p className="text-[15px] md:text-[17px] leading-relaxed text-muted-foreground font-medium tracking-wide opacity-90">
+                      <h3 className="text-lg font-semibold mb-2 tracking-tight">Touch Ready</h3>
+                      <p className="text-[15px] leading-relaxed text-muted-foreground font-medium tracking-wide opacity-90">
                          1:1 gesture tracking with velocity-aware throwing.
                       </p>
                    </div>
@@ -316,14 +326,14 @@ export default function Home() {
                  {/* Small Feature: Dark Mode */}
                  <motion.div 
                    variants={cardVariant} 
-                   className="m-bentoCard m-bentoCardSmall flex flex-col justify-between overflow-hidden min-h-[280px] md:min-h-[320px]"
+                   className="m-bentoCard m-bentoCardSmall flex flex-col justify-between overflow-hidden min-h-[180px] md:min-h-[220px]"
                  >
                    <div className="absolute inset-0 flex items-center justify-center opacity-[0.03]">
-                      <Moon className="h-32 w-32 md:h-40 md:w-40" />
+                      <Moon className="h-24 w-24 md:h-32 md:w-32" />
                    </div>
                    <div className="relative z-10">
-                      <h3 className="text-lg md:text-xl font-semibold mb-2 md:mb-3 tracking-tight">Dark Mode Native</h3>
-                      <p className="text-[15px] md:text-[17px] leading-relaxed text-muted-foreground font-medium tracking-wide opacity-90">
+                      <h3 className="text-lg font-semibold mb-2 tracking-tight">Dark Mode Native</h3>
+                      <p className="text-[15px] leading-relaxed text-muted-foreground font-medium tracking-wide opacity-90">
                          Optimized for deep blacks and vibrant highlights.
                       </p>
                    </div>
@@ -331,6 +341,56 @@ export default function Home() {
              </motion.div>
            </div>
            
+           <motion.div 
+             className="py-24 relative border-t border-dashed border-border/70"
+             initial="hidden"
+             whileInView="visible"
+             viewport={{ once: true, margin: "-100px" }}
+             variants={staggerContainer}
+           >
+              <div className="max-w-2xl mx-auto px-6 text-center">
+                 <motion.div variants={fadeUp} className="flex justify-center mb-8">
+                    <div className="h-16 w-16 rounded-full bg-secondary/50 flex items-center justify-center border border-border/50 shadow-sm">
+                       <Heart className="h-8 w-8 text-foreground/80 fill-foreground/20" />
+                    </div>
+                 </motion.div>
+                 
+                 <motion.h2 variants={fadeUp} className="text-3xl md:text-4xl font-semibold tracking-tight mb-6">
+                    Support Human-Centric UI
+                 </motion.h2>
+                 
+                 <motion.p variants={fadeUp} className="text-lg text-muted-foreground leading-relaxed mb-10 text-balance">
+                    This project is crafted with love and attention to detail. 
+                    If you use it in your commercial projects or just appreciate the craft, 
+                    consider supporting the development.
+                 </motion.p>
+                 
+                 <motion.div variants={fadeUp} className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <Link
+                      href="https://github.com/sponsors/your-handle"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex h-12 items-center justify-center gap-2.5 rounded-full bg-foreground px-8 text-[15px] font-medium text-background transition-transform active:scale-[0.98] hover:opacity-90 shadow-xl shadow-foreground/10"
+                    >
+                       <Star className="h-4 w-4 fill-current" />
+                       Become a Sponsor
+                    </Link>
+                    <Link
+                      href="https://github.com/your-repo/coverflow"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex h-12 items-center justify-center gap-2.5 rounded-full border border-border bg-background px-8 text-[15px] font-medium text-foreground transition-colors hover:bg-secondary/50"
+                    >
+                       <Github className="h-4 w-4" />
+                       Star on GitHub
+                    </Link>
+                 </motion.div>
+              </div>
+              
+              <Plus className="m-plusIcon m-plusIcon-bl" />
+              <Plus className="m-plusIcon m-plusIcon-br" />
+           </motion.div>
+
            <motion.footer 
              className="m-foot border-t border-dashed border-border/70 relative" 
              aria-label="Footer"

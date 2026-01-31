@@ -55,6 +55,11 @@ export function CoverFlow({
   });
 
   useEffect(() => {
+    // If initialIndex changes (e.g. from parent delay), update activeIndex
+    setActiveIndex(initialIndex);
+  }, [initialIndex]);
+  
+  useEffect(() => {
     onIndexChange?.(activeIndex);
   }, [activeIndex, onIndexChange]);
 
