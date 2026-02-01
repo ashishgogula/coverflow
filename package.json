@@ -10,15 +10,17 @@
     "registry:build": "shadcn build"
   },
   "dependencies": {
+    "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.473.0",
-    "motion": "^12.0.0",
+    "motion": "^12.29.2",
     "next": "^15.1.4",
     "next-themes": "^0.4.6",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "shadcn": "^3.8.1",
-    "tailwind-merge": "^2.6.0"
+    "tailwind-merge": "^2.6.1",
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@types/node": "^20",

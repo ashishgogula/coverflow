@@ -24,7 +24,7 @@ const animeItems: CoverFlowItem[] = [
 
 export default function GetStarted() {
   const [copied, setCopied] = useState(false);
-  const installCommand = useMemo(() => "npx shadcn add coverflow", []);
+  const installCommand = useMemo(() => "npx shadcn@latest add https://coverflow.ashishgogula.in/r/coverflow.json", []);
 
   const copyCommand = () => {
     navigator.clipboard.writeText(installCommand);
@@ -159,7 +159,7 @@ export default function CoverFlowDemo() {
                 </div>
                 <div className="relative rounded-2xl border border-border/40 bg-secondary/30 p-4 font-mono text-sm backdrop-blur-sm">
                   <div className="flex items-center justify-between">
-                    <code>coming soon</code>
+                    <code className="text-xs sm:text-sm break-all">{installCommand}</code>
                     <button
                       onClick={copyCommand}
                       className="text-muted-foreground hover:text-foreground transition-colors"

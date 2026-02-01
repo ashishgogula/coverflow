@@ -88,7 +88,11 @@ export default function Home() {
   const [copied, setCopied] = useState(false);
   const [itemSize, setItemSize] = useState({ width: 400, height: 400 });
   const [initialIndex, setInitialIndex] = useState(0);
-  const installCommand = useMemo(() => "coming soon", []);
+  const installCommand = useMemo(
+    () =>
+      "npx shadcn@latest add https://coverflow.ashishgogula.in/r/coverflow.json",
+    [],
+  );
 
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
@@ -154,7 +158,7 @@ export default function Home() {
         <div className="m-wrap border-x border-dashed border-t-0 min-h-screen relative">
           <section className="relative pt-20 border-dashed border-border">
             <motion.div
-              className="relative z-10 flex flex-col items-center text-center px-4"
+              className="relative z-10 flex flex-col items-center text-center"
               initial="hidden"
               animate="visible"
               variants={staggerContainer}
@@ -171,10 +175,7 @@ export default function Home() {
                 iOS-like Cover Flow for React.
               </motion.h2>
 
-              <motion.div
-                variants={fadeUp}
-                className="m-sub mb-12 max-w-[60ch]"
-              >
+              <motion.div variants={fadeUp} className="m-sub mb-8 max-w-[60ch]">
                 Fluid, physical motion with zero layout shifts.
                 <HighlightWords
                   text="Built for the modern web with Motion and Tailwind."
@@ -184,25 +185,31 @@ export default function Home() {
 
               <motion.div
                 variants={fadeUp}
-                className="flex flex-col items-center gap-8"
+                className="flex flex-col mb-8 items-center gap-8"
               >
                 <div className="flex flex-wrap items-center justify-center gap-4">
                   <Link className="m-btn m-btnPrimary" href="/get-started">
                     Get Started
                   </Link>
-                  <button
-                    type="button"
-                    onClick={copyCommand}
-                    className="m-btn m-btnSecondary font-mono text-xs"
-                  >
-                    {copied ? (
-                      <Check className="h-3 w-3" />
-                    ) : (
-                      <Copy className="h-3 w-3" />
-                    )}
-                    {installCommand}
-                  </button>
                 </div>
+              </motion.div>
+
+              <motion.div
+                variants={fadeUp}
+                className="flex flex-col items-center border-y w-full border-dashed gap-2 py-4"
+              >
+                <button
+                  type="button"
+                  onClick={copyCommand}
+                  className=" flex gap-2 flex-row font-mono text-xs cursor-copy"
+                >
+                  {copied ? (
+                    <Check className="h-4 w-4" />
+                  ) : (
+                    <Copy className="h-4 w-4" />
+                  )}
+                  {installCommand}
+                </button>
               </motion.div>
             </motion.div>
           </section>
@@ -240,7 +247,6 @@ export default function Home() {
                   duration: 0.5,
                   ease: [0.22, 1, 0.36, 1],
                 }}
-                
                 className="hidden sm:block text-center mt-8 text-sm text-muted-foreground/60 font-medium tracking-wide"
               >
                 Drag to browse • Arrow keys to navigate
