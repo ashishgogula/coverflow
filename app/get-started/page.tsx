@@ -18,7 +18,7 @@ const animeItems: CoverFlowItem[] = [
   { id: 7, image: "/anime/Tanjiro.jpeg", title: "Tanjiro Kamado" },
   { id: 8, image: "/anime/Nezuko.jpeg", title: "Nezuko Kamado" },
   { id: 9, image: "/anime/Zenitsu.jpeg", title: "Zenitsu Agatsuma" },
-  { id: 10, image: "/anime/Inosuke.jpeg", title: "Inosuke Hashibira" },
+  { id: 10, image: "/anime/InosukeH.jpeg", title: "Inosuke Hashibira" },
   { id: 11, image: "/anime/tokitou.jpeg", title: "Muichiro Tokito" },
 ];
 

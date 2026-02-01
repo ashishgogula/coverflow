@@ -15,8 +15,8 @@ export function Navbar() {
     >
       <div className="m-navSurface">
         <div className="m-navInner px-4">
-          <div className="m-navBrand">
-            <div className="flex h-12 w-12 items-center justify-center rounded-md  overflow-hidden relative text-foreground">
+          <Link href="/" className="m-navBrand flex items-center">
+            <div className="flex h-12 w-12 items-center justify-center rounded-md overflow-hidden relative text-foreground">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -30,17 +30,15 @@ export function Navbar() {
               >
                 <path d="M1.5 8v8" />
                 <path d="M4 6v12" />
-
                 <rect x="7" y="4" width="10" height="16" rx="2" />
-
                 <path d="M20 6v12" />
                 <path d="M22.5 8v8" />
               </svg>
             </div>
-            <Link href="/" className="font-bold">
-              Cover Flow
-            </Link>
-          </div>
+
+            <span className="font-bold">Cover Flow</span>
+          </Link>
+
           <nav className="m-navLinks" aria-label="Primary">
             <Link className="m-navLink" href="/get-started">
               Docs

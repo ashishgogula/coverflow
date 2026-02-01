@@ -121,8 +121,8 @@ export default function Home() {
   const fadeUp: Variants = {
     hidden: {
       opacity: 0,
-      y: 12,
-      filter: "blur(4px)",
+      y: 100,
+      filter: "blur(20px)",
     },
     visible: {
       opacity: 1,
@@ -142,23 +142,6 @@ export default function Home() {
       transition: {
         staggerChildren: 0.08,
         delayChildren: 0.1,
-      },
-    },
-  };
-
-  const cardVariant: Variants = {
-    hidden: {
-      opacity: 0,
-      scale: 0.98,
-      filter: "blur(4px)",
-    },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      filter: "blur(0px)",
-      transition: {
-        duration: 0.4,
-        ease: [0.22, 1, 0.36, 1],
       },
     },
   };
@@ -239,7 +222,7 @@ export default function Home() {
                   }, 1200);
                 }}
                 transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-                className="relative w-full h-[600px] aspect-[16/9] md:aspect-[2/1] flex flex-col items-center justify-center"
+                className="relative w-full h-[500px] sm:h-[620px] aspect-[16/9] md:aspect-[2/1] flex flex-col items-center justify-center"
               >
                 <CoverFlow
                   items={albums}
@@ -257,7 +240,8 @@ export default function Home() {
                   duration: 0.5,
                   ease: [0.22, 1, 0.36, 1],
                 }}
-                className="text-center mt-8 text-sm text-muted-foreground/60 font-medium tracking-wide"
+                
+                className="hidden sm:block text-center mt-8 text-sm text-muted-foreground/60 font-medium tracking-wide"
               >
                 Drag to browse • Arrow keys to navigate
               </motion.div>
@@ -273,11 +257,11 @@ export default function Home() {
               id="principles"
               initial="hidden"
               whileInView="visible"
-              viewport={{ once: true, margin: "-80px", amount: 0.2 }}
+              viewport={{ once: true, margin: "-40px" }}
               variants={staggerContainer}
             >
               <motion.div
-                variants={cardVariant}
+                variants={fadeUp}
                 className="m-bentoCard m-bentoCardWide flex flex-col justify-between overflow-hidden min-h-[280px] md:min-h-[320px]"
               >
                 <div className="absolute inset-0 flex items-center justify-center opacity-[0.03]">
@@ -293,9 +277,8 @@ export default function Home() {
                 </div>
               </motion.div>
 
-              {/* Tall Feature: Keyboard */}
               <motion.div
-                variants={cardVariant}
+                variants={fadeUp}
                 className="m-bentoCard m-bentoCardTall flex flex-col justify-between overflow-hidden min-h-[280px] md:min-h-[320px]"
               >
                 <div className="absolute inset-0 flex items-center justify-center opacity-[0.03]">
@@ -318,9 +301,8 @@ export default function Home() {
                 </div>
               </motion.div>
 
-              {/* Small Feature: Layout */}
               <motion.div
-                variants={cardVariant}
+                variants={fadeUp}
                 className="m-bentoCard m-bentoCardSmall flex flex-col justify-between overflow-hidden min-h-[180px] md:min-h-[220px]"
               >
                 <div className="absolute inset-0 flex items-center justify-center opacity-[0.03]">
@@ -337,9 +319,8 @@ export default function Home() {
                 </div>
               </motion.div>
 
-              {/* Small Feature: Mobile */}
               <motion.div
-                variants={cardVariant}
+                variants={fadeUp}
                 className="m-bentoCard m-bentoCardSmall flex flex-col justify-between overflow-hidden min-h-[180px] md:min-h-[220px]"
               >
                 <div className="absolute inset-0 flex items-center justify-center opacity-[0.03]">
@@ -355,9 +336,8 @@ export default function Home() {
                 </div>
               </motion.div>
 
-              {/* Small Feature: Dark Mode */}
               <motion.div
-                variants={cardVariant}
+                variants={fadeUp}
                 className="m-bentoCard m-bentoCardSmall flex flex-col justify-between overflow-hidden min-h-[180px] md:min-h-[220px]"
               >
                 <div className="absolute inset-0 flex items-center justify-center opacity-[0.03]">

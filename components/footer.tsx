@@ -19,16 +19,16 @@ export function Footer() {
             href="https://ashishgogula.in"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-foreground hover:underline underline-offset-4 underline"
+            className="text-foreground hover:underline underline-offset-4 underline font-semibold" 
           >
             Ashish Gogula
           </a>
-          <span>, source code available on</span>
+          <span>. source code available on</span>
           <a
             href="https://github.com/ashishgogula/coverflow"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-foreground hover:underline underline-offset-4 underline"
+            className="text-foreground hover:underline underline-offset-4 underline font-semibold"
           >
             GitHub
           </a>
