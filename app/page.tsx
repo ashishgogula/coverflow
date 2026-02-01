@@ -3,10 +3,7 @@
 import { CoverFlow, CoverFlowItem } from "@/components/coverflow";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
-import { ThemeToggle } from "@/components/theme-toggle";
 import {
-  Github,
-  Heart,
   Check,
   Copy,
   Layers,
@@ -20,7 +17,7 @@ import {
 import Link from "next/link";
 import { useMemo, useState, useEffect } from "react";
 import { motion, type Variants } from "motion/react";
-import Image from "next/image";
+import { HighlightWords } from "@/components/highlight-words";
 
 const albums: CoverFlowItem[] = [
   {
@@ -190,11 +187,17 @@ export default function Home() {
               <motion.h2 variants={fadeUp} className="m-h1 mb-4 max-w-[20ch]">
                 iOS-like Cover Flow for React.
               </motion.h2>
-              <motion.p variants={fadeUp} className="m-sub mb-12 max-w-[60ch]">
+
+              <motion.div
+                variants={fadeUp}
+                className="m-sub mb-12 max-w-[60ch]"
+              >
                 Fluid, physical motion with zero layout shifts.
-                <br className="hidden md:block" />
-                Built for the modern web with Motion and Tailwind.
-              </motion.p>
+                <HighlightWords
+                  text="Built for the modern web with Motion and Tailwind."
+                  highlights={["Motion", "Tailwind"]}
+                />
+              </motion.div>
 
               <motion.div
                 variants={fadeUp}
@@ -381,7 +384,6 @@ export default function Home() {
             variants={staggerContainer}
           >
             <div className="max-w-xl mx-auto px-6 text-center">
-
               <motion.h2
                 variants={fadeUp}
                 className="text-2xl md:text-3xl font-semibold tracking-tight mb-4"
