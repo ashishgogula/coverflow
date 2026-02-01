@@ -84,8 +84,7 @@
   }
 
   .m-navSurface {
-    @apply border-b border-dashed border-border bg-background/80;
-    backdrop-filter: blur(16px);
+    @apply border-b border-dashed border-border bg-background;
   }
 
   .m-navBrand {
