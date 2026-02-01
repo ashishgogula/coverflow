@@ -57,7 +57,6 @@ export function CoverFlow({
   });
 
   useEffect(() => {
-    // If initialIndex changes (e.g. from parent delay), update activeIndex
     setActiveIndex(initialIndex);
   }, [initialIndex]);
 
@@ -292,7 +291,6 @@ function CoverFlowItemCard({
       onClick={onClick}
     >
       <div className="relative w-full h-full rounded-xl shadow-2xl bg-black">
-        {/* Glass highlight on edges */}
         <div className="absolute inset-0 rounded-xl border border-white/10 z-20 pointer-events-none" />
 
         <div className="relative w-full h-full overflow-hidden rounded-xl">
@@ -306,7 +304,6 @@ function CoverFlowItemCard({
             priority={Math.abs(index - scrollX.get()) < 2}
             quality={95}
           />
-          {/* Subtle gloss gradient */}
           <div className="absolute inset-0 bg-linear-to-tr from-white/10 to-transparent opacity-0 dark:opacity-20 pointer-events-none z-10" />
         </div>
       </div>

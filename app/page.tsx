@@ -89,7 +89,6 @@ const albums: CoverFlowItem[] = [
 export default function Home() {
   const [copied, setCopied] = useState(false);
   const [itemSize, setItemSize] = useState({ width: 400, height: 400 });
-  // Start at index 0, then animate to 5 after hero load
   const [initialIndex, setInitialIndex] = useState(0);
   const installCommand = useMemo(() => "coming soon", []);
 
@@ -121,7 +120,6 @@ export default function Home() {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  // Linear/Notion-style subtle fade up
   const fadeUp: Variants = {
     hidden: {
       opacity: 0,
@@ -134,12 +132,11 @@ export default function Home() {
       filter: "blur(0px)",
       transition: {
         duration: 0.5,
-        ease: [0.22, 1, 0.36, 1], // Custom easing similar to Linear
+        ease: [0.22, 1, 0.36, 1],
       },
     },
   };
 
-  // Stagger container with reduced delays
   const staggerContainer: Variants = {
     hidden: { opacity: 0 },
     visible: {
@@ -151,7 +148,6 @@ export default function Home() {
     },
   };
 
-  // Subtle scale fade for cards
   const cardVariant: Variants = {
     hidden: {
       opacity: 0,
@@ -276,7 +272,6 @@ export default function Home() {
               viewport={{ once: true, margin: "-80px", amount: 0.2 }}
               variants={staggerContainer}
             >
-              {/* Large Feature: Physics */}
               <motion.div
                 variants={cardVariant}
                 className="m-bentoCard m-bentoCardWide flex flex-col justify-between overflow-hidden min-h-[280px] md:min-h-[320px]"
@@ -385,7 +380,6 @@ export default function Home() {
             variants={staggerContainer}
           >
             <div className="max-w-xl mx-auto px-6 text-center">
-              {/* Quiet label instead of icon */}
 
               <motion.h2
                 variants={fadeUp}

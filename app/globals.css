@@ -100,7 +100,6 @@
     @apply transition-colors hover:text-foreground;
   }
 
-  /* Bento Grid System */
   .m-bentoGrid {
     @apply grid grid-cols-1 gap-4 md:grid-cols-6 md:gap-6;
   }
@@ -143,7 +142,6 @@
     @apply flex items-center gap-1;
   }
 
-  /* Grid System */
   .m-gridContainer {
     @apply relative border-x border-dashed border-border;
     background-image: radial-gradient(
@@ -170,7 +168,6 @@
 
   .m-gridOverlay {
     @apply absolute inset-0 pointer-events-none;
-    /* Removed the previous gradient grid to avoid double lines with the new explicit ones */
   }
 
   .m-gridLines {
