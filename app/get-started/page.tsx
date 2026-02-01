@@ -1,14 +1,14 @@
 "use client";
 
-import { ThemeToggle } from "@/components/theme-toggle";
-import { Github, Heart, Check, Copy } from "lucide-react";
+import { Github, Check, Copy } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { Navbar } from "@/components/navbar";
 import { CoverFlow, CoverFlowItem } from "@/components/coverflow";
+import { motion, type Variants } from "motion/react";
 
 const animeItems: CoverFlowItem[] = [
-  { id: 1, image: "/anime/𝗦𝗵𝗶𝗻𝗮𝘇𝘂𝗴𝗮𝘄𝗮 ✩.jpeg", title: "Sanemi Shinazugawa" },
+  { id: 1, image: "/anime/Shinazugawa.jpeg", title: "Sanemi Shinazugawa" },
   { id: 2, image: "/anime/Obanai.jpeg", title: "Obanai Iguro" },
   { id: 3, image: "/anime/Mitsuri.jpeg", title: "Mitsuri Kanroji" },
   { id: 4, image: "/anime/giyu.jpeg", title: "Giyu Tomioka" },
@@ -17,7 +17,8 @@ const animeItems: CoverFlowItem[] = [
   { id: 7, image: "/anime/Tanjiro.jpeg", title: "Tanjiro Kamado" },
   { id: 8, image: "/anime/Nezuko.jpeg", title: "Nezuko Kamado" },
   { id: 9, image: "/anime/Zenitsu.jpeg", title: "Zenitsu Agatsuma" },
-  { id: 10, image: "/anime/tokitou.jpeg", title: "Muichiro Tokito" },
+  { id: 10, image: "/anime/Inosuke.jpeg", title: "Inosuke Hashibira" },
+  { id: 11, image: "/anime/tokitou.jpeg", title: "Muichiro Tokito" },
 ];
 
 export default function GetStarted() {
@@ -28,6 +29,24 @@ export default function GetStarted() {
     navigator.clipboard.writeText(installCommand);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const fadeUp: Variants = {
+    hidden: { opacity: 0, y: 12, filter: "blur(4px)" },
+    visible: { 
+      opacity: 1, 
+      y: 0, 
+      filter: "blur(0px)",
+      transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } 
+    },
+  };
+
+  const staggerContainer: Variants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.08, delayChildren: 0.1 },
+    },
   };
 
   return (
@@ -45,66 +64,95 @@ export default function GetStarted() {
             id="get-started"
             className="max-w-4xl mx-auto space-y-16 py-12 relative z-10 px-6"
           >
-            <div>
-              <h1 className="text-4xl font-semibold tracking-tight mb-8">
+            <motion.div
+              initial="hidden"
+              animate="visible"
+              variants={staggerContainer}
+            >
+              <motion.h1 
+                variants={fadeUp}
+                className="text-4xl font-semibold tracking-tight mb-8"
+              >
                 Get Started
-              </h1>
-              <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
+              </motion.h1>
+              <motion.p 
+                variants={fadeUp}
+                className="text-xl text-muted-foreground mb-8 leading-relaxed"
+              >
                 Install the component via CLI or copy the source code directly
                 into your project.
-              </p>
-            </div>
+              </motion.p>
+            </motion.div>
 
-            <div className="space-y-8">
-              <h3 className="text-2xl font-medium tracking-tight">Usage</h3>
-              <div className="rounded-2xl border border-border/40 bg-secondary/20 overflow-hidden shadow-sm">
-                <div className="h-[500px] w-full border-b border-border/40 relative bg-background">
+            <motion.div 
+              variants={staggerContainer}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-50px" }}
+              className="space-y-8"
+            >
+              <motion.h3 variants={fadeUp} className="text-2xl font-medium tracking-tight">Usage</motion.h3>
+              <motion.div variants={fadeUp} className="rounded-2xl border border-border/40 bg-secondary/20 overflow-hidden shadow-sm">
+                <div className="h-[400px] w-full border-b border-border/40 relative bg-background">
                   <CoverFlow
                     items={animeItems}
                     itemWidth={250}
                     itemHeight={250}
-                    initialIndex={3}
+                    initialIndex={5}
                     enableReflection={true}
                   />
                 </div>
                 <div className="p-6 overflow-x-auto">
                   <pre className="text-sm font-mono text-muted-foreground leading-relaxed">
-                    {`import { CoverFlow } from "@/components/coverflow";
-                      const items =  [
-                        { id: 1, image: "/anime/𝗦𝗵𝗶𝗻𝗮𝘇𝘂𝗴𝗮𝘄𝗮 ✩.jpeg", title: "Sanemi Shinazugawa" },
-                        { id: 2, image: "/anime/Obanai.jpeg", title: "Obanai Iguro" },
-                        { id: 3, image: "/anime/Mitsuri.jpeg", title: "Mitsuri Kanroji" },
-                        { id: 4, image: "/anime/giyu.jpeg", title: "Giyu Tomioka" },
-                        { id: 5, image: "/anime/Shinobu.jpeg", title: "Shinobu Kocho" },
-                        { id: 6, image: "/anime/kanao.jpeg", title: "Kanao Tsuyuri" },
-                        { id: 7, image: "/anime/Tanjiro.jpeg", title: "Tanjiro Kamado" },
-                        { id: 8, image: "/anime/Nezuko.jpeg", title: "Nezuko Kamado" },
-                        { id: 9, image: "/anime/Zenitsu.jpeg", title: "Zenitsu Agatsuma" },
-                        { id: 10, image: "/anime/tokitou.jpeg", title: "Muichiro Tokito" },
-                      ];
+                    {`"use client";
 
-                      export function Demo() {
-                        return (
-                          <div className="h-[400px] w-full">
-                            <CoverFlow 
-                              items={items} 
-                              itemWidth={250} 
-                              itemHeight={250} 
-                            />
-                          </div>
-                        );
-                      }`}
+import { CoverFlow, CoverFlowItem } from "@/components/ui/coverflow";
+
+const animeItems: CoverFlowItem[] = [
+  { id: 1, image: "/anime/Shinazugawa.jpeg", title: "Sanemi Shinazugawa" },
+  { id: 2, image: "/anime/Obanai.jpeg", title: "Obanai Iguro" },
+  { id: 3, image: "/anime/Mitsuri.jpeg", title: "Mitsuri Kanroji" },
+  { id: 4, image: "/anime/giyu.jpeg", title: "Giyu Tomioka" },
+  { id: 5, image: "/anime/Shinobu.jpeg", title: "Shinobu Kocho" },
+  { id: 6, image: "/anime/kanao.jpeg", title: "Kanao Tsuyuri" },
+  { id: 7, image: "/anime/Tanjiro.jpeg", title: "Tanjiro Kamado" },
+  { id: 8, image: "/anime/Nezuko.jpeg", title: "Nezuko Kamado" },
+  { id: 9, image: "/anime/Zenitsu.jpeg", title: "Zenitsu Agatsuma" },
+  { id: 10, image: "/anime/Inosuke.jpeg", title: "Inosuke Hashibira" },
+  { id: 11, image: "/anime/tokitou.jpeg", title: "Muichiro Tokito" },
+];
+
+export default function CoverFlowDemo() {
+  return (
+    <div className="h-[400px] w-full border-b border-border/40 relative bg-background">
+      <CoverFlow
+        items={animeItems}
+        itemWidth={250}
+        itemHeight={250}
+        initialIndex={3}
+        enableReflection={true}
+      />
+    </div>
+  );
+}
+`}
                   </pre>
                 </div>
-              </div>
-            </div>
+              </motion.div>
+            </motion.div>
 
-            <div className="space-y-8">
-              <h3 className="text-2xl font-medium tracking-tight">
+            <motion.div 
+              variants={staggerContainer}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-50px" }}
+              className="space-y-8"
+            >
+              <motion.h3 variants={fadeUp} className="text-2xl font-medium tracking-tight">
                 Installation
-              </h3>
+              </motion.h3>
 
-              <div className="space-y-4">
+              <motion.div variants={fadeUp} className="space-y-4">
                 <div className="font-medium text-sm text-muted-foreground uppercase tracking-wider">
                   CLI
                 </div>
@@ -123,9 +171,9 @@ export default function GetStarted() {
                     </button>
                   </div>
                 </div>
-              </div>
+              </motion.div>
 
-              <div className="space-y-4">
+              <motion.div variants={fadeUp} className="space-y-4">
                 <div className="font-medium text-sm text-muted-foreground uppercase tracking-wider">
                   Manual
                 </div>
@@ -150,12 +198,18 @@ export default function GetStarted() {
                     View Source <Github className="h-3 w-3" />
                   </Link>
                 </div>
-              </div>
-            </div>
+              </motion.div>
+            </motion.div>
 
-            <div className="space-y-8">
-              <h3 className="text-2xl font-medium tracking-tight">Props</h3>
-              <div className="overflow-hidden rounded-2xl border border-border/40 shadow-sm">
+            <motion.div 
+              variants={staggerContainer}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-50px" }}
+              className="space-y-8"
+            >
+              <motion.h3 variants={fadeUp} className="text-2xl font-medium tracking-tight">Props</motion.h3>
+              <motion.div variants={fadeUp} className="overflow-hidden rounded-2xl border border-border/40 shadow-sm">
                 <table className="w-full text-left text-sm">
                   <thead className="bg-secondary/30 text-muted-foreground font-medium">
                     <tr>
@@ -306,8 +360,8 @@ export default function GetStarted() {
                     </tr>
                   </tbody>
                 </table>
-              </div>
-            </div>
+              </motion.div>
+            </motion.div>
           </section>
         </div>
       </main>

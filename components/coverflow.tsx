@@ -60,7 +60,7 @@ export function CoverFlow({
     // If initialIndex changes (e.g. from parent delay), update activeIndex
     setActiveIndex(initialIndex);
   }, [initialIndex]);
-  
+
   useEffect(() => {
     onIndexChange?.(activeIndex);
   }, [activeIndex, onIndexChange]);
@@ -69,11 +69,13 @@ export function CoverFlow({
     scrollX.set(activeIndex);
   }, [activeIndex, scrollX]);
 
-  const jumpToIndex = useCallback((index: number) => {
-    const clamped = Math.min(Math.max(index, 0), items.length - 1);
-    setActiveIndex(clamped);
-  }, [items.length]);
-
+  const jumpToIndex = useCallback(
+    (index: number) => {
+      const clamped = Math.min(Math.max(index, 0), items.length - 1);
+      setActiveIndex(clamped);
+    },
+    [items.length],
+  );
 
   const onKeyDown = useCallback(
     (e: ReactKeyboardEvent<HTMLDivElement>) => {
@@ -86,7 +88,7 @@ export function CoverFlow({
         jumpToIndex(activeIndex + 1);
       }
     },
-    [activeIndex, jumpToIndex]
+    [activeIndex, jumpToIndex],
   );
 
   const onDrag = (event: any, info: PanInfo) => {
@@ -112,9 +114,10 @@ export function CoverFlow({
     <div
       ref={containerRef}
       className={
-        "relative w-full h-full flex flex-col justify-center items-center overflow-hidden bg-transparent perspective-1000 focus:outline-none " +
+        "relative w-full h-full flex flex-col justify-center items-center overflow-hidden bg-transparent focus:outline-none " +
         (className ?? "")
       }
+      style={{ perspective: 1000 }}
       role="region"
       aria-label="Cover Flow"
       tabIndex={0}
@@ -131,7 +134,10 @@ export function CoverFlow({
         style={{ opacity: 0 }}
       />
 
-      <div className="relative w-full h-full flex items-center justify-center preserve-3d">
+      <div
+        className="relative w-full h-full flex items-center justify-center"
+        style={{ transformStyle: "preserve-3d" }}
+      >
         {items.map((item, index) => (
           <CoverFlowItemCard
             key={item.id}
@@ -157,25 +163,25 @@ export function CoverFlow({
       </div>
 
       <div className="absolute bottom-8 left-0 right-0 flex flex-col items-center justify-center pointer-events-none z-40 transition-opacity duration-300">
-         <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ 
-                opacity: 1, 
-                y: 0,
-            }}
-            key={activeIndex}
-            transition={{ duration: 0.4, ease: "easeOut" }}
-            className="text-center"
-         >
-            <h3 className="text-2xl font-semibold text-foreground tracking-tight drop-shadow-md">
-                {items[activeIndex]?.title}
-            </h3>
-            {items[activeIndex]?.subtitle && (
-                <p className="text-foreground/60 text-sm mt-1 font-medium tracking-wide">
-                    {items[activeIndex]?.subtitle}
-                </p>
-            )}
-         </motion.div>
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{
+            opacity: 1,
+            y: 0,
+          }}
+          key={activeIndex}
+          transition={{ duration: 0.4, ease: "easeOut" }}
+          className="text-center"
+        >
+          <h3 className="text-2xl font-semibold text-foreground tracking-tight drop-shadow-md">
+            {items[activeIndex]?.title}
+          </h3>
+          {items[activeIndex]?.subtitle && (
+            <p className="text-foreground/60 text-sm mt-1 font-medium tracking-wide">
+              {items[activeIndex]?.subtitle}
+            </p>
+          )}
+        </motion.div>
       </div>
     </div>
   );
@@ -218,47 +224,47 @@ function CoverFlowItemCard({
   const t = useTransform(position, (pos) => {
     const absPos = Math.abs(pos);
     const isCenter = absPos < 0.5;
-    
+
     let rY = 0;
     if (pos < -0.5) rY = rotation;
     if (pos > 0.5) rY = -rotation;
-    
+
     if (!isCenter) {
     } else {
-        rY = -pos * (rotation * 2);
+      rY = -pos * (rotation * 2);
     }
 
     let x = 0;
     if (pos < 0) {
-        const stackIndex = Math.max(0, absPos - 1);
-        x = -centerGap - stackIndex * stackSpacing;
-        
-        if (absPos < 1) {
-            x = pos * centerGap;
-        }
+      const stackIndex = Math.max(0, absPos - 1);
+      x = -centerGap - stackIndex * stackSpacing;
+
+      if (absPos < 1) {
+        x = pos * centerGap;
+      }
     } else {
-        const stackIndex = Math.max(0, absPos - 1);
-        x = centerGap + stackIndex * stackSpacing;
-        
-        if (absPos < 1) {
-            x = pos * centerGap;
-        }
+      const stackIndex = Math.max(0, absPos - 1);
+      x = centerGap + stackIndex * stackSpacing;
+
+      if (absPos < 1) {
+        x = pos * centerGap;
+      }
     }
 
     let z = 0;
     if (absPos > 0.5) {
-        z = -200;
+      z = -200;
     } else {
-        z = Math.abs(pos) * -400;
+      z = Math.abs(pos) * -400;
     }
 
     return {
-        rotateY: rY,
-        x,
-        z,
+      rotateY: rY,
+      x,
+      z,
     };
   });
-  
+
   const rotateY = useTransform(t, (v) => v.rotateY);
   const x = useTransform(t, (v) => v.x);
   const z = useTransform(t, (v) => v.z);
@@ -286,45 +292,48 @@ function CoverFlowItemCard({
       onClick={onClick}
     >
       <div className="relative w-full h-full rounded-xl shadow-2xl bg-black">
-         {/* Glass highlight on edges */}
-         <div className="absolute inset-0 rounded-xl border border-white/10 z-20 pointer-events-none" />
-         
-         <div className="relative w-full h-full overflow-hidden rounded-xl">
-            <Image
-              src={item.image}
-              alt={item.title}
-              fill
-              className="object-cover select-none pointer-events-none"
-              draggable={false}
-              sizes={`${width}px`}
-              priority={Math.abs(index - scrollX.get()) < 2}
-              quality={95}
-            />
-            {/* Subtle gloss gradient */}
-            <div className="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent opacity-0 dark:opacity-20 pointer-events-none z-10" />
-         </div>
+        {/* Glass highlight on edges */}
+        <div className="absolute inset-0 rounded-xl border border-white/10 z-20 pointer-events-none" />
+
+        <div className="relative w-full h-full overflow-hidden rounded-xl">
+          <Image
+            src={item.image}
+            alt={item.title}
+            fill
+            className="object-cover select-none pointer-events-none"
+            draggable={false}
+            sizes={`${width}px`}
+            priority={Math.abs(index - scrollX.get()) < 2}
+            quality={95}
+          />
+          {/* Subtle gloss gradient */}
+          <div className="absolute inset-0 bg-linear-to-tr from-white/10 to-transparent opacity-0 dark:opacity-20 pointer-events-none z-10" />
+        </div>
       </div>
 
       {enableReflection && (
-        <div 
+        <div
           className="absolute left-0 right-0 overflow-hidden pointer-events-none"
-          style={{ 
-            top: "100%", 
+          style={{
+            top: "100%",
             width: width,
-            height: height * 0.35, 
-            marginTop: "2px"
+            height: height * 0.35,
+            marginTop: "2px",
           }}
         >
-           <div className="relative w-full h-full opacity-40" style={{ transform: "scaleY(-1)" }}>
-               <Image 
-                  src={item.image} 
-                  alt="" 
-                  fill
-                  className="object-cover blur-[1px]"
-                  sizes={`${width}px`}
-               />
-               <div className="absolute inset-0 bg-gradient-to-b from-background/90 to-transparent" />
-           </div>
+          <div
+            className="relative w-full h-full opacity-40"
+            style={{ transform: "scaleY(-1)" }}
+          >
+            <Image
+              src={item.image}
+              alt=""
+              fill
+              className="object-cover blur-[1px]"
+              sizes={`${width}px`}
+            />
+            <div className="absolute inset-0 bg-linear-to-b from-background/90 to-transparent" />
+          </div>
         </div>
       )}
     </motion.div>

@@ -1,19 +1,37 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1200" viewBox="0 0 1200 1200">
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="800" viewBox="0 0 800 800">
   <defs>
-    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#f4f2ee"/>
-      <stop offset="1" stop-color="#ffffff"/>
+    <filter id="blurcover-10.svg" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="60"/>
+    </filter>
+    <linearGradient id="gradcover-10.svg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#831843;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f472b6;stop-opacity:1" />
     </linearGradient>
   </defs>
-  <rect width="1200" height="1200" fill="url(#g)"/>
-  <rect x="48" y="48" width="1104" height="1104" rx="56" fill="none" stroke="rgba(0,0,0,0.06)"/>
-  <g fill="rgba(0,0,0,0.86)" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial" letter-spacing="-0.02em">
-    <text x="96" y="160" font-size="42" opacity="0.6">Cover Flow</text>
-    <text x="96" y="230" font-size="78" font-weight="600">Summer</text>
-    <text x="96" y="312" font-size="78" font-weight="600">Vibes</text>
+  
+  <!-- Background -->
+  <rect width="800" height="800" fill="url(#gradcover-10.svg)"/>
+  
+  <!-- Subtle Gradient Circles (Mesh-like) -->
+  <g filter="url(#blurcover-10.svg)" opacity="0.7">
+    <circle cx="200" cy="200" r="300" fill="#f472b6" opacity="0.6"/>
+    <circle cx="600" cy="600" r="350" fill="#22d3ee" opacity="0.6"/>
+    <circle cx="600" cy="100" r="250" fill="#facc15" opacity="0.5"/>
+    <circle cx="100" cy="700" r="300" fill="#facc15" opacity="0.4"/>
   </g>
-  <g opacity="0.12">
-    <circle cx="900" cy="820" r="320" fill="#22c55e"/>
-    <circle cx="990" cy="740" r="220" fill="#0ea5e9"/>
+
+  <!-- Glassy Overlay/Texture effect -->
+  <rect width="800" height="800" fill="rgba(255,255,255,0.03)"/>
+  <rect x="20" y="20" width="760" height="760" rx="40" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
+
+  <!-- Typography -->
+  <g fill="white" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+    <text x="60" y="100" font-size="24" opacity="0.6" font-weight="500">Cover Flow</text>
+    <text x="60" y="180" font-size="72" font-weight="700" letter-spacing="-2">Summer</text>
+    <text x="60" y="250" font-size="72" font-weight="700" letter-spacing="-2">Vibes</text>
+    
+    <!-- Decorative element -->
+    <circle cx="700" cy="700" r="60" fill="rgba(255,255,255,0.1)"/>
+    <circle cx="700" cy="700" r="30" fill="rgba(255,255,255,0.2)"/>
   </g>
 </svg>

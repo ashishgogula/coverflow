@@ -54,10 +54,11 @@ const albums: CoverFlowItem[] = [
   },
   {
     id: 6,
-    image: "/covers/cover-06.svg",
-    title: "Coffee House",
-    subtitle: "Acoustic Vibes • 2024",
+    image: "/covers/cover-10.svg",
+    title: "Summer Vibes",
+    subtitle: "Beach Party • 2022",
   },
+ 
   {
     id: 7,
     image: "/covers/cover-07.svg",
@@ -76,11 +77,12 @@ const albums: CoverFlowItem[] = [
     title: "Deep Space",
     subtitle: "Ambient Cosmos • 2025",
   },
-  {
+  
+   {
     id: 10,
-    image: "/covers/cover-10.svg",
-    title: "Summer Vibes",
-    subtitle: "Beach Party • 2022",
+    image: "/covers/cover-06.svg",
+    title: "Coffee House",
+    subtitle: "Acoustic Vibes • 2024",
   },
 ];
 
@@ -173,7 +175,7 @@ export default function Home() {
 
       <main>
         <div className="m-wrap border-x border-dashed border-t-0 min-h-screen relative">
-          <section className="relative py-20 border-b border-dashed border-border">
+          <section className="relative pt-20 border-dashed border-border">
             <motion.div
               className="relative z-10 flex flex-col items-center text-center px-4"
               initial="hidden"
@@ -225,7 +227,7 @@ export default function Home() {
 
           <div className="w-full border-dashed border-border/70 relative">
             <div
-              className="max-w-[1400px] mx-auto px-4 md:px-8 pb-24 scroll-mt-18"
+              className="max-w-[1400px] mx-auto px-4 md:px-8 pb-20 scroll-mt-18"
               id="demo"
             >
               <motion.div
@@ -238,7 +240,7 @@ export default function Home() {
                   }, 1200);
                 }}
                 transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-                className="relative w-full aspect-[16/9] md:aspect-[2/1] flex flex-col items-center justify-center"
+                className="relative w-full h-[600px] aspect-[16/9] md:aspect-[2/1] flex flex-col items-center justify-center"
               >
                 <CoverFlow
                   items={albums}
@@ -430,9 +432,28 @@ export default function Home() {
             transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
           >
             <div className="m-footInner px-6">
-              <div className="text-sm font-medium">Built by Ashish Gogula</div>
-             
-            </div>
+  <div className="text-sm font-medium flex flex-wrap  gap-1">
+    <span>Built by</span>
+    <a
+      href="https://ashishgogula.in"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-foreground hover:underline underline-offset-4 underline"
+    >
+      Ashish Gogula
+    </a>
+    <span>, source code available on</span>
+    <a
+      href="https://github.com/ashishgogula/coverflow"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-foreground hover:underline underline-offset-4 underline"
+    >
+      GitHub
+    </a>
+  </div>
+</div>
+
           </motion.footer>
         </div>
       </main>
