@@ -4,6 +4,7 @@ import { Github, Check, Copy } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { Navbar } from "@/components/navbar";
+import { Footer } from "@/components/footer";
 import { CoverFlow, CoverFlowItem } from "@/components/coverflow";
 import { motion, type Variants } from "motion/react";
 
@@ -363,6 +364,8 @@ export default function CoverFlowDemo() {
               </motion.div>
             </motion.div>
           </section>
+          
+          <Footer />
         </div>
       </main>
     </div>
