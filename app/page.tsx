@@ -58,7 +58,7 @@ const albums: CoverFlowItem[] = [
     title: "Summer Vibes",
     subtitle: "Beach Party • 2022",
   },
- 
+
   {
     id: 7,
     image: "/covers/cover-07.svg",
@@ -77,8 +77,8 @@ const albums: CoverFlowItem[] = [
     title: "Deep Space",
     subtitle: "Ambient Cosmos • 2025",
   },
-  
-   {
+
+  {
     id: 10,
     image: "/covers/cover-06.svg",
     title: "Coffee House",
@@ -91,7 +91,7 @@ export default function Home() {
   const [itemSize, setItemSize] = useState({ width: 400, height: 400 });
   // Start at index 0, then animate to 5 after hero load
   const [initialIndex, setInitialIndex] = useState(0);
-  const installCommand = useMemo(() => "npx shadcn add coverflow", []);
+  const installCommand = useMemo(() => "coming soon", []);
 
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
@@ -182,12 +182,11 @@ export default function Home() {
               animate="visible"
               variants={staggerContainer}
             >
-              
               <motion.div variants={fadeUp} className="mb-6">
                 <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-secondary/50 border border-border/40 backdrop-blur-sm transition-colors hover:bg-secondary/80 hover:border-border/80 cursor-default">
                   <span className="flex h-1.5 w-1.5 rounded-full bg-foreground/70" />
                   <span className="text-xs font-medium text-muted-foreground">
-                     A classic interaction, reimagined.
+                    A classic interaction, reimagined.
                   </span>
                 </div>
               </motion.div>
@@ -432,28 +431,27 @@ export default function Home() {
             transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
           >
             <div className="m-footInner px-6">
-  <div className="text-sm font-medium flex flex-wrap  gap-1">
-    <span>Built by</span>
-    <a
-      href="https://ashishgogula.in"
-      target="_blank"
-      rel="noopener noreferrer"
-      className="text-foreground hover:underline underline-offset-4 underline"
-    >
-      Ashish Gogula
-    </a>
-    <span>, source code available on</span>
-    <a
-      href="https://github.com/ashishgogula/coverflow"
-      target="_blank"
-      rel="noopener noreferrer"
-      className="text-foreground hover:underline underline-offset-4 underline"
-    >
-      GitHub
-    </a>
-  </div>
-</div>
-
+              <div className="text-sm font-medium flex flex-wrap  gap-1">
+                <span>Built by</span>
+                <a
+                  href="https://ashishgogula.in"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-foreground hover:underline underline-offset-4 underline"
+                >
+                  Ashish Gogula
+                </a>
+                <span>, source code available on</span>
+                <a
+                  href="https://github.com/ashishgogula/coverflow"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-foreground hover:underline underline-offset-4 underline"
+                >
+                  GitHub
+                </a>
+              </div>
+            </div>
           </motion.footer>
         </div>
       </main>

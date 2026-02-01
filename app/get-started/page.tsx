@@ -182,7 +182,7 @@ export default function CoverFlowDemo() {
                     1. Install dependencies:
                   </p>
                   <div className="rounded-lg bg-secondary/50 p-3 font-mono text-xs mb-6">
-                    npm install motion lucide-react
+                    npm install motion
                   </div>
                   <p className="text-sm text-muted-foreground mb-4">
                     2. Copy the component code into{" "}
