@@ -90,7 +90,7 @@ export default function Home() {
   const [initialIndex, setInitialIndex] = useState(0);
   const installCommand = useMemo(
     () =>
-      "npx shadcn@latest add https://coverflow.ashishgogula.in/r/coverflow.json",
+      "npx shadcn add https://ashishgogula.in/r/coverflow.json",
     [],
   );
 

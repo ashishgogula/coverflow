@@ -2,7 +2,7 @@
 
 import { Github, Check, Copy, LayoutGrid } from "lucide-react";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { CoverFlow, CoverFlowItem } from "@/components/coverflow";
@@ -28,10 +28,10 @@ export default function GetStarted() {
   const [packageManager, setPackageManager] = useState("pnpm");
 
   const commands = {
-    pnpm: "pnpm dlx shadcn@latest add https://coverflow.ashishgogula.in/r/coverflow.json",
-    npm: "npx shadcn@latest add https://coverflow.ashishgogula.in/r/coverflow.json",
-    yarn: "npx shadcn@latest add https://coverflow.ashishgogula.in/r/coverflow.json",
-    bun: "bun x shadcn@latest add https://coverflow.ashishgogula.in/r/coverflow.json",
+    pnpm: "pnpm dlx shadcn add https://ashishgogula.in/r/coverflow.json",
+    npm: "npx shadcn add https://ashishgogula.in/r/coverflow.json",
+    yarn: "npx shadcn add https://ashishgogula.in/r/coverflow.json",
+    bun: "bun x shadcn add https://ashishgogula.in/r/coverflow.json",
   };
 
   const copyCommand = () => {
@@ -123,8 +123,7 @@ export default function GetStarted() {
                 </div>
                 <div className="p-6 overflow-x-auto">
                   <pre className="text-sm font-mono text-muted-foreground leading-relaxed">
-                    {`"use client";
-
+                    {`
 import { CoverFlow, CoverFlowItem } from "@/components/ui/coverflow";
 
 const animeItems: CoverFlowItem[] = [
