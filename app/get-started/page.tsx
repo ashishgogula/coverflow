@@ -1,12 +1,13 @@
 "use client";
 
-import { Github, Check, Copy } from "lucide-react";
+import { Github, Check, Copy, LayoutGrid } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { CoverFlow, CoverFlowItem } from "@/components/coverflow";
 import { motion, type Variants } from "motion/react";
+import { cn } from "@/lib/utils";
 
 const animeItems: CoverFlowItem[] = [
   { id: 1, image: "/anime/Shinazugawa.jpeg", title: "Sanemi Shinazugawa" },
@@ -24,21 +25,30 @@ const animeItems: CoverFlowItem[] = [
 
 export default function GetStarted() {
   const [copied, setCopied] = useState(false);
-  const installCommand = useMemo(() => "npx shadcn@latest add https://coverflow.ashishgogula.in/r/coverflow.json", []);
+  const [packageManager, setPackageManager] = useState("pnpm");
+
+  const commands = {
+    pnpm: "pnpm dlx shadcn@latest add https://coverflow.ashishgogula.in/r/coverflow.json",
+    npm: "npx shadcn@latest add https://coverflow.ashishgogula.in/r/coverflow.json",
+    yarn: "npx shadcn@latest add https://coverflow.ashishgogula.in/r/coverflow.json",
+    bun: "bun x shadcn@latest add https://coverflow.ashishgogula.in/r/coverflow.json",
+  };
 
   const copyCommand = () => {
-    navigator.clipboard.writeText(installCommand);
+    navigator.clipboard.writeText(
+      commands[packageManager as keyof typeof commands],
+    );
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
   const fadeUp: Variants = {
     hidden: { opacity: 0, y: 12, filter: "blur(4px)" },
-    visible: { 
-      opacity: 1, 
-      y: 0, 
+    visible: {
+      opacity: 1,
+      y: 0,
       filter: "blur(0px)",
-      transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } 
+      transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] },
     },
   };
 
@@ -70,13 +80,13 @@ export default function GetStarted() {
               animate="visible"
               variants={staggerContainer}
             >
-              <motion.h1 
+              <motion.h1
                 variants={fadeUp}
                 className="text-4xl font-semibold tracking-tight mb-8"
               >
                 Get Started
               </motion.h1>
-              <motion.p 
+              <motion.p
                 variants={fadeUp}
                 className="text-xl text-muted-foreground mb-8 leading-relaxed"
               >
@@ -85,15 +95,23 @@ export default function GetStarted() {
               </motion.p>
             </motion.div>
 
-            <motion.div 
+            <motion.div
               variants={staggerContainer}
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, margin: "-50px" }}
               className="space-y-8"
             >
-              <motion.h3 variants={fadeUp} className="text-2xl font-medium tracking-tight">Usage</motion.h3>
-              <motion.div variants={fadeUp} className="rounded-2xl border border-border/40 bg-secondary/20 overflow-hidden shadow-sm">
+              <motion.h3
+                variants={fadeUp}
+                className="text-2xl font-medium tracking-tight"
+              >
+                Usage
+              </motion.h3>
+              <motion.div
+                variants={fadeUp}
+                className="rounded-2xl border border-border/40 bg-secondary/20 overflow-hidden shadow-sm"
+              >
                 <div className="h-[400px] w-full border-b border-border/40 relative bg-background">
                   <CoverFlow
                     items={animeItems}
@@ -142,14 +160,17 @@ export default function CoverFlowDemo() {
               </motion.div>
             </motion.div>
 
-            <motion.div 
+            <motion.div
               variants={staggerContainer}
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, margin: "-50px" }}
               className="space-y-8"
             >
-              <motion.h3 variants={fadeUp} className="text-2xl font-medium tracking-tight">
+              <motion.h3
+                variants={fadeUp}
+                className="text-2xl font-medium tracking-tight"
+              >
                 Installation
               </motion.h3>
 
@@ -157,19 +178,86 @@ export default function CoverFlowDemo() {
                 <div className="font-medium text-sm text-muted-foreground uppercase tracking-wider">
                   CLI
                 </div>
-                <div className="relative rounded-2xl border border-border/40 bg-secondary/30 p-4 font-mono text-sm backdrop-blur-sm">
-                  <div className="flex items-center justify-between">
-                    <code className="text-xs sm:text-sm break-all">{installCommand}</code>
+                <div className="rounded-2xl border border-border/40 bg-card shadow-sm">
+                  <div className="flex rounded-t-2xl items-center justify-between p-2 px-4 border-b border-zinc-200 dark:border-white/10 bg-secondary/50">
+                    <div className="flex items-center gap-4">
+                      <div className="text-muted-foreground">
+                        <LayoutGrid className="w-5 h-5" />
+                      </div>
+                      <div className="flex items-center gap-4">
+                        {["pnpm", "yarn", "npm", "bun"].map((pm) => (
+                          <button
+                            key={pm}
+                            onClick={() => setPackageManager(pm)}
+                            className={cn(
+                              "text-sm font-medium transition-colors relative py-1",
+                              packageManager === pm
+                                ? "text-zinc-900 dark:text-zinc-100"
+                                : "text-muted-foreground hover:text-zinc-900 dark:hover:text-zinc-100",
+                            )}
+                          >
+                            {pm}
+                            {packageManager === pm && (
+                              <motion.div
+                                layoutId="activeTab"
+                                className="absolute -bottom-[13px] left-0 right-0 h-[2px] bg-zinc-900 dark:bg-zinc-100"
+                              />
+                            )}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
                     <button
                       onClick={copyCommand}
-                      className="text-muted-foreground hover:text-foreground transition-colors"
+                      className="text-muted-foreground hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors p-2 hover:bg-zinc-200 dark:hover:bg-white/5 rounded-md"
                     >
                       {copied ? (
-                        <Check className="h-4 w-4" />
+                        <Check className="w-4 h-4" />
                       ) : (
-                        <Copy className="h-4 w-4" />
+                        <Copy className="w-4 h-4" />
                       )}
                     </button>
+                  </div>
+                  <div className="p-4 font-mono text-sm text-zinc-900 dark:text-zinc-100 overflow-x-auto">
+                    {packageManager === "pnpm" && (
+                      <>
+                        <span className="text-blue-600 dark:text-blue-400">
+                          pnpm
+                        </span>{" "}
+                        <span className="text-blue-600 dark:text-blue-400">
+                          dlx
+                        </span>{" "}
+                      </>
+                    )}
+                    {packageManager === "npm" && (
+                      <span className="text-blue-600 dark:text-blue-400">
+                        npx
+                      </span>
+                    )}
+                    {packageManager === "yarn" && (
+                      <span className="text-blue-600 dark:text-blue-400">
+                        npx
+                      </span>
+                    )}
+                    {packageManager === "bun" && (
+                      <>
+                        <span className="text-blue-600 dark:text-blue-400">
+                          bun
+                        </span>{" "}
+                        <span className="text-blue-600 dark:text-blue-400">
+                          x
+                        </span>{" "}
+                      </>
+                    )}{" "}
+                    <span className="text-teal-600 dark:text-cyan-400">
+                      shadcn@latest
+                    </span>{" "}
+                    <span className="text-blue-600 dark:text-blue-400">
+                      add
+                    </span>{" "}
+                    <span className="text-zinc-500 dark:text-zinc-400">
+                      https://coverflow.ashishgogula.in/r/coverflow.json
+                    </span>
                   </div>
                 </div>
               </motion.div>
@@ -202,15 +290,23 @@ export default function CoverFlowDemo() {
               </motion.div>
             </motion.div>
 
-            <motion.div 
+            <motion.div
               variants={staggerContainer}
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, margin: "-50px" }}
               className="space-y-8"
             >
-              <motion.h3 variants={fadeUp} className="text-2xl font-medium tracking-tight">Props</motion.h3>
-              <motion.div variants={fadeUp} className="overflow-hidden rounded-2xl border border-border/40 shadow-sm">
+              <motion.h3
+                variants={fadeUp}
+                className="text-2xl font-medium tracking-tight"
+              >
+                Props
+              </motion.h3>
+              <motion.div
+                variants={fadeUp}
+                className="overflow-hidden rounded-2xl border border-border/40 shadow-sm"
+              >
                 <table className="w-full text-left text-sm">
                   <thead className="bg-secondary/30 text-muted-foreground font-medium">
                     <tr>
@@ -364,7 +460,7 @@ export default function CoverFlowDemo() {
               </motion.div>
             </motion.div>
           </section>
-          
+
           <Footer />
         </div>
       </main>
