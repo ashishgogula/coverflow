@@ -57,6 +57,7 @@ export function Navbar() {
               href="https://github.com/ashishgogula/coverflow"
               target="_blank"
               rel="noreferrer"
+              aria-label="Cover Flow GitHub repository"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"

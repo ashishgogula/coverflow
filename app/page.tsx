@@ -247,7 +247,7 @@ export default function Home() {
                   duration: 0.5,
                   ease: [0.22, 1, 0.36, 1],
                 }}
-                className="hidden sm:block text-center mt-8 text-sm text-muted-foreground/60 font-medium tracking-wide"
+                className="hidden sm:block text-center mt-8 text-sm font-semibold text-foreground tracking-wide"
               >
                 Drag to browse • Arrow keys to navigate
               </motion.div>
