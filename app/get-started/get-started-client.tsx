@@ -43,7 +43,6 @@ export default function GetStartedClient({
     useState<"shadcn" | "primitive">("shadcn");
   const [manualCopied, setManualCopied] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
-  const [isMinimized, setIsMinimized] = useState(false);
 
   const copyManualCode = () => {
     navigator.clipboard.writeText(componentCode);
@@ -417,13 +416,13 @@ export default function CoverFlowDemo() {
                           <motion.button
                             whileHover={{ scale: 1.0 }}
                             whileTap={{ scale: 0.95 }}
-                            onClick={() => setIsMinimized(!isMinimized)}
+                            onClick={() => setIsExpanded(!isExpanded)}
                             className="text-muted-foreground hover:text-foreground transition-colors p-1.5 hover:bg-background/50 rounded-md"
                           >
-                            {isMinimized ? (
-                              <Maximize2 className="w-3.5 h-3.5" />
-                            ) : (
+                            {isExpanded ? (
                               <Minimize2 className="w-3.5 h-3.5" />
+                            ) : (
+                              <Maximize2 className="w-3.5 h-3.5" />
                             )}
                           </motion.button>
                           <motion.button
@@ -443,8 +442,7 @@ export default function CoverFlowDemo() {
                       <motion.div
                         initial={false}
                         animate={{
-                          height: isMinimized ? 400 : isExpanded ? "auto" : 400,
-                         
+                          height: isExpanded ? "auto" : 400,
                         }}
                         transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                         className="relative overflow-hidden"
@@ -454,30 +452,28 @@ export default function CoverFlowDemo() {
                             {componentCode}
                           </pre>
                         </div>
-                        {!isExpanded && !isMinimized && (
+                        {!isExpanded && (
                           <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-card to-transparent pointer-events-none" />
                         )}
                       </motion.div>
-                      {!isMinimized && (
-                        <div className="border-t border-border/50 bg-secondary/30 p-2 flex justify-center">
-                          <button
-                            onClick={() => setIsExpanded(!isExpanded)}
-                            className="flex items-center gap-2 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5 rounded-md hover:bg-background/50"
-                          >
-                            {isExpanded ? (
-                              <>
-                                <ChevronUp className="w-3.5 h-3.5" />
-                                Collapse code
-                              </>
-                            ) : (
-                              <>
-                                <ChevronDown className="w-3.5 h-3.5" />
-                                Expand code
-                              </>
-                            )}
-                          </button>
-                        </div>
-                      )}
+                      <div className="border-t border-border/50 bg-secondary/30 p-2 flex justify-center">
+                        <button
+                          onClick={() => setIsExpanded(!isExpanded)}
+                          className="flex items-center gap-2 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5 rounded-md hover:bg-background/50"
+                        >
+                          {isExpanded ? (
+                            <>
+                              <ChevronUp className="w-3.5 h-3.5" />
+                              Collapse code
+                            </>
+                          ) : (
+                            <>
+                              <ChevronDown className="w-3.5 h-3.5" />
+                              Expand code
+                            </>
+                          )}
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -659,7 +655,6 @@ export default function CoverFlowDemo() {
         </div>
       </main>
     
-      <Footer />
     </div>
   );
 }
