@@ -6,7 +6,7 @@ import { useTheme } from "next-themes";
 import { motion } from "motion/react";
 
 export function ThemeToggle() {
-  const { theme, setTheme } = useTheme();
+  const { setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = React.useState(false);
 
   React.useEffect(() => {
@@ -27,16 +27,16 @@ export function ThemeToggle() {
   return (
     <motion.button
       whileTap={{ scale: 0.95 }}
-      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+      onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
       className="relative h-11 w-11 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/20 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
       aria-label="Toggle theme"
     >
       <motion.div
         initial={false}
         animate={{
-          scale: theme === "dark" ? 0 : 1,
-          opacity: theme === "dark" ? 0 : 1,
-          rotate: theme === "dark" ? 90 : 0,
+          scale: resolvedTheme === "dark" ? 0 : 1,
+          opacity: resolvedTheme === "dark" ? 0 : 1,
+          rotate: resolvedTheme === "dark" ? 90 : 0,
         }}
         transition={{ duration: 0.15, ease: "easeOut" }}
         className="absolute inset-0 flex items-center justify-center"
@@ -46,9 +46,9 @@ export function ThemeToggle() {
       <motion.div
         initial={false}
         animate={{
-          scale: theme === "dark" ? 1 : 0,
-          opacity: theme === "dark" ? 1 : 0,
-          rotate: theme === "dark" ? 0 : -90,
+          scale: resolvedTheme === "dark" ? 1 : 0,
+          opacity: resolvedTheme === "dark" ? 1 : 0,
+          rotate: resolvedTheme === "dark" ? 0 : -90,
         }}
         transition={{ duration: 0.2 }}
         className="flex items-center justify-center"
