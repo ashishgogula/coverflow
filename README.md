@@ -12,7 +12,7 @@ A high-fidelity recreation of the classic iTunes Cover Flow interaction, built f
 
 ## Overview
 
-Cover Flow is a production-ready 3D carousel component that mimics the physical feel of the original Apple interface. It uses spring physics for fluid, interruptible motion and is built with a focus on performance (60fps), accessibility, and zero layout shifts.
+Cover Flow is a production-ready 3D carousel component that mimics the physical feel of the original Apple interface. It uses spring physics for fluid, interruptible motion and is built with a focus on performance (buttery-smooth animations on modern high-refresh displays), accessibility, and zero layout shifts.
 
 Designed to be dropped into any React/Next.js application, it supports both mouse/touch interactions and keyboard navigation.
 
@@ -54,11 +54,11 @@ bun add @ashishgogula/coverflow
 1.  **Install dependencies**:
 
     ```bash
-    npm install motion lucide-react clsx tailwind-merge
+    npm install motion
     ```
 
 2.  **Copy the code**:
-    Copy the source code from `components/coverflow.tsx` into your project's component directory.
+    Copy the source code from `registry/coverflow/coverflow.tsx` into your project's component directory.
 
 ## Usage
 
