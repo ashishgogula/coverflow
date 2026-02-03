@@ -1,12 +1,12 @@
 "use client";
 
-import { Github, Check, Copy, LayoutGrid } from "lucide-react";
+import { Github, CircleCheck, Copy, LayoutGrid, ChevronDown, ChevronUp, Minimize2, Maximize2 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { CoverFlow, CoverFlowItem } from "@/components/coverflow";
-import { motion, type Variants } from "motion/react";
+import { motion, type Variants, AnimatePresence } from "motion/react";
 import { cn } from "@/lib/utils";
 
 const animeItems: CoverFlowItem[] = [
@@ -27,6 +27,319 @@ export default function GetStarted() {
   const [copied, setCopied] = useState(false);
   const [packageManager, setPackageManager] = useState("pnpm");
   const [installMethod, setInstallMethod] = useState<"shadcn" | "primitive">("shadcn");
+  const [manualCopied, setManualCopied] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [isMinimized, setIsMinimized] = useState(false);
+
+  const componentCode = `
+import type { KeyboardEvent as ReactKeyboardEvent } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  motion,
+  useMotionValue,
+  useTransform,
+  useSpring,
+  PanInfo,
+  MotionValue,
+} from "motion/react";
+
+export interface CoverFlowItem {
+  id: string | number;
+  image: string;
+  title: string;
+  subtitle?: string;
+}
+
+export interface CoverFlowProps {
+  items: CoverFlowItem[];
+  itemWidth?: number;
+  itemHeight?: number;
+  stackSpacing?: number;
+  centerGap?: number;
+  rotation?: number;
+  initialIndex?: number;
+  enableReflection?: boolean;
+  className?: string;
+  onItemClick?: (item: CoverFlowItem, index: number) => void;
+  onIndexChange?: (index: number) => void;
+}
+
+export function CoverFlow({
+  items,
+  itemWidth = 400,
+  itemHeight = 400,
+  stackSpacing = 100,
+  centerGap = 250,
+  rotation = 50,
+  initialIndex = 0,
+  enableReflection = false,
+  className,
+  onItemClick,
+  onIndexChange,
+}: CoverFlowProps) {
+  const [activeIndex, setActiveIndex] = useState(initialIndex);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const scrollX = useMotionValue(initialIndex);
+
+  const springX = useSpring(scrollX, {
+    stiffness: 150,
+    damping: 30,
+    mass: 1,
+  });
+
+  useEffect(() => {
+    setActiveIndex(initialIndex);
+  }, [initialIndex]);
+
+  useEffect(() => {
+    onIndexChange?.(activeIndex);
+  }, [activeIndex, onIndexChange]);
+
+  useEffect(() => {
+    scrollX.set(activeIndex);
+  }, [activeIndex, scrollX]);
+
+  const jumpToIndex = useCallback(
+    (index: number) => {
+      const clamped = Math.min(Math.max(index, 0), items.length - 1);
+      setActiveIndex(clamped);
+    },
+    [items.length]
+  );
+
+  const onKeyDown = useCallback(
+    (e: ReactKeyboardEvent<HTMLDivElement>) => {
+      if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        jumpToIndex(activeIndex - 1);
+      }
+      if (e.key === "ArrowRight") {
+        e.preventDefault();
+        jumpToIndex(activeIndex + 1);
+      }
+    },
+    [activeIndex, jumpToIndex]
+  );
+
+  const onDrag = (event: any, info: PanInfo) => {
+    const deltaIndex = -info.delta.x / (centerGap * 0.8);
+    const current = springX.get();
+    scrollX.set(current + deltaIndex);
+  };
+
+  const onDragEnd = (event: any, info: PanInfo) => {
+    const current = springX.get();
+    const velocity = info.velocity.x;
+    const projected = current - velocity * 0.002;
+    const targetIndex = Math.round(projected);
+    const clampedIndex = Math.min(
+      Math.max(targetIndex, 0),
+      items.length - 1
+    );
+    setActiveIndex(clampedIndex);
+  };
+
+  return (
+    <div
+      ref={containerRef}
+      className={
+        "relative w-full h-full flex flex-col justify-center items-center overflow-hidden bg-transparent focus:outline-none " +
+        (className ?? "")
+      }
+      style={{ perspective: 1000 }}
+      role="region"
+      aria-label="Cover Flow"
+      tabIndex={0}
+      onKeyDown={onKeyDown}
+    >
+      <motion.div
+        className="absolute inset-0 z-50 cursor-grab active:cursor-grabbing touch-none"
+        drag="x"
+        dragConstraints={{ left: 0, right: 0 }}
+        dragElastic={0}
+        dragMomentum={false}
+        onDrag={onDrag}
+        onDragEnd={onDragEnd}
+        style={{ opacity: 0 }}
+      />
+
+      <div
+        className="relative w-full h-full flex items-center justify-center"
+        style={{ transformStyle: "preserve-3d" }}
+      >
+        {items.map((item, index) => (
+          <CoverFlowItemCard
+            key={item.id}
+            item={item}
+            index={index}
+            scrollX={springX}
+            width={itemWidth}
+            height={itemHeight}
+            stackSpacing={stackSpacing}
+            centerGap={centerGap}
+            rotation={rotation}
+            isActive={index === activeIndex}
+            enableReflection={enableReflection}
+            onClick={() => {
+              if (index === activeIndex) {
+                onItemClick?.(item, index);
+              } else {
+                jumpToIndex(index);
+              }
+            }}
+          />
+        ))}
+      </div>
+
+      <div className="absolute bottom-8 left-0 right-0 flex flex-col items-center justify-center pointer-events-none z-40 transition-opacity duration-300">
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          key={activeIndex}
+          transition={{ duration: 0.4, ease: "easeOut" }}
+          className="text-center"
+        >
+          <h3 className="text-2xl font-semibold text-foreground tracking-tight drop-shadow-md">
+            {items[activeIndex]?.title}
+          </h3>
+          {items[activeIndex]?.subtitle && (
+            <p className="text-foreground/60 text-sm mt-1 font-medium tracking-wide">
+              {items[activeIndex]?.subtitle}
+            </p>
+          )}
+        </motion.div>
+      </div>
+    </div>
+  );
+}
+
+interface CardProps {
+  item: CoverFlowItem;
+  index: number;
+  scrollX: MotionValue<number>;
+  width: number;
+  height: number;
+  stackSpacing: number;
+  centerGap: number;
+  rotation: number;
+  isActive: boolean;
+  enableReflection: boolean;
+  onClick: () => void;
+}
+
+function CoverFlowItemCard({
+  item,
+  index,
+  scrollX,
+  width,
+  height,
+  stackSpacing,
+  centerGap,
+  rotation,
+  isActive,
+  enableReflection,
+  onClick,
+}: CardProps) {
+  const position = useTransform(scrollX, (value) => index - value);
+
+  const zIndex = useTransform(position, (pos) => 1000 - Math.abs(pos) * 10);
+
+  const t = useTransform(position, (pos) => {
+    const absPos = Math.abs(pos);
+    const isCenter = absPos < 0.5;
+
+    let rY = 0;
+    if (pos < -0.5) rY = rotation;
+    if (pos > 0.5) rY = -rotation;
+    if (isCenter) rY = -pos * (rotation * 2);
+
+    let x = 0;
+    if (pos < 0) {
+      const stackIndex = Math.max(0, absPos - 1);
+      x = absPos < 1 ? pos * centerGap : -centerGap - stackIndex * stackSpacing;
+    } else {
+      const stackIndex = Math.max(0, absPos - 1);
+      x = absPos < 1 ? pos * centerGap : centerGap + stackIndex * stackSpacing;
+    }
+
+    let z = absPos > 0.5 ? -200 : Math.abs(pos) * -400;
+
+    return { rotateY: rY, x, z };
+  });
+
+  const rotateY = useTransform(t, (v) => v.rotateY);
+  const x = useTransform(t, (v) => v.x);
+  const z = useTransform(t, (v) => v.z);
+
+  const brightness = useTransform(position, (pos) =>
+    Math.abs(pos) < 0.5 ? 1 : 0.5
+  );
+
+  return (
+    <motion.div
+      className="absolute top-1/2 left-1/2 preserve-3d will-change-transform"
+      style={{
+        width,
+        height,
+        marginTop: -height / 2,
+        marginLeft: -width / 2,
+        x,
+        z,
+        rotateY,
+        zIndex,
+        filter: useTransform(brightness, (b) => \`brightness(\${b})\`),
+      }}
+      onClick={onClick}
+    >
+      <div className="relative w-full h-full rounded-xl shadow-2xl bg-black">
+        <div className="absolute inset-0 rounded-xl border border-white/10 z-20 pointer-events-none" />
+
+        <div className="relative w-full h-full overflow-hidden rounded-xl">
+          <img
+            src={item.image}
+            alt={item.title}
+            draggable={false}
+            className="absolute inset-0 h-full w-full object-cover select-none pointer-events-none"
+          />
+          <div className="absolute inset-0 bg-linear-to-tr from-white/10 to-transparent opacity-0 dark:opacity-20 pointer-events-none z-10" />
+        </div>
+      </div>
+
+      {enableReflection && (
+        <div
+          className="absolute left-0 right-0 overflow-hidden pointer-events-none"
+          style={{
+            top: "100%",
+            width,
+            height: height * 0.35,
+            marginTop: "2px",
+          }}
+        >
+          <div
+            className="relative w-full h-full opacity-40"
+            style={{ transform: "scaleY(-1)" }}
+          >
+            <img
+              src={item.image}
+              alt=""
+              className="absolute inset-0 h-full w-full object-cover blur-[1px]"
+            />
+            <div className="absolute inset-0 bg-linear-to-b from-background/90 to-transparent" />
+          </div>
+        </div>
+      )}
+    </motion.div>
+  );
+}
+
+  
+  `;
+
+  const copyManualCode = () => {
+    navigator.clipboard.writeText(componentCode);
+    setManualCopied(true);
+    setTimeout(() => setManualCopied(false), 2000);
+  };
 
   const commands = {
     pnpm: "pnpm dlx shadcn add https://ashishgogula.in/r/coverflow.json",
@@ -184,7 +497,8 @@ export default function CoverFlowDemo() {
 
               <motion.div variants={fadeUp} className="space-y-4">
                 <div className="flex items-center gap-4 border-b border-border/40 pb-2">
-                  <button
+                  <motion.button
+                    layout
                     onClick={() => setInstallMethod("shadcn")}
                     className={cn(
                       "text-sm font-medium transition-colors relative py-1",
@@ -200,8 +514,9 @@ export default function CoverFlowDemo() {
                         className="absolute -bottom-[9px] left-0 right-0 h-[2px] bg-zinc-900 dark:bg-zinc-100"
                       />
                     )}
-                  </button>
-                  <button
+                  </motion.button>
+                  <motion.button
+                    layout
                     onClick={() => setInstallMethod("primitive")}
                     className={cn(
                       "text-sm font-medium transition-colors relative py-1",
@@ -217,7 +532,7 @@ export default function CoverFlowDemo() {
                         className="absolute -bottom-[9px] left-0 right-0 h-[2px] bg-zinc-900 dark:bg-zinc-100"
                       />
                     )}
-                  </button>
+                  </motion.button>
                 </div>
                 <div className="rounded-2xl border border-border/40 bg-card shadow-sm">
                   <div className="flex rounded-t-2xl items-center justify-between p-2 px-4 border-b border-zinc-200 dark:border-white/10 bg-secondary/50">
@@ -248,107 +563,119 @@ export default function CoverFlowDemo() {
                         ))}
                       </div>
                     </div>
-                    <button
+                    <motion.button
+                      whileHover={{ scale: 1.0 }}
+                      whileTap={{ scale: 0.95 }}
                       onClick={copyCommand}
                       className="text-muted-foreground hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors p-2 hover:bg-zinc-200 dark:hover:bg-white/5 rounded-md"
                     >
                       {copied ? (
-                        <Check className="w-4 h-4" />
+                        <CircleCheck className="w-4 h-4" />
                       ) : (
                         <Copy className="w-4 h-4" />
                       )}
-                    </button>
+                    </motion.button>
                   </div>
-                  <div className="p-4 font-mono text-sm text-zinc-900 dark:text-zinc-100 overflow-x-auto">
-                    {installMethod === "shadcn" ? (
-                      <>
-                        {packageManager === "pnpm" && (
+                  <div className="p-4 font-mono text-sm text-zinc-900 dark:text-zinc-100 overflow-x-auto min-h-[56px] flex items-center">
+                    <AnimatePresence mode="wait">
+                      <motion.div
+                        key={installMethod + packageManager}
+                        initial={{ opacity: 0, y: 5 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -5 }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        {installMethod === "shadcn" ? (
                           <>
-                            <span className="text-blue-600 dark:text-blue-400">
-                              pnpm
-                            </span>{" "}
-                            <span className="text-blue-600 dark:text-blue-400">
-                              dlx
-                            </span>{" "}
-                          </>
-                        )}
-                        {packageManager === "npm" && (
-                          <span className="text-blue-600 dark:text-blue-400">
-                            npx
-                          </span>
-                        )}
-                        {packageManager === "yarn" && (
-                          <span className="text-blue-600 dark:text-blue-400">
-                            npx
-                          </span>
-                        )}
-                        {packageManager === "bun" && (
-                          <>
-                            <span className="text-blue-600 dark:text-blue-400">
-                              bun
-                            </span>{" "}
-                            <span className="text-blue-600 dark:text-blue-400">
-                              x
-                            </span>{" "}
-                          </>
-                        )}{" "}
-                        <span className="text-teal-600 dark:text-cyan-400">
-                          shadcn@latest
-                        </span>{" "}
-                        <span className="text-blue-600 dark:text-blue-400">
-                          add
-                        </span>{" "}
-                        <span className="text-zinc-500 dark:text-zinc-400">
-                          https://coverflow.ashishgogula.in/r/coverflow.json
-                        </span>
-                      </>
-                    ) : (
-                      <>
-                        {packageManager === "pnpm" && (
-                          <>
-                            <span className="text-blue-600 dark:text-blue-400">
-                              pnpm
+                            {packageManager === "pnpm" && (
+                              <>
+                                <span className="text-blue-600 dark:text-blue-400">
+                                  pnpm
+                                </span>{" "}
+                                <span className="text-blue-600 dark:text-blue-400">
+                                  dlx
+                                </span>{" "}
+                              </>
+                            )}
+                            {packageManager === "npm" && (
+                              <span className="text-blue-600 dark:text-blue-400">
+                                npx
+                              </span>
+                            )}
+                            {packageManager === "yarn" && (
+                              <span className="text-blue-600 dark:text-blue-400">
+                                npx
+                              </span>
+                            )}
+                            {packageManager === "bun" && (
+                              <>
+                                <span className="text-blue-600 dark:text-blue-400">
+                                  bun
+                                </span>{" "}
+                                <span className="text-blue-600 dark:text-blue-400">
+                                  x
+                                </span>{" "}
+                              </>
+                            )}{" "}
+                            <span className="text-teal-600 dark:text-cyan-400">
+                              shadcn@latest
                             </span>{" "}
                             <span className="text-blue-600 dark:text-blue-400">
                               add
                             </span>{" "}
+                            <span className="text-zinc-500 dark:text-zinc-400">
+                              https://coverflow.ashishgogula.in/r/coverflow.json
+                            </span>
+                          </>
+                        ) : (
+                          <>
+                            {packageManager === "pnpm" && (
+                              <>
+                                <span className="text-blue-600 dark:text-blue-400">
+                                  pnpm
+                                </span>{" "}
+                                <span className="text-blue-600 dark:text-blue-400">
+                                  add
+                                </span>{" "}
+                              </>
+                            )}
+                            {packageManager === "npm" && (
+                              <>
+                                <span className="text-blue-600 dark:text-blue-400">
+                                  npm
+                                </span>{" "}
+                                <span className="text-blue-600 dark:text-blue-400">
+                                  install
+                                </span>{" "}
+                              </>
+                            )}
+                            {packageManager === "yarn" && (
+                              <>
+                                <span className="text-blue-600 dark:text-blue-400">
+                                  yarn
+                                </span>{" "}
+                                <span className="text-blue-600 dark:text-blue-400">
+                                  add
+                                </span>{" "}
+                              </>
+                            )}
+                            {packageManager === "bun" && (
+                              <>
+                                <span className="text-blue-600 dark:text-blue-400">
+                                  bun
+                                </span>{" "}
+                                <span className="text-blue-600 dark:text-blue-400">
+                                  add
+                                </span>{" "}
+                              </>
+                            )}{" "}
+                            <span className="text-zinc-500 dark:text-zinc-400">
+                              @ashishgogula/coverflow
+                            </span>
                           </>
                         )}
-                        {packageManager === "npm" && (
-                          <>
-                            <span className="text-blue-600 dark:text-blue-400">
-                              npm
-                            </span>{" "}
-                            <span className="text-blue-600 dark:text-blue-400">
-                              install
-                            </span>{" "}
-                          </>
-                        )}
-                        {packageManager === "yarn" && (
-                          <>
-                            <span className="text-blue-600 dark:text-blue-400">
-                              yarn
-                            </span>{" "}
-                            <span className="text-blue-600 dark:text-blue-400">
-                              add
-                            </span>{" "}
-                          </>
-                        )}
-                        {packageManager === "bun" && (
-                          <>
-                            <span className="text-blue-600 dark:text-blue-400">
-                              bun
-                            </span>{" "}
-                            <span className="text-blue-600 dark:text-blue-400">
-                              add
-                            </span>{" "}
-                          </>
-                        )}{" "}
-                        <span className="text-zinc-500 dark:text-zinc-400">
-                          @ashishgogula/coverflow
-                        </span>
-                      </>
-                    )}
+                      </motion.div>
+                    </AnimatePresence>
                   </div>
                 </div>
               </motion.div>
@@ -357,26 +684,98 @@ export default function CoverFlowDemo() {
                 <div className="font-medium text-sm text-muted-foreground uppercase tracking-wider">
                   Manual
                 </div>
-                <div className="rounded-2xl border border-border/40 bg-card p-6 shadow-sm">
-                  <p className="text-sm text-muted-foreground mb-4">
-                    1. Install dependencies:
-                  </p>
-                  <div className="rounded-lg bg-secondary/50 p-3 font-mono text-xs mb-6">
-                    npm install motion
+                <div className="rounded-2xl border border-border/40 bg-card shadow-sm overflow-hidden">
+                  <div className="p-6">
+                    <p className="text-sm text-muted-foreground mb-4">
+                      1. Install dependencies:
+                    </p>
+                    <div className="rounded-lg bg-secondary/50 p-3 font-mono text-xs mb-6">
+                      npm install motion
+                    </div>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      2. Copy the component code into{" "}
+                      <code className="text-foreground bg-secondary/50 px-1 py-0.5 rounded">
+                        components/coverflow.tsx
+                      </code>
+                    </p>
+                    <Link
+                      href="https://github.com/ashishgogula/coverflow/blob/main/components/coverflow.tsx"
+                      target="_blank"
+                      className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline mb-6"
+                    >
+                      View Source <Github className="h-3 w-3" />
+                    </Link>
+
+                    <div className="relative rounded-lg bg-secondary/50 border border-border/50 overflow-hidden">
+                      <div className="flex items-center justify-between px-4 py-2 border-b border-border/50 bg-secondary/30">
+                        <span className="text-xs font-medium text-muted-foreground">coverflow.tsx</span>
+                        <div className="flex items-center gap-2">
+                          <motion.button
+                            whileHover={{ scale: 1.0 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={() => setIsMinimized(!isMinimized)}
+                            className="text-muted-foreground hover:text-foreground transition-colors p-1.5 hover:bg-background/50 rounded-md"
+                          >
+                            {isMinimized ? (
+                              <Maximize2 className="w-3.5 h-3.5" />
+                            ) : (
+                              <Minimize2 className="w-3.5 h-3.5" />
+                            )}
+                          </motion.button>
+                          <motion.button
+                            whileHover={{ scale: 1.0 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={copyManualCode}
+                            className="text-muted-foreground hover:text-foreground transition-colors p-1.5 hover:bg-background/50 rounded-md"
+                          >
+                            {manualCopied ? (
+                              <CircleCheck className="w-3.5 h-3.5" />
+                            ) : (
+                              <Copy className="w-3.5 h-3.5" />
+                            )}
+                          </motion.button>
+                        </div>
+                      </div>
+                      <motion.div
+                        initial={false}
+                        animate={{
+                          height: isMinimized ? 0 : isExpanded ? "auto" : 400,
+                          opacity: isMinimized ? 0 : 1,
+                        }}
+                        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                        className="relative overflow-hidden"
+                      >
+                        <div className="p-4 overflow-x-auto">
+                          <pre className="text-xs font-mono text-muted-foreground leading-relaxed">
+                            {componentCode}
+                          </pre>
+                        </div>
+                        {!isExpanded && !isMinimized && (
+                          <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-card to-transparent pointer-events-none" />
+                        )}
+                      </motion.div>
+                      {!isMinimized && (
+                        <div className="border-t border-border/50 bg-secondary/30 p-2 flex justify-center">
+                          <button
+                            onClick={() => setIsExpanded(!isExpanded)}
+                            className="flex items-center gap-2 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5 rounded-md hover:bg-background/50"
+                          >
+                            {isExpanded ? (
+                              <>
+                                <ChevronUp className="w-3.5 h-3.5" />
+                                Collapse code
+                              </>
+                            ) : (
+                              <>
+                                <ChevronDown className="w-3.5 h-3.5" />
+                                Expand code
+                              </>
+                            )}
+                          </button>
+                        </div>
+                      )}
+                    </div>
                   </div>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    2. Copy the component code into{" "}
-                    <code className="text-foreground bg-secondary/50 px-1 py-0.5 rounded">
-                      components/coverflow.tsx
-                    </code>
-                  </p>
-                  <Link
-                    href="https://github.com/ashishgogula/coverflow/blob/main/components/coverflow.tsx"
-                    target="_blank"
-                    className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline"
-                  >
-                    View Source <Github className="h-3 w-3" />
-                  </Link>
                 </div>
               </motion.div>
             </motion.div>

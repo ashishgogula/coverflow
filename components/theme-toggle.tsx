@@ -38,7 +38,7 @@ export function ThemeToggle() {
           opacity: theme === "dark" ? 0 : 1,
           rotate: theme === "dark" ? 90 : 0,
         }}
-        transition={{ duration: 0.2 }}
+        transition={{ duration: 0.15, ease: "easeOut" }}
         className="absolute inset-0 flex items-center justify-center"
       >
         <Sun className="h-5 w-5" />

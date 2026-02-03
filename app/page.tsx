@@ -4,7 +4,6 @@ import { CoverFlow, CoverFlowItem } from "@/components/coverflow";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import {
-  Check,
   Copy,
   Layers,
   Command,
@@ -13,6 +12,7 @@ import {
   Moon,
   Plus,
   Star,
+  CircleCheck,
 } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState, useEffect } from "react";
@@ -198,18 +198,19 @@ export default function Home() {
                 variants={fadeUp}
                 className="flex flex-col items-center border-y w-full border-dashed gap-2 py-4"
               >
-                <button
-                  type="button"
+                <motion.button
+                  whileTap={{ scale: 0.97 }}
                   onClick={copyCommand}
                   className=" flex gap-2 flex-row font-mono text-xs cursor-copy"
                 >
+
                   {copied ? (
-                    <Check className="h-4 w-4" />
+                    <CircleCheck className="h-4 w-4" />
                   ) : (
                     <Copy className="h-4 w-4" />
                   )}
                   {installCommand}
-                </button>
+                </motion.button>
               </motion.div>
             </motion.div>
           </section>
