@@ -26,6 +26,7 @@ const animeItems: CoverFlowItem[] = [
 export default function GetStarted() {
   const [copied, setCopied] = useState(false);
   const [packageManager, setPackageManager] = useState("pnpm");
+  const [installMethod, setInstallMethod] = useState<"shadcn" | "primitive">("shadcn");
 
   const commands = {
     pnpm: "pnpm dlx shadcn add https://ashishgogula.in/r/coverflow.json",
@@ -34,9 +35,17 @@ export default function GetStarted() {
     bun: "bun x shadcn add https://ashishgogula.in/r/coverflow.json",
   };
 
+  const primitiveCommands = {
+    pnpm: "pnpm add @ashishgogula/coverflow",
+    npm: "npm install @ashishgogula/coverflow",
+    yarn: "yarn add @ashishgogula/coverflow",
+    bun: "bun add @ashishgogula/coverflow",
+  };
+
   const copyCommand = () => {
+    const currentCommands = installMethod === "shadcn" ? commands : primitiveCommands;
     navigator.clipboard.writeText(
-      commands[packageManager as keyof typeof commands],
+      currentCommands[packageManager as keyof typeof commands],
     );
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
@@ -174,8 +183,41 @@ export default function CoverFlowDemo() {
               </motion.h3>
 
               <motion.div variants={fadeUp} className="space-y-4">
-                <div className="font-medium text-sm text-muted-foreground uppercase tracking-wider">
-                  CLI
+                <div className="flex items-center gap-4 border-b border-border/40 pb-2">
+                  <button
+                    onClick={() => setInstallMethod("shadcn")}
+                    className={cn(
+                      "text-sm font-medium transition-colors relative py-1",
+                      installMethod === "shadcn"
+                        ? "text-zinc-900 dark:text-zinc-100"
+                        : "text-muted-foreground hover:text-zinc-900 dark:hover:text-zinc-100",
+                    )}
+                  >
+                    Shadcn
+                    {installMethod === "shadcn" && (
+                      <motion.div
+                        layoutId="activeInstallTab"
+                        className="absolute -bottom-[9px] left-0 right-0 h-[2px] bg-zinc-900 dark:bg-zinc-100"
+                      />
+                    )}
+                  </button>
+                  <button
+                    onClick={() => setInstallMethod("primitive")}
+                    className={cn(
+                      "text-sm font-medium transition-colors relative py-1",
+                      installMethod === "primitive"
+                        ? "text-zinc-900 dark:text-zinc-100"
+                        : "text-muted-foreground hover:text-zinc-900 dark:hover:text-zinc-100",
+                    )}
+                  >
+                    Primitive
+                    {installMethod === "primitive" && (
+                      <motion.div
+                        layoutId="activeInstallTab"
+                        className="absolute -bottom-[9px] left-0 right-0 h-[2px] bg-zinc-900 dark:bg-zinc-100"
+                      />
+                    )}
+                  </button>
                 </div>
                 <div className="rounded-2xl border border-border/40 bg-card shadow-sm">
                   <div className="flex rounded-t-2xl items-center justify-between p-2 px-4 border-b border-zinc-200 dark:border-white/10 bg-secondary/50">
@@ -218,45 +260,95 @@ export default function CoverFlowDemo() {
                     </button>
                   </div>
                   <div className="p-4 font-mono text-sm text-zinc-900 dark:text-zinc-100 overflow-x-auto">
-                    {packageManager === "pnpm" && (
+                    {installMethod === "shadcn" ? (
                       <>
-                        <span className="text-blue-600 dark:text-blue-400">
-                          pnpm
+                        {packageManager === "pnpm" && (
+                          <>
+                            <span className="text-blue-600 dark:text-blue-400">
+                              pnpm
+                            </span>{" "}
+                            <span className="text-blue-600 dark:text-blue-400">
+                              dlx
+                            </span>{" "}
+                          </>
+                        )}
+                        {packageManager === "npm" && (
+                          <span className="text-blue-600 dark:text-blue-400">
+                            npx
+                          </span>
+                        )}
+                        {packageManager === "yarn" && (
+                          <span className="text-blue-600 dark:text-blue-400">
+                            npx
+                          </span>
+                        )}
+                        {packageManager === "bun" && (
+                          <>
+                            <span className="text-blue-600 dark:text-blue-400">
+                              bun
+                            </span>{" "}
+                            <span className="text-blue-600 dark:text-blue-400">
+                              x
+                            </span>{" "}
+                          </>
+                        )}{" "}
+                        <span className="text-teal-600 dark:text-cyan-400">
+                          shadcn@latest
                         </span>{" "}
                         <span className="text-blue-600 dark:text-blue-400">
-                          dlx
+                          add
                         </span>{" "}
+                        <span className="text-zinc-500 dark:text-zinc-400">
+                          https://coverflow.ashishgogula.in/r/coverflow.json
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        {packageManager === "pnpm" && (
+                          <>
+                            <span className="text-blue-600 dark:text-blue-400">
+                              pnpm
+                            </span>{" "}
+                            <span className="text-blue-600 dark:text-blue-400">
+                              add
+                            </span>{" "}
+                          </>
+                        )}
+                        {packageManager === "npm" && (
+                          <>
+                            <span className="text-blue-600 dark:text-blue-400">
+                              npm
+                            </span>{" "}
+                            <span className="text-blue-600 dark:text-blue-400">
+                              install
+                            </span>{" "}
+                          </>
+                        )}
+                        {packageManager === "yarn" && (
+                          <>
+                            <span className="text-blue-600 dark:text-blue-400">
+                              yarn
+                            </span>{" "}
+                            <span className="text-blue-600 dark:text-blue-400">
+                              add
+                            </span>{" "}
+                          </>
+                        )}
+                        {packageManager === "bun" && (
+                          <>
+                            <span className="text-blue-600 dark:text-blue-400">
+                              bun
+                            </span>{" "}
+                            <span className="text-blue-600 dark:text-blue-400">
+                              add
+                            </span>{" "}
+                          </>
+                        )}{" "}
+                        <span className="text-zinc-500 dark:text-zinc-400">
+                          @ashishgogula/coverflow
+                        </span>
                       </>
                     )}
-                    {packageManager === "npm" && (
-                      <span className="text-blue-600 dark:text-blue-400">
-                        npx
-                      </span>
-                    )}
-                    {packageManager === "yarn" && (
-                      <span className="text-blue-600 dark:text-blue-400">
-                        npx
-                      </span>
-                    )}
-                    {packageManager === "bun" && (
-                      <>
-                        <span className="text-blue-600 dark:text-blue-400">
-                          bun
-                        </span>{" "}
-                        <span className="text-blue-600 dark:text-blue-400">
-                          x
-                        </span>{" "}
-                      </>
-                    )}{" "}
-                    <span className="text-teal-600 dark:text-cyan-400">
-                      shadcn@latest
-                    </span>{" "}
-                    <span className="text-blue-600 dark:text-blue-400">
-                      add
-                    </span>{" "}
-                    <span className="text-zinc-500 dark:text-zinc-400">
-                      https://coverflow.ashishgogula.in/r/coverflow.json
-                    </span>
                   </div>
                 </div>
               </motion.div>
