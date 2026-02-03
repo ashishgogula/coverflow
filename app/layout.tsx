@@ -4,9 +4,31 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Cover Flow",
-  description: "iTunes-style 3D carousel rebuilt with Next.js and Motion",
+  description: "iOS-like Cover Flow for React.",
   icons: {
     icon: "/favicon.svg",
+  },
+  openGraph: {
+    title: "Cover Flow",
+    description: "iOS-like Cover Flow for React.",
+    url: "https://coverflow.ashishgogula.in",
+    siteName: "Cover Flow",
+    images: [
+      {
+        url: "/coverflow.png",
+        width: 1200,
+        height: 630,
+        alt: "Cover Flow",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Cover Flow",
+    description: "iOS-like Cover Flow for React.",
+    images: ["/coverflow.png"],
   },
 };
 

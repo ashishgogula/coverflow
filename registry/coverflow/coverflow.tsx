@@ -5,7 +5,7 @@ import {
   useMotionValue,
   useTransform,
   useSpring,
-  PanInfo,
+  type PanInfo,
   MotionValue,
 } from "motion/react";
 
@@ -70,7 +70,7 @@ export function CoverFlow({
       const clamped = Math.min(Math.max(index, 0), items.length - 1);
       setActiveIndex(clamped);
     },
-    [items.length]
+    [items.length],
   );
 
   const onKeyDown = useCallback(
@@ -84,11 +84,12 @@ export function CoverFlow({
         jumpToIndex(activeIndex + 1);
       }
     },
-    [activeIndex, jumpToIndex]
+    [activeIndex, jumpToIndex],
   );
 
   const onDrag = (event: any, info: PanInfo) => {
     const deltaIndex = -info.delta.x / (centerGap * 0.8);
+
     const current = springX.get();
     scrollX.set(current + deltaIndex);
   };
@@ -96,12 +97,12 @@ export function CoverFlow({
   const onDragEnd = (event: any, info: PanInfo) => {
     const current = springX.get();
     const velocity = info.velocity.x;
+
     const projected = current - velocity * 0.002;
+
     const targetIndex = Math.round(projected);
-    const clampedIndex = Math.min(
-      Math.max(targetIndex, 0),
-      items.length - 1
-    );
+    const clampedIndex = Math.min(Math.max(targetIndex, 0), items.length - 1);
+
     setActiveIndex(clampedIndex);
   };
 
@@ -160,7 +161,10 @@ export function CoverFlow({
       <div className="absolute bottom-8 left-0 right-0 flex flex-col items-center justify-center pointer-events-none z-40 transition-opacity duration-300">
         <motion.div
           initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
+          animate={{
+            opacity: 1,
+            y: 0,
+          }}
           key={activeIndex}
           transition={{ duration: 0.4, ease: "easeOut" }}
           className="text-center"
@@ -178,7 +182,6 @@ export function CoverFlow({
     </div>
   );
 }
-
 interface CardProps {
   item: CoverFlowItem;
   index: number;
@@ -206,9 +209,13 @@ function CoverFlowItemCard({
   enableReflection,
   onClick,
 }: CardProps) {
-  const position = useTransform(scrollX, (value) => index - value);
+  const position = useTransform(scrollX, (value) => {
+    return index - value;
+  });
 
-  const zIndex = useTransform(position, (pos) => 1000 - Math.abs(pos) * 10);
+  const zIndex = useTransform(position, (pos) => {
+    return 1000 - Math.abs(pos) * 10;
+  });
 
   const t = useTransform(position, (pos) => {
     const absPos = Math.abs(pos);
@@ -217,29 +224,52 @@ function CoverFlowItemCard({
     let rY = 0;
     if (pos < -0.5) rY = rotation;
     if (pos > 0.5) rY = -rotation;
-    if (isCenter) rY = -pos * (rotation * 2);
+
+    if (!isCenter) {
+    } else {
+      rY = -pos * (rotation * 2);
+    }
 
     let x = 0;
     if (pos < 0) {
       const stackIndex = Math.max(0, absPos - 1);
-      x = absPos < 1 ? pos * centerGap : -centerGap - stackIndex * stackSpacing;
+      x = -centerGap - stackIndex * stackSpacing;
+
+      if (absPos < 1) {
+        x = pos * centerGap;
+      }
     } else {
       const stackIndex = Math.max(0, absPos - 1);
-      x = absPos < 1 ? pos * centerGap : centerGap + stackIndex * stackSpacing;
+      x = centerGap + stackIndex * stackSpacing;
+
+      if (absPos < 1) {
+        x = pos * centerGap;
+      }
     }
 
-    let z = absPos > 0.5 ? -200 : Math.abs(pos) * -400;
+    let z = 0;
+    if (absPos > 0.5) {
+      z = -200;
+    } else {
+      z = Math.abs(pos) * -400;
+    }
 
-    return { rotateY: rY, x, z };
+    return {
+      rotateY: rY,
+      x,
+      z,
+    };
   });
 
   const rotateY = useTransform(t, (v) => v.rotateY);
   const x = useTransform(t, (v) => v.x);
   const z = useTransform(t, (v) => v.z);
 
-  const brightness = useTransform(position, (pos) =>
-    Math.abs(pos) < 0.5 ? 1 : 0.5
-  );
+  const brightness = useTransform(position, (pos) => {
+    const absPos = Math.abs(pos);
+    if (absPos < 0.5) return 1;
+    return 0.5;
+  });
 
   return (
     <motion.div
@@ -264,8 +294,9 @@ function CoverFlowItemCard({
           <img
             src={item.image}
             alt={item.title}
+            className="object-cover select-none pointer-events-none"
             draggable={false}
-            className="absolute inset-0 h-full w-full object-cover select-none pointer-events-none"
+            sizes={`${width}px`}
           />
           <div className="absolute inset-0 bg-linear-to-tr from-white/10 to-transparent opacity-0 dark:opacity-20 pointer-events-none z-10" />
         </div>
@@ -276,7 +307,7 @@ function CoverFlowItemCard({
           className="absolute left-0 right-0 overflow-hidden pointer-events-none"
           style={{
             top: "100%",
-            width,
+            width: width,
             height: height * 0.35,
             marginTop: "2px",
           }}
@@ -288,7 +319,8 @@ function CoverFlowItemCard({
             <img
               src={item.image}
               alt=""
-              className="absolute inset-0 h-full w-full object-cover blur-[1px]"
+              className="object-cover blur-[1px]"
+              sizes={`${width}px`}
             />
             <div className="absolute inset-0 bg-linear-to-b from-background/90 to-transparent" />
           </div>
