@@ -302,7 +302,7 @@ function CoverFlowItemCard({
             draggable={false}
             sizes={`${width}px`}
             priority={Math.abs(index - scrollX.get()) < 2}
-            quality={95}
+            quality={100}
           />
           <div className="absolute inset-0 bg-linear-to-tr from-white/10 to-transparent opacity-0 dark:opacity-20 pointer-events-none z-10" />
         </div>
