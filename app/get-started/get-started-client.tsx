@@ -10,7 +10,6 @@ import {
   Minimize2,
   Maximize2,
 } from "lucide-react";
-import Link from "next/link";
 import { useState, useRef } from "react";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";

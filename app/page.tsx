@@ -261,7 +261,7 @@ export default function Home() {
 
             <motion.div
               className="m-bentoGrid px-6 scroll-mt-24"
-              id="principles"
+              id="features"
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, margin: "-40px" }}
