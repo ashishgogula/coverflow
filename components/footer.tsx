@@ -13,22 +13,31 @@ export function Footer() {
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
     >
       <div className="m-footInner px-6">
-        <div className="text-sm font-medium flex flex-wrap  gap-1">
+        <div className="text-sm font-medium flex flex-wrap gap-1">
           <span>Built by</span>
           <a
             href="https://ashishgogula.in"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-foreground hover:underline underline-offset-4 underline font-semibold" 
+            className="text-foreground underline underline-offset-4 font-semibold hover:underline"
           >
             Ashish Gogula
           </a>
-          <span>. source code available on</span>
+          <span>· Hosted on</span>
+          <a
+            href="https://vercel.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-foreground underline underline-offset-4 font-semibold hover:underline"
+          >
+            Vercel
+          </a>
+          <span>· Source code on</span>
           <a
             href="https://github.com/ashishgogula/coverflow"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-foreground hover:underline underline-offset-4 underline font-semibold"
+            className="text-foreground underline underline-offset-4 font-semibold hover:underline"
           >
             GitHub
           </a>

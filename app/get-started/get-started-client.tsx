@@ -11,7 +11,7 @@ import {
   Maximize2,
 } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { CoverFlow, CoverFlowItem } from "@ashishgogula/coverflow";
@@ -39,10 +39,20 @@ export default function GetStartedClient({
 }) {
   const [copied, setCopied] = useState(false);
   const [packageManager, setPackageManager] = useState("pnpm");
-  const [installMethod, setInstallMethod] =
-    useState<"shadcn" | "primitive">("shadcn");
+  const [installMethod, setInstallMethod] = useState<"shadcn" | "primitive">(
+    "shadcn",
+  );
   const [manualCopied, setManualCopied] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [usageCopied, setUsageCopied] = useState(false);
+  const usageCodeRef = useRef<HTMLPreElement | null>(null);
+
+  const copyUsageCode = () => {
+    if (!usageCodeRef.current) return;
+    navigator.clipboard.writeText(usageCodeRef.current.innerText);
+    setUsageCopied(true);
+    setTimeout(() => setUsageCopied(false), 2000);
+  };
 
   const copyManualCode = () => {
     navigator.clipboard.writeText(componentCode);
@@ -65,10 +75,9 @@ export default function GetStartedClient({
   };
 
   const copyCommand = () => {
-    const current =
-      installMethod === "shadcn" ? commands : primitiveCommands;
+    const current = installMethod === "shadcn" ? commands : primitiveCommands;
     navigator.clipboard.writeText(
-      current[packageManager as keyof typeof current]
+      current[packageManager as keyof typeof current],
     );
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
@@ -93,7 +102,7 @@ export default function GetStartedClient({
   };
 
   return (
-     <div className="m-shell">
+    <div className="m-shell">
       <Navbar />
 
       <main>
@@ -154,7 +163,28 @@ export default function GetStartedClient({
                   />
                 </div>
                 <div className="p-6 overflow-x-auto">
-                  <pre className="text-sm font-mono text-muted-foreground leading-relaxed">
+                  <div className="flex justify-end mb-3">
+                    <motion.button
+                      whileHover={{ scale: 1.0 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={copyUsageCode}
+                      className="text-muted-foreground hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors p-2 hover:bg-zinc-200 dark:hover:bg-white/5 rounded-md"
+                    >
+                      {usageCopied ? (
+                        <>
+                          <CircleCheck className="w-3.5 h-3.5" />
+                        </>
+                      ) : (
+                        <>
+                          <Copy className="w-3.5 h-3.5" />
+                        </>
+                      )}
+                    </motion.button>
+                  </div>
+                  <pre
+                    ref={usageCodeRef}
+                    className="text-sm font-mono text-muted-foreground leading-relaxed"
+                  >
                     {`
 import { CoverFlow, type CoverFlowItem } from "@/components/ui/coverflow";
 
@@ -411,7 +441,9 @@ export default function CoverFlowDemo() {
 
                     <div className="relative rounded-lg bg-secondary/50 border border-border/50 overflow-hidden">
                       <div className="flex items-center justify-between px-4 py-2 border-b border-border/50 bg-secondary/30">
-                        <span className="text-xs font-medium text-muted-foreground">coverflow.tsx</span>
+                        <span className="text-xs font-medium text-muted-foreground">
+                          coverflow.tsx
+                        </span>
                         <div className="flex items-center gap-2">
                           <motion.button
                             whileHover={{ scale: 1.0 }}
@@ -654,7 +686,6 @@ export default function CoverFlowDemo() {
           <Footer />
         </div>
       </main>
-    
     </div>
   );
 }
