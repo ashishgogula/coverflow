@@ -7,6 +7,8 @@
 
 A high-fidelity recreation of the classic iTunes Cover Flow interaction, built for the modern web using React, Next.js, Tailwind and Motion.
 
+This project focuses on motion feel, spatial depth, and interaction fidelity rather than recreating visuals pixel-for-pixel.
+
 ![Cover Flow Preview](public/coverflow.png)
 ![Cover Flow Example](public/example.png)
 
@@ -19,6 +21,7 @@ A high-fidelity recreation of the classic iTunes Cover Flow interaction, built f
 - Styled with Tailwind CSS and compatible with next-themes for dark mode support.
 - Isolated transform-based animations ensure the surrounding layout never shifts.
 
+If this component helped you or inspired an interaction idea, a GitHub star is appreciated.
 
 ## Documentation & Installation
 
