@@ -643,10 +643,24 @@ export default function CoverFlowDemo() {
                         boolean
                       </td>
                       <td className="p-4 font-mono text-xs text-muted-foreground">
-                        true
+                        false
                       </td>
                       <td className="p-4 text-muted-foreground">
                         Enable or disable reflection effect.
+                      </td>
+                    </tr>
+                    <tr className="group hover:bg-secondary/20 transition-colors">
+                      <td className="p-4 font-mono text-foreground">
+                        enableClickToSnap
+                      </td>
+                      <td className="p-4 font-mono text-xs text-blue-500">
+                        boolean
+                      </td>
+                      <td className="p-4 font-mono text-xs text-muted-foreground">
+                        true
+                      </td>
+                      <td className="p-4 text-muted-foreground">
+                        Enable or disable clicking on items to snap them to the center.
                       </td>
                     </tr>
                     <tr className="group hover:bg-secondary/20 transition-colors">
