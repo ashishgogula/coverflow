@@ -25,6 +25,7 @@ export interface CoverFlowProps {
   rotation?: number;
   initialIndex?: number;
   enableReflection?: boolean;
+  enableClickToSnap?: boolean;
   className?: string;
   onItemClick?: (item: CoverFlowItem, index: number) => void;
   onIndexChange?: (index: number) => void;
@@ -39,14 +40,15 @@ export function CoverFlow({
   rotation = 50,
   initialIndex = 0,
   enableReflection = false,
+  enableClickToSnap = true,
   className,
   onItemClick,
   onIndexChange,
 }: CoverFlowProps) {
   const [activeIndex, setActiveIndex] = useState(initialIndex);
+  const [isDragging, setIsDragging] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollX = useMotionValue(initialIndex);
-
   const springX = useSpring(scrollX, {
     stiffness: 150,
     damping: 30,
@@ -54,27 +56,53 @@ export function CoverFlow({
   });
 
   useEffect(() => {
+    if (initialIndex !== activeIndex) {
     setActiveIndex(initialIndex);
+      scrollX.set(initialIndex);
+    }
   }, [initialIndex]);
 
   useEffect(() => {
     onIndexChange?.(activeIndex);
   }, [activeIndex, onIndexChange]);
 
-  useEffect(() => {
-    scrollX.set(activeIndex);
-  }, [activeIndex, scrollX]);
 
   const jumpToIndex = useCallback(
     (index: number) => {
       const clamped = Math.min(Math.max(index, 0), items.length - 1);
       setActiveIndex(clamped);
+      scrollX.set(clamped);
     },
-    [items.length],
+    [items.length, scrollX],
   );
 
+  const onDragStart = () => {
+    setIsDragging(true);
+  };
+
+  const onDrag = (event: any, info: PanInfo) => {
+    const deltaIndex = -info.delta.x / (centerGap * 0.8);
+
+    const current = springX.get();
+    scrollX.set(current + deltaIndex);
+  };
+
+  const onDragEnd = (event: any, info: PanInfo) => {
+    setIsDragging(false);
+    const current = springX.get();
+    const velocity = info.velocity.x;
+
+    const projected = current - velocity * 0.002;
+
+    const targetIndex = Math.round(projected);
+    const clampedIndex = Math.min(Math.max(targetIndex, 0), items.length - 1);
+
+    setActiveIndex(clampedIndex);
+    scrollX.set(clampedIndex);
+  };
+
   const onKeyDown = useCallback(
-    (e: ReactKeyboardEvent<HTMLDivElement>) => {
+    (e: React.KeyboardEvent) => {
       if (e.key === "ArrowLeft") {
         e.preventDefault();
         jumpToIndex(activeIndex - 1);
@@ -86,52 +114,27 @@ export function CoverFlow({
     },
     [activeIndex, jumpToIndex],
   );
-
-  const onDrag = (event: any, info: PanInfo) => {
-    const deltaIndex = -info.delta.x / (centerGap * 0.8);
-
-    const current = springX.get();
-    scrollX.set(current + deltaIndex);
-  };
-
-  const onDragEnd = (event: any, info: PanInfo) => {
-    const current = springX.get();
-    const velocity = info.velocity.x;
-
-    const projected = current - velocity * 0.002;
-
-    const targetIndex = Math.round(projected);
-    const clampedIndex = Math.min(Math.max(targetIndex, 0), items.length - 1);
-
-    setActiveIndex(clampedIndex);
-  };
-
   return (
-    <div
+    <motion.div
       ref={containerRef}
-      className={
-        "relative w-full h-full flex flex-col justify-center items-center overflow-hidden bg-transparent focus:outline-none " +
-        (className ?? "")
-      }
+      className={`relative w-full h-full flex flex-col justify-center items-center overflow-hidden bg-transparent focus:outline-none touch-none ${isDragging ? "cursor-grabbing" : "cursor-grab"
+        } ${className ?? ""}`}
       style={{ perspective: 1000 }}
       role="region"
       aria-label="Cover Flow"
       tabIndex={0}
       onKeyDown={onKeyDown}
-    >
-      <motion.div
-        className="absolute inset-0 z-50 cursor-grab active:cursor-grabbing touch-none"
         drag="x"
         dragConstraints={{ left: 0, right: 0 }}
         dragElastic={0}
         dragMomentum={false}
+      onDragStart={onDragStart}
         onDrag={onDrag}
         onDragEnd={onDragEnd}
-        style={{ opacity: 0 }}
-      />
+    >
 
       <div
-        className="relative w-full h-full flex items-center justify-center"
+        className="relative w-full h-full flex items-center justify-center pointer-events-none"
         style={{ transformStyle: "preserve-3d" }}
       >
         {items.map((item, index) => (
@@ -147,10 +150,12 @@ export function CoverFlow({
             rotation={rotation}
             isActive={index === activeIndex}
             enableReflection={enableReflection}
+            enableClickToSnap={enableClickToSnap}
+            isDragging={isDragging}
             onClick={() => {
               if (index === activeIndex) {
                 onItemClick?.(item, index);
-              } else {
+              } else if (enableClickToSnap) {
                 jumpToIndex(index);
               }
             }}
@@ -161,10 +166,7 @@ export function CoverFlow({
       <div className="absolute bottom-8 left-0 right-0 flex flex-col items-center justify-center pointer-events-none z-40 transition-opacity duration-300">
         <motion.div
           initial={{ opacity: 0, y: 10 }}
-          animate={{
-            opacity: 1,
-            y: 0,
-          }}
+          animate={{ opacity: 1, y: 0 }}
           key={activeIndex}
           transition={{ duration: 0.4, ease: "easeOut" }}
           className="text-center"
@@ -179,7 +181,7 @@ export function CoverFlow({
           )}
         </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 interface CardProps {
@@ -193,6 +195,8 @@ interface CardProps {
   rotation: number;
   isActive: boolean;
   enableReflection: boolean;
+  enableClickToSnap: boolean;
+  isDragging: boolean;
   onClick: () => void;
 }
 
@@ -207,15 +211,12 @@ function CoverFlowItemCard({
   rotation,
   isActive,
   enableReflection,
+  enableClickToSnap,
+  isDragging,
   onClick,
 }: CardProps) {
-  const position = useTransform(scrollX, (value) => {
-    return index - value;
-  });
-
-  const zIndex = useTransform(position, (pos) => {
-    return 1000 - Math.abs(pos) * 10;
-  });
+  const position = useTransform(scrollX, (value) => index - value);
+  const zIndex = useTransform(position, (pos) => 1000 - Math.abs(pos) * 10);
 
   const t = useTransform(position, (pos) => {
     const absPos = Math.abs(pos);
@@ -225,26 +226,19 @@ function CoverFlowItemCard({
     if (pos < -0.5) rY = rotation;
     if (pos > 0.5) rY = -rotation;
 
-    if (!isCenter) {
-    } else {
-      rY = -pos * (rotation * 2);
-    }
+    if (isCenter) rY = -pos * (rotation * 2);
 
     let x = 0;
     if (pos < 0) {
       const stackIndex = Math.max(0, absPos - 1);
       x = -centerGap - stackIndex * stackSpacing;
 
-      if (absPos < 1) {
-        x = pos * centerGap;
-      }
+      if (absPos < 1) x = pos * centerGap;
     } else {
       const stackIndex = Math.max(0, absPos - 1);
       x = centerGap + stackIndex * stackSpacing;
 
-      if (absPos < 1) {
-        x = pos * centerGap;
-      }
+      if (absPos < 1) x = pos * centerGap;
     }
 
     let z = 0;
@@ -254,26 +248,23 @@ function CoverFlowItemCard({
       z = Math.abs(pos) * -400;
     }
 
-    return {
-      rotateY: rY,
-      x,
-      z,
-    };
+    return { rotateY: rY, x, z };
   });
 
   const rotateY = useTransform(t, (v) => v.rotateY);
   const x = useTransform(t, (v) => v.x);
   const z = useTransform(t, (v) => v.z);
+  const brightness = useTransform(position, (pos) => Math.abs(pos) < 0.5 ? 1 : 0.5);
 
-  const brightness = useTransform(position, (pos) => {
-    const absPos = Math.abs(pos);
-    if (absPos < 0.5) return 1;
-    return 0.5;
-  });
+  const getCursorClass = () => {
+    if (isDragging) return "cursor-grabbing";
+    if (isActive || enableClickToSnap) return "cursor-pointer";
+    return "cursor-grab";
+  };
 
   return (
     <motion.div
-      className="absolute top-1/2 left-1/2 preserve-3d will-change-transform"
+      className={`absolute top-1/2 left-1/2 preserve-3d will-change-transform ${getCursorClass()}`}
       style={{
         width,
         height,
@@ -284,6 +275,7 @@ function CoverFlowItemCard({
         rotateY,
         zIndex,
         filter: useTransform(brightness, (b) => `brightness(${b})`),
+        pointerEvents: "auto",
       }}
       onClick={onClick}
     >

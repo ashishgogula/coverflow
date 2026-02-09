@@ -237,6 +237,7 @@ export default function Home() {
                   itemWidth={itemSize.width}
                   itemHeight={itemSize.height}
                   initialIndex={initialIndex}
+                  enableClickToSnap={true}
                   className="w-full h-full z-10"
                 />
               </motion.div>

@@ -13,9 +13,9 @@ import {
 import { useState, useRef } from "react";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
-import { CoverFlow, CoverFlowItem } from "@ashishgogula/coverflow";
 import { motion, type Variants, AnimatePresence } from "motion/react";
 import { cn } from "@/lib/utils";
+import { CoverFlow,CoverFlowItem } from "@/registry/coverflow/coverflow";
 
 const animeItems: CoverFlowItem[] = [
   { id: 1, image: "/anime/Shinazugawa.jpeg", title: "Sanemi Shinazugawa" },
@@ -159,6 +159,7 @@ export default function GetStartedClient({
                     itemHeight={250}
                     initialIndex={5}
                     enableReflection={true}
+                    enableClickToSnap={true}
                   />
                 </div>
                 <div className="p-6 overflow-x-auto">
