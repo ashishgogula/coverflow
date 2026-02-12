@@ -172,6 +172,12 @@ export default function CoverFlowPlayground() {
   const activePreset: PresetKey | null =
     PRESETS.find((preset) => matchesSettings(preset.settings))?.key ?? null;
   const canReset = activePreset !== "modern";
+  const presetIndicatorSpring = {
+    type: "spring",
+    stiffness: 280,
+    damping: 26,
+    mass: 0.8,
+  } as const;
 
   const resetToDefaults = () => {
     applySettings(MODERN_PRESET);
@@ -209,13 +215,28 @@ export default function CoverFlowPlayground() {
                   type="button"
                   onClick={() => applySettings(preset.settings)}
                   aria-pressed={activePreset === preset.key}
-                  className={`rounded-md border px-4 py-1.5 text-xs font-medium transition-colors ${
+                  className={`relative overflow-hidden rounded-md border px-4 py-1.5 text-xs font-medium transition-colors ${
                     activePreset === preset.key
-                      ? "border-border/70 bg-background text-foreground shadow-sm"
-                      : "border-transparent bg-transparent text-muted-foreground hover:border-border/40 hover:bg-background/50 hover:text-foreground"
+                      ? "border-transparent"
+                      : "border-transparent bg-transparent text-muted-foreground"
                   }`}
                 >
-                  {preset.label}
+                  {activePreset === preset.key && (
+                    <motion.span
+                      layoutId="preset-active-indicator"
+                      transition={presetIndicatorSpring}
+                      className="absolute inset-0 rounded-md bg-black dark:bg-white"
+                    />
+                  )}
+                  <span
+                    className={`relative z-10 ${
+                      activePreset === preset.key
+                        ? "text-white dark:text-black"
+                        : "text-muted-foreground"
+                    }`}
+                  >
+                    {preset.label}
+                  </span>
                 </button>
               ))}
             </div>
@@ -225,7 +246,7 @@ export default function CoverFlowPlayground() {
               disabled={!canReset}
               className={`ml-auto shrink-0 rounded-md border px-3 py-1.5 text-xs font-medium transition-colors ${
                 canReset
-                  ? "border-border/70 bg-background text-foreground shadow-sm"
+                  ? "border-black/90 bg-black text-white shadow-sm dark:border-white/90 dark:bg-white dark:text-black"
                   : "border-border/60 bg-secondary/30 text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50"
               }`}
             >
