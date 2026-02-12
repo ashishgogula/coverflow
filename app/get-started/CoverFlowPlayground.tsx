@@ -18,7 +18,18 @@ const playgroundItems: CoverFlowItem[] = [
   { id: 11, image: "/anime/tokitou.jpeg", title: "Muichiro Tokito" },
 ];
 
-const DEFAULT_PLAYGROUND_PROPS = {
+type PlaygroundSettings = {
+  stackSpacing: number;
+  centerGap: number;
+  rotation: number;
+  initialIndex: number;
+  enableReflection: boolean;
+  enableClickToSnap: boolean;
+};
+
+type PresetKey = "modern" | "classic" | "apple";
+
+const MODERN_PRESET: PlaygroundSettings = {
   stackSpacing: 100,
   centerGap: 250,
   rotation: 50,
@@ -27,14 +38,29 @@ const DEFAULT_PLAYGROUND_PROPS = {
   enableClickToSnap: true,
 };
 
-const APPLE_PRESET_PROPS = {
+const CLASSIC_PRESET: PlaygroundSettings = {
+  stackSpacing: 130,
+  centerGap: 280,
+  rotation: 38,
+  initialIndex: 4,
+  enableReflection: false,
+  enableClickToSnap: true,
+};
+
+const APPLE_PRESET: PlaygroundSettings = {
   stackSpacing: 60,
   centerGap: 180,
   rotation: 67,
-  initialIndex: 3,
+  initialIndex: 5,
   enableReflection: true,
   enableClickToSnap: true,
 };
+
+const PRESETS: { key: PresetKey; label: string; settings: PlaygroundSettings }[] = [
+  { key: "modern", label: "Modern (Default)", settings: MODERN_PRESET },
+  { key: "classic", label: "Classic", settings: CLASSIC_PRESET },
+  { key: "apple", label: "Apple", settings: APPLE_PRESET },
+];
 
 interface SliderProps {
   label: string;
@@ -52,7 +78,10 @@ function SliderControl({ label, min, max, step, value, onChange }: SliderProps) 
     damping: 30,
     mass: 0.25,
   });
-  const progressWidth = useTransform(smoothProgress, (v) => `${Math.min(100, Math.max(0, v))}%`);
+  const progressWidth = useTransform(
+    smoothProgress,
+    (v) => `${Math.min(100, Math.max(0, v))}%`,
+  );
 
   useEffect(() => {
     const next = ((value - min) / (max - min)) * 100;
@@ -63,7 +92,9 @@ function SliderControl({ label, min, max, step, value, onChange }: SliderProps) 
     <label className="space-y-2">
       <div className="flex items-center justify-between text-sm">
         <span className="text-muted-foreground">{label}</span>
-        <span className="font-mono text-xs text-foreground">{value.toFixed(step < 1 ? 2 : 0)}</span>
+        <span className="font-mono text-xs text-foreground">
+          {value.toFixed(step < 1 ? 2 : 0)}
+        </span>
       </div>
       <div className="relative h-5">
         <div className="absolute inset-x-0 top-1/2 h-2 -translate-y-1/2 rounded-full bg-secondary/70" />
@@ -109,22 +140,17 @@ function ToggleControl({ label, checked, onChange }: ToggleProps) {
   );
 }
 
-type PlaygroundSettings = {
-  stackSpacing: number;
-  centerGap: number;
-  rotation: number;
-  initialIndex: number;
-  enableReflection: boolean;
-  enableClickToSnap: boolean;
-};
-
 export default function CoverFlowPlayground() {
-  const [stackSpacing, setStackSpacing] = useState(DEFAULT_PLAYGROUND_PROPS.stackSpacing);
-  const [centerGap, setCenterGap] = useState(DEFAULT_PLAYGROUND_PROPS.centerGap);
-  const [rotation, setRotation] = useState(DEFAULT_PLAYGROUND_PROPS.rotation);
-  const [initialIndex, setInitialIndex] = useState(DEFAULT_PLAYGROUND_PROPS.initialIndex);
-  const [enableReflection, setEnableReflection] = useState(DEFAULT_PLAYGROUND_PROPS.enableReflection);
-  const [enableClickToSnap, setEnableClickToSnap] = useState(DEFAULT_PLAYGROUND_PROPS.enableClickToSnap);
+  const [stackSpacing, setStackSpacing] = useState(MODERN_PRESET.stackSpacing);
+  const [centerGap, setCenterGap] = useState(MODERN_PRESET.centerGap);
+  const [rotation, setRotation] = useState(MODERN_PRESET.rotation);
+  const [initialIndex, setInitialIndex] = useState(MODERN_PRESET.initialIndex);
+  const [enableReflection, setEnableReflection] = useState(
+    MODERN_PRESET.enableReflection,
+  );
+  const [enableClickToSnap, setEnableClickToSnap] = useState(
+    MODERN_PRESET.enableClickToSnap,
+  );
 
   const matchesSettings = (settings: PlaygroundSettings) =>
     stackSpacing === settings.stackSpacing &&
@@ -143,16 +169,12 @@ export default function CoverFlowPlayground() {
     setEnableClickToSnap(settings.enableClickToSnap);
   };
 
-  const activePreset = matchesSettings(APPLE_PRESET_PROPS)
-    ? "apple"
-    : matchesSettings(DEFAULT_PLAYGROUND_PROPS)
-      ? "classic"
-      : null;
-
-  const isDefaultState = activePreset === "classic";
+  const activePreset: PresetKey | null =
+    PRESETS.find((preset) => matchesSettings(preset.settings))?.key ?? null;
+  const canReset = activePreset !== "modern";
 
   const resetToDefaults = () => {
-    applySettings(DEFAULT_PLAYGROUND_PROPS);
+    applySettings(MODERN_PRESET);
   };
 
   return (
@@ -173,92 +195,93 @@ export default function CoverFlowPlayground() {
         </div>
       </div>
 
-      <div className="grid gap-6 p-6 md:grid-cols-2">
-        <ToggleControl
-          label="enableReflection"
-          checked={enableReflection}
-          onChange={setEnableReflection}
-        />
+      <div className="space-y-6 p-6">
+        <div className="space-y-3">
+          <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+            Presets
+          </p>
 
-        <ToggleControl
-          label="enableClickToSnap"
-          checked={enableClickToSnap}
-          onChange={setEnableClickToSnap}
-        />
+          <div className="flex w-full flex-wrap items-center gap-3 md:flex-nowrap">
+            <div className="inline-flex w-fit items-center gap-1 rounded-lg border border-border/60 bg-secondary/25 p-1">
+              {PRESETS.map((preset) => (
+                <button
+                  key={preset.key}
+                  type="button"
+                  onClick={() => applySettings(preset.settings)}
+                  aria-pressed={activePreset === preset.key}
+                  className={`rounded-md border px-4 py-1.5 text-xs font-medium transition-colors ${
+                    activePreset === preset.key
+                      ? "border-border/70 bg-background text-foreground shadow-sm"
+                      : "border-transparent bg-transparent text-muted-foreground hover:border-border/40 hover:bg-background/50 hover:text-foreground"
+                  }`}
+                >
+                  {preset.label}
+                </button>
+              ))}
+            </div>
 
-        <SliderControl
-          label="stackSpacing"
-          min={60}
-          max={220}
-          step={5}
-          value={stackSpacing}
-          onChange={setStackSpacing}
-        />
-
-        <SliderControl
-          label="centerGap"
-          min={180}
-          max={420}
-          step={10}
-          value={centerGap}
-          onChange={setCenterGap}
-        />
-
-        <SliderControl
-          label="rotation"
-          min={20}
-          max={80}
-          step={1}
-          value={rotation}
-          onChange={setRotation}
-        />
-
-        <SliderControl
-          label="initialIndex"
-          min={0}
-          max={playgroundItems.length - 1}
-          step={1}
-          value={initialIndex}
-          onChange={setInitialIndex}
-        />
-
-        <div className="md:col-span-2 flex flex-wrap items-center justify-end gap-2 pt-1">
-          <div className="inline-flex items-center rounded-md border border-border/60 bg-secondary/20 p-1">
             <button
-              type="button"
-              onClick={() => applySettings(DEFAULT_PLAYGROUND_PROPS)}
-              aria-pressed={activePreset === "classic"}
-              className={`rounded-sm px-2.5 py-1 text-xs font-medium transition-colors ${
-                activePreset === "classic"
-                  ? "bg-background text-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground"
+              onClick={resetToDefaults}
+              disabled={!canReset}
+              className={`ml-auto shrink-0 rounded-md border px-3 py-1.5 text-xs font-medium transition-colors ${
+                canReset
+                  ? "border-border/70 bg-background text-foreground shadow-sm"
+                  : "border-border/60 bg-secondary/30 text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50"
               }`}
             >
-              Classic
-            </button>
-            <button
-              type="button"
-              onClick={() => applySettings(APPLE_PRESET_PROPS)}
-              aria-pressed={activePreset === "apple"}
-              className={`rounded-sm px-2.5 py-1 text-xs font-medium transition-colors ${
-                activePreset === "apple"
-                  ? "bg-background text-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              Apple
+              Reset to defaults
             </button>
           </div>
+        </div>
 
-          <motion.button
-            whileHover={{ scale: 1.0 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={resetToDefaults}
-            disabled={isDefaultState}
-            className="rounded-md border border-border/60 bg-secondary/30 px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-secondary/50 hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            Reset to defaults
-          </motion.button>
+        <div className="grid gap-6 md:grid-cols-2">
+          <ToggleControl
+            label="enableReflection"
+            checked={enableReflection}
+            onChange={setEnableReflection}
+          />
+
+          <ToggleControl
+            label="enableClickToSnap"
+            checked={enableClickToSnap}
+            onChange={setEnableClickToSnap}
+          />
+
+          <SliderControl
+            label="stackSpacing"
+            min={60}
+            max={220}
+            step={5}
+            value={stackSpacing}
+            onChange={setStackSpacing}
+          />
+
+          <SliderControl
+            label="centerGap"
+            min={180}
+            max={420}
+            step={10}
+            value={centerGap}
+            onChange={setCenterGap}
+          />
+
+          <SliderControl
+            label="rotation"
+            min={20}
+            max={80}
+            step={1}
+            value={rotation}
+            onChange={setRotation}
+          />
+
+          <SliderControl
+            label="initialIndex"
+            min={0}
+            max={playgroundItems.length - 1}
+            step={1}
+            value={initialIndex}
+            onChange={setInitialIndex}
+          />
         </div>
       </div>
     </div>
