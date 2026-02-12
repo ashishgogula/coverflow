@@ -15,10 +15,11 @@ import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { motion, type Variants, AnimatePresence } from "motion/react";
 import { cn } from "@/lib/utils";
-import { CoverFlow,CoverFlowItem } from "@/registry/coverflow/coverflow";
+import { CoverFlow, CoverFlowItem } from "@/registry/coverflow/coverflow";
+import CoverFlowPlayground from "./CoverFlowPlayground";
 
 const animeItems: CoverFlowItem[] = [
-  { id: 1, image: "/anime/Shinazugawa.jpeg", title: "Sanemi Shinazugawa" },
+  { id: 1, image: "/anime/Sanemi.jpeg", title: "Sanemi Sanemi" },
   { id: 2, image: "/anime/Obanai.jpeg", title: "Obanai Iguro" },
   { id: 3, image: "/anime/Mitsuri.jpeg", title: "Mitsuri Kanroji" },
   { id: 4, image: "/anime/giyu.jpeg", title: "Giyu Tomioka" },
@@ -189,7 +190,7 @@ export default function GetStartedClient({
 import { CoverFlow, type CoverFlowItem } from "@/components/ui/coverflow";
 
 const animeItems: CoverFlowItem[] = [
-  { id: 1, image: "/anime/Shinazugawa.jpeg", title: "Sanemi Shinazugawa" },
+  { id: 1, image: "/anime/Sanemi.jpeg", title: "Sanemi Sanemi" },
   { id: 2, image: "/anime/Obanai.jpeg", title: "Obanai Iguro" },
   { id: 3, image: "/anime/Mitsuri.jpeg", title: "Mitsuri Kanroji" },
   { id: 4, image: "/anime/giyu.jpeg", title: "Giyu Tomioka" },
@@ -509,6 +510,24 @@ export default function CoverFlowDemo() {
                     </div>
                   </div>
                 </div>
+              </motion.div>
+            </motion.div>
+
+            <motion.div
+              variants={staggerContainer}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-50px" }}
+              className="space-y-8"
+            >
+              <motion.h3
+                variants={fadeUp}
+                className="text-2xl font-medium tracking-tight"
+              >
+                Interactive Example
+              </motion.h3>
+              <motion.div variants={fadeUp}>
+                <CoverFlowPlayground />
               </motion.div>
             </motion.div>
 
