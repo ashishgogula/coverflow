@@ -78,6 +78,50 @@ export function CoverFlow({
     [items.length, scrollX],
   );
 
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    let wheelAccumulator = 0;
+    let lastWheelTime = Date.now();
+
+    const handleWheel = (e: WheelEvent) => {
+      const isVerticalScroll = Math.abs(e.deltaY) > Math.abs(e.deltaX);
+
+      if (isVerticalScroll) {
+        return;
+      }
+
+      e.preventDefault();
+
+      const now = Date.now();
+      if (now - lastWheelTime > 200) {
+        wheelAccumulator = 0;
+      }
+      lastWheelTime = now;
+
+      wheelAccumulator += e.deltaX;
+
+      const threshold = 90; 
+
+      if (wheelAccumulator > threshold) {
+        const currentIndex = Math.round(scrollX.get());
+        jumpToIndex(currentIndex + 1);
+        wheelAccumulator = 0;
+      } else if (wheelAccumulator < -threshold) {
+        const currentIndex = Math.round(scrollX.get());
+        jumpToIndex(currentIndex - 1);
+        wheelAccumulator = 0;
+      }
+    };
+
+    container.addEventListener("wheel", handleWheel, { passive: false });
+    
+    return () => {
+      container.removeEventListener("wheel", handleWheel);
+    };
+  }, [jumpToIndex, scrollX]);
+
   const onDragStart = () => {
     setIsDragging(true);
   };
@@ -117,8 +161,9 @@ export function CoverFlow({
   return (
     <motion.div
       ref={containerRef}
-      className={`relative w-full h-full flex flex-col justify-center items-center overflow-hidden bg-transparent focus:outline-none touch-none ${isDragging ? "cursor-grabbing" : "cursor-grab"
-        } ${className ?? ""}`}
+      className={`relative w-full h-full flex flex-col justify-center items-center overflow-hidden bg-transparent focus:outline-none touch-none ${
+        isDragging ? "cursor-grabbing" : "cursor-grab"
+      } ${className ?? ""}`}
       style={{ perspective: 1000 }}
       role="region"
       aria-label="Cover Flow"
