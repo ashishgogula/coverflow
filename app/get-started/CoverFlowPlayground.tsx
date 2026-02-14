@@ -25,6 +25,8 @@ type PlaygroundSettings = {
   initialIndex: number;
   enableReflection: boolean;
   enableClickToSnap: boolean;
+  enableScroll: boolean;
+  scrollSensitivity: number;
 };
 
 type PresetKey = "modern" | "classic" | "apple";
@@ -36,6 +38,8 @@ const MODERN_PRESET: PlaygroundSettings = {
   initialIndex: 3,
   enableReflection: true,
   enableClickToSnap: true,
+  enableScroll: true,
+  scrollSensitivity: 90,
 };
 
 const CLASSIC_PRESET: PlaygroundSettings = {
@@ -45,6 +49,8 @@ const CLASSIC_PRESET: PlaygroundSettings = {
   initialIndex: 4,
   enableReflection: false,
   enableClickToSnap: true,
+  enableScroll: true,
+  scrollSensitivity: 90,
 };
 
 const APPLE_PRESET: PlaygroundSettings = {
@@ -54,6 +60,8 @@ const APPLE_PRESET: PlaygroundSettings = {
   initialIndex: 5,
   enableReflection: true,
   enableClickToSnap: true,
+  enableScroll: true,
+  scrollSensitivity: 90,
 };
 
 const PRESETS: { key: PresetKey; label: string; settings: PlaygroundSettings }[] = [
@@ -151,6 +159,10 @@ export default function CoverFlowPlayground() {
   const [enableClickToSnap, setEnableClickToSnap] = useState(
     MODERN_PRESET.enableClickToSnap,
   );
+  const [enableScroll, setEnableScroll] = useState(MODERN_PRESET.enableScroll);
+  const [scrollSensitivity, setScrollSensitivity] = useState(
+    MODERN_PRESET.scrollSensitivity,
+  );
 
   const matchesSettings = (settings: PlaygroundSettings) =>
     stackSpacing === settings.stackSpacing &&
@@ -158,7 +170,9 @@ export default function CoverFlowPlayground() {
     rotation === settings.rotation &&
     initialIndex === settings.initialIndex &&
     enableReflection === settings.enableReflection &&
-    enableClickToSnap === settings.enableClickToSnap;
+    enableClickToSnap === settings.enableClickToSnap &&
+    enableScroll === settings.enableScroll &&
+    scrollSensitivity === settings.scrollSensitivity;
 
   const applySettings = (settings: PlaygroundSettings) => {
     setStackSpacing(settings.stackSpacing);
@@ -167,6 +181,8 @@ export default function CoverFlowPlayground() {
     setInitialIndex(settings.initialIndex);
     setEnableReflection(settings.enableReflection);
     setEnableClickToSnap(settings.enableClickToSnap);
+    setEnableScroll(settings.enableScroll);
+    setScrollSensitivity(settings.scrollSensitivity);
   };
 
   const activePreset: PresetKey | null =
@@ -195,6 +211,8 @@ export default function CoverFlowPlayground() {
             initialIndex={initialIndex}
             enableReflection={enableReflection}
             enableClickToSnap={enableClickToSnap}
+            enableScroll={enableScroll}
+            scrollSensitivity={scrollSensitivity}
             itemHeight={250}
             itemWidth={250}
           />
@@ -268,6 +286,12 @@ export default function CoverFlowPlayground() {
             onChange={setEnableClickToSnap}
           />
 
+          <ToggleControl
+            label="enableScroll"
+            checked={enableScroll}
+            onChange={setEnableScroll}
+          />
+
           <SliderControl
             label="stackSpacing"
             min={60}
@@ -302,6 +326,15 @@ export default function CoverFlowPlayground() {
             step={1}
             value={initialIndex}
             onChange={setInitialIndex}
+          />
+
+          <SliderControl
+            label="scrollSensitivity"
+            min={30}
+            max={220}
+            step={5}
+            value={scrollSensitivity}
+            onChange={setScrollSensitivity}
           />
         </div>
       </div>
