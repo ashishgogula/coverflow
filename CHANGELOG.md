@@ -6,6 +6,25 @@ This project follows semantic versioning.
 
 ---
 
+## [0.2.0] - 2026-02-15
+
+### Added
+
+- `enableScroll` prop (enabled by default) for horizontal wheel-based snapping
+- `scrollSensitivity` prop (default `90`) to control wheel delta threshold before snapping
+
+### Improved
+
+- `/get-started` usage examples now include `enableScroll` and `scrollSensitivity`
+- `/get-started` props table now documents the new scroll props and defaults
+- Interactive playground now includes `enableScroll` toggle and `scrollSensitivity` slider controls
+
+### Fixed
+
+- Stable wheel effect dependency handling to avoid changing `useEffect` dependency array size between renders
+
+---
+
 ## [0.1.4] - 2026-02-09
 
 ### Added

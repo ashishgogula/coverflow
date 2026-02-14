@@ -12,9 +12,9 @@ This project focuses on motion feel, spatial depth, and interaction fidelity rat
 ![Cover Flow Preview](public/coverflow.png)
 ![Cover Flow Example](public/example.png)
 
+- Supports click, drag, touch, keyboard, and horizontal wheel interactions with velocity-aware dragging and arrow-key navigation.
 - Driven by motion springs for weighty, responsive, and fully interruptible animations.
 - Uses hardware-accelerated CSS 3D transforms for smooth, refresh-rate-independent performance.
-- Supports mouse, touch, and keyboard interactions with velocity-aware dragging and arrow-key navigation.
 - Drops cleanly into shadcn-based projects via the CLI or manual install, following the same conventions and structure.
 - Works seamlessly in modern React and Next.js environments, including App Router setups.
 - Adapts gracefully to different container sizes and layouts by default.
@@ -35,6 +35,7 @@ This includes:
 - npm / pnpm / yarn / bun usage
 - Manual setup
 - Live examples
+- Interactive playground with presets and real-time prop controls
 - Props reference
 
 ## Live Demo
