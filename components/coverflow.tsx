@@ -28,6 +28,8 @@ export interface CoverFlowProps {
   initialIndex?: number;
   enableReflection?: boolean;
   enableClickToSnap?: boolean;
+  enableScroll?: boolean;
+  scrollSensitivity?: number;
   className?: string;
   onItemClick?: (item: CoverFlowItem, index: number) => void;
   onIndexChange?: (index: number) => void;
@@ -43,6 +45,8 @@ export function CoverFlow({
   initialIndex = 0,
   enableReflection = false,
   enableClickToSnap = true,
+  enableScroll = true,
+  scrollSensitivity = 90,
   className,
   onItemClick,
   onIndexChange,
@@ -50,6 +54,8 @@ export function CoverFlow({
   const [activeIndex, setActiveIndex] = useState(initialIndex);
   const [isDragging, setIsDragging] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const enableScrollRef = useRef(enableScroll);
+  const scrollSensitivityRef = useRef(scrollSensitivity);
 
   const scrollX = useMotionValue(initialIndex);
   const springX = useSpring(scrollX, {
@@ -69,6 +75,14 @@ export function CoverFlow({
     onIndexChange?.(activeIndex);
   }, [activeIndex, onIndexChange]);
 
+  useEffect(() => {
+    enableScrollRef.current = enableScroll;
+  }, [enableScroll]);
+
+  useEffect(() => {
+    scrollSensitivityRef.current = scrollSensitivity;
+  }, [scrollSensitivity]);
+
   const jumpToIndex = useCallback(
     (index: number) => {
       const clamped = Math.min(Math.max(index, 0), items.length - 1);
@@ -86,6 +100,8 @@ export function CoverFlow({
     let lastWheelTime = Date.now();
 
     const handleWheel = (e: WheelEvent) => {
+      if (!enableScrollRef.current) return;
+
       const isVerticalScroll = Math.abs(e.deltaY) > Math.abs(e.deltaX);
 
       if (isVerticalScroll) {
@@ -102,7 +118,7 @@ export function CoverFlow({
 
       wheelAccumulator += e.deltaX;
 
-      const threshold = 90; 
+      const threshold = scrollSensitivityRef.current;
 
       if (wheelAccumulator > threshold) {
         const currentIndex = Math.round(scrollX.get());
