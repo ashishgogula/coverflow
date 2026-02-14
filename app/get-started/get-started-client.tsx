@@ -161,6 +161,8 @@ export default function GetStartedClient({
                     initialIndex={5}
                     enableReflection={true}
                     enableClickToSnap={true}
+                    enableScroll={true}
+                    scrollSensitivity={100}
                   />
                 </div>
                 <div className="p-6 overflow-x-auto">
@@ -212,6 +214,8 @@ export default function CoverFlowDemo() {
         itemHeight={250}
         initialIndex={3}
         enableReflection={true}
+        enableScroll={true}
+        scrollSensitivity={100}
       />
     </div>
   );
@@ -680,6 +684,34 @@ export default function CoverFlowDemo() {
                       </td>
                       <td className="p-4 text-muted-foreground">
                         Enable or disable clicking on items to snap them to the center.
+                      </td>
+                    </tr>
+                    <tr className="group hover:bg-secondary/20 transition-colors">
+                      <td className="p-4 font-mono text-foreground">
+                        enableScroll
+                      </td>
+                      <td className="p-4 font-mono text-xs text-blue-500">
+                        boolean
+                      </td>
+                      <td className="p-4 font-mono text-xs text-muted-foreground">
+                        true
+                      </td>
+                      <td className="p-4 text-muted-foreground">
+                        Enable or disable horizontal wheel scroll snapping.
+                      </td>
+                    </tr>
+                    <tr className="group hover:bg-secondary/20 transition-colors">
+                      <td className="p-4 font-mono text-foreground">
+                        scrollSensitivity
+                      </td>
+                      <td className="p-4 font-mono text-xs text-blue-500">
+                        number
+                      </td>
+                      <td className="p-4 font-mono text-xs text-muted-foreground">
+                        100
+                      </td>
+                      <td className="p-4 text-muted-foreground">
+                        Wheel delta threshold required before snapping to next card.
                       </td>
                     </tr>
                     <tr className="group hover:bg-secondary/20 transition-colors">

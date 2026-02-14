@@ -25,6 +25,8 @@ export interface CoverFlowProps {
   initialIndex?: number;
   enableReflection?: boolean;
   enableClickToSnap?: boolean;
+  enableScroll?: boolean;
+  scrollSensitivity?: number;
   className?: string;
   onItemClick?: (item: CoverFlowItem, index: number) => void;
   onIndexChange?: (index: number) => void;
@@ -40,6 +42,8 @@ export function CoverFlow({
   initialIndex = 0,
   enableReflection = false,
   enableClickToSnap = true,
+  enableScroll = true,
+  scrollSensitivity = 100,
   className,
   onItemClick,
   onIndexChange,
@@ -47,6 +51,8 @@ export function CoverFlow({
   const [activeIndex, setActiveIndex] = useState(initialIndex);
   const [isDragging, setIsDragging] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const enableScrollRef = useRef(enableScroll);
+  const scrollSensitivityRef = useRef(scrollSensitivity);
   const scrollX = useMotionValue(initialIndex);
   const springX = useSpring(scrollX, {
     stiffness: 150,
@@ -56,7 +62,7 @@ export function CoverFlow({
 
   useEffect(() => {
     if (initialIndex !== activeIndex) {
-    setActiveIndex(initialIndex);
+      setActiveIndex(initialIndex);
       scrollX.set(initialIndex);
     }
   }, [initialIndex]);
@@ -64,6 +70,14 @@ export function CoverFlow({
   useEffect(() => {
     onIndexChange?.(activeIndex);
   }, [activeIndex, onIndexChange]);
+
+  useEffect(() => {
+    enableScrollRef.current = enableScroll;
+  }, [enableScroll]);
+
+  useEffect(() => {
+    scrollSensitivityRef.current = scrollSensitivity;
+  }, [scrollSensitivity]);
 
 
   const jumpToIndex = useCallback(
@@ -74,6 +88,51 @@ export function CoverFlow({
     },
     [items.length, scrollX],
   );
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    let wheelAccumulator = 0;
+    let lastWheelTime = Date.now();
+
+    const handleWheel = (e: WheelEvent) => {
+      if (!enableScrollRef.current) return;
+
+      const isVerticalScroll = Math.abs(e.deltaY) > Math.abs(e.deltaX);
+
+      if (isVerticalScroll) {
+        return;
+      }
+
+      e.preventDefault();
+
+      const now = Date.now();
+      if (now - lastWheelTime > 200) {
+        wheelAccumulator = 0;
+      }
+      lastWheelTime = now;
+      wheelAccumulator += e.deltaX;
+
+      const threshold = scrollSensitivityRef.current;
+
+      if (wheelAccumulator > threshold) {
+        const currentIndex = Math.round(scrollX.get());
+        jumpToIndex(currentIndex + 1);
+        wheelAccumulator = 0;
+      } else if (wheelAccumulator < -threshold) {
+        const currentIndex = Math.round(scrollX.get());
+        jumpToIndex(currentIndex - 1);
+        wheelAccumulator = 0;
+      }
+    };
+
+    container.addEventListener("wheel", handleWheel, { passive: false });
+    
+    return () => {
+      container.removeEventListener("wheel", handleWheel);
+    };
+  }, [jumpToIndex, scrollX]);
 
   const onDragStart = () => {
     setIsDragging(true);
@@ -117,19 +176,19 @@ export function CoverFlow({
     <motion.div
       ref={containerRef}
       className={`relative w-full h-full flex flex-col justify-center items-center overflow-hidden bg-transparent focus:outline-none touch-none ${isDragging ? "cursor-grabbing" : "cursor-grab"
-        } ${className ?? ""}`}
+      } ${className ?? ""}`}
       style={{ perspective: 1000 }}
       role="region"
       aria-label="Cover Flow"
       tabIndex={0}
       onKeyDown={onKeyDown}
-        drag="x"
-        dragConstraints={{ left: 0, right: 0 }}
-        dragElastic={0}
-        dragMomentum={false}
+      drag="x"
+      dragConstraints={{ left: 0, right: 0 }}
+      dragElastic={0}
+      dragMomentum={false}
       onDragStart={onDragStart}
-        onDrag={onDrag}
-        onDragEnd={onDragEnd}
+      onDrag={onDrag}
+      onDragEnd={onDragEnd}
     >
 
       <div
@@ -224,19 +283,15 @@ function CoverFlowItemCard({
     let rY = 0;
     if (pos < -0.5) rY = rotation;
     if (pos > 0.5) rY = -rotation;
-
     if (isCenter) rY = -pos * (rotation * 2);
-
     let x = 0;
     if (pos < 0) {
       const stackIndex = Math.max(0, absPos - 1);
       x = -centerGap - stackIndex * stackSpacing;
-
       if (absPos < 1) x = pos * centerGap;
     } else {
       const stackIndex = Math.max(0, absPos - 1);
       x = centerGap + stackIndex * stackSpacing;
-
       if (absPos < 1) x = pos * centerGap;
     }
 
@@ -280,7 +335,6 @@ function CoverFlowItemCard({
     >
       <div className="relative w-full h-full rounded-xl shadow-2xl bg-black">
         <div className="absolute inset-0 rounded-xl border border-white/10 z-20 pointer-events-none" />
-
         <div className="relative w-full h-full overflow-hidden rounded-xl">
           <img
             src={item.image}
