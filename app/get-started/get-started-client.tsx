@@ -162,7 +162,7 @@ export default function GetStartedClient({
                     enableReflection={true}
                     enableClickToSnap={true}
                     enableScroll={true}
-                    scrollSensitivity={90}
+                    scrollSensitivity={100}
                   />
                 </div>
                 <div className="p-6 overflow-x-auto">
@@ -215,7 +215,7 @@ export default function CoverFlowDemo() {
         initialIndex={3}
         enableReflection={true}
         enableScroll={true}
-        scrollSensitivity={90}
+        scrollSensitivity={100}
       />
     </div>
   );
@@ -708,7 +708,7 @@ export default function CoverFlowDemo() {
                         number
                       </td>
                       <td className="p-4 font-mono text-xs text-muted-foreground">
-                        90
+                        100
                       </td>
                       <td className="p-4 text-muted-foreground">
                         Wheel delta threshold required before snapping to next card.

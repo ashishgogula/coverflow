@@ -46,7 +46,7 @@ export function CoverFlow({
   enableReflection = false,
   enableClickToSnap = true,
   enableScroll = true,
-  scrollSensitivity = 90,
+  scrollSensitivity = 100,
   className,
   onItemClick,
   onIndexChange,

@@ -39,7 +39,7 @@ const MODERN_PRESET: PlaygroundSettings = {
   enableReflection: true,
   enableClickToSnap: true,
   enableScroll: true,
-  scrollSensitivity: 90,
+  scrollSensitivity: 100,
 };
 
 const CLASSIC_PRESET: PlaygroundSettings = {
@@ -50,7 +50,7 @@ const CLASSIC_PRESET: PlaygroundSettings = {
   enableReflection: false,
   enableClickToSnap: true,
   enableScroll: true,
-  scrollSensitivity: 90,
+  scrollSensitivity: 100,
 };
 
 const APPLE_PRESET: PlaygroundSettings = {
@@ -61,7 +61,7 @@ const APPLE_PRESET: PlaygroundSettings = {
   enableReflection: true,
   enableClickToSnap: true,
   enableScroll: true,
-  scrollSensitivity: 90,
+  scrollSensitivity: 100,
 };
 
 const PRESETS: { key: PresetKey; label: string; settings: PlaygroundSettings }[] = [
