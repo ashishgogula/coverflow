@@ -251,7 +251,7 @@ export default function Home() {
                 }}
                 className="hidden sm:block text-center mt-8 text-sm font-semibold text-foreground tracking-wide"
               >
-                Drag to browse • Arrow keys to navigate
+               Horizontal Scroll • Drag • Keyboard
               </motion.div>
             </div>
           </div>
