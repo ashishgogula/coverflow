@@ -8,9 +8,7 @@
       "type": "registry:component",
       "title": "Cover Flow",
       "description": "Apple-style Cover Flow component with 3D motion",
-      "dependencies": [
-        "motion"
-      ],
+      "dependencies": ["motion"],
       "files": [
         {
           "path": "registry/coverflow/coverflow.tsx",

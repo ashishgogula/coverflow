@@ -1,8 +1,8 @@
-"use client";
+'use client'
 
-import { CoverFlow, CoverFlowItem } from "@/components/coverflow";
-import { Navbar } from "@/components/navbar";
-import { Footer } from "@/components/footer";
+import { CoverFlow, CoverFlowItem } from '@/components/coverflow'
+import { Navbar } from '@/components/navbar'
+import { Footer } from '@/components/footer'
 import {
   Copy,
   Layers,
@@ -13,131 +13,130 @@ import {
   Plus,
   Star,
   CircleCheck,
-} from "lucide-react";
-import Link from "next/link";
-import { useMemo, useState, useEffect } from "react";
-import { motion, type Variants } from "motion/react";
-import { HighlightWords } from "@/components/highlight-words";
+} from 'lucide-react'
+import Link from 'next/link'
+import { useMemo, useState, useEffect } from 'react'
+import { motion, type Variants } from 'motion/react'
+import { HighlightWords } from '@/components/highlight-words'
 
 const albums: CoverFlowItem[] = [
   {
     id: 1,
-    image: "/covers/cover-01.svg",
-    title: "Midnight Dreams",
-    subtitle: "The Dreamers • 2024",
+    image: '/covers/cover-01.svg',
+    title: 'Midnight Dreams',
+    subtitle: 'The Dreamers • 2024',
   },
   {
     id: 2,
-    image: "/covers/cover-02.svg",
-    title: "Surf Waves",
-    subtitle: "Ocean Sounds • 2023",
+    image: '/covers/cover-02.svg',
+    title: 'Surf Waves',
+    subtitle: 'Ocean Sounds • 2023',
   },
   {
     id: 3,
-    image: "/covers/cover-03.svg",
-    title: "Neon Nights",
-    subtitle: "Synthwave Collective • 2024",
+    image: '/covers/cover-03.svg',
+    title: 'Neon Nights',
+    subtitle: 'Synthwave Collective • 2024',
   },
   {
     id: 4,
-    image: "/covers/cover-04.svg",
-    title: "Urban Jungle",
-    subtitle: "City Beats • 2022",
+    image: '/covers/cover-04.svg',
+    title: 'Urban Jungle',
+    subtitle: 'City Beats • 2022',
   },
   {
     id: 5,
-    image: "/covers/cover-05.svg",
-    title: "Mountain Echoes",
-    subtitle: "Nature Ambient • 2023",
+    image: '/covers/cover-05.svg',
+    title: 'Mountain Echoes',
+    subtitle: 'Nature Ambient • 2023',
   },
   {
     id: 6,
-    image: "/covers/cover-10.svg",
-    title: "Summer Vibes",
-    subtitle: "Beach Party • 2022",
+    image: '/covers/cover-10.svg',
+    title: 'Summer Vibes',
+    subtitle: 'Beach Party • 2022',
   },
 
   {
     id: 7,
-    image: "/covers/cover-07.svg",
-    title: "Vinyl Classics",
-    subtitle: "Retro Hits • 2021",
+    image: '/covers/cover-07.svg',
+    title: 'Vinyl Classics',
+    subtitle: 'Retro Hits • 2021',
   },
   {
     id: 8,
-    image: "/covers/cover-08.svg",
-    title: "Golden Hour",
-    subtitle: "Sunset Melodies • 2023",
+    image: '/covers/cover-08.svg',
+    title: 'Golden Hour',
+    subtitle: 'Sunset Melodies • 2023',
   },
   {
     id: 9,
-    image: "/covers/cover-09.svg",
-    title: "Deep Space",
-    subtitle: "Ambient Cosmos • 2025",
+    image: '/covers/cover-09.svg',
+    title: 'Deep Space',
+    subtitle: 'Ambient Cosmos • 2025',
   },
 
   {
     id: 10,
-    image: "/covers/cover-06.svg",
-    title: "Coffee House",
-    subtitle: "Acoustic Vibes • 2024",
+    image: '/covers/cover-06.svg',
+    title: 'Coffee House',
+    subtitle: 'Acoustic Vibes • 2024',
   },
-];
+]
 
 export default function Home() {
-  const [copied, setCopied] = useState(false);
-  const [itemSize, setItemSize] = useState({ width: 400, height: 400 });
-  const [initialIndex, setInitialIndex] = useState(0);
+  const [copied, setCopied] = useState(false)
+  const [itemSize, setItemSize] = useState({ width: 400, height: 400 })
+  const [initialIndex, setInitialIndex] = useState(0)
   const installCommand = useMemo(
-    () =>
-      "npx shadcn add https://ashishgogula.in/r/coverflow.json",
+    () => 'npx shadcn add https://ashishgogula.in/r/coverflow.json',
     [],
-  );
+  )
 
   useEffect(() => {
-    let timeoutId: NodeJS.Timeout;
+    let timeoutId: NodeJS.Timeout
     const handleResize = () => {
-      clearTimeout(timeoutId);
+      clearTimeout(timeoutId)
       timeoutId = setTimeout(() => {
         if (window.innerWidth < 768) {
-          setItemSize({ width: 240, height: 240 });
+          setItemSize({ width: 240, height: 240 })
         } else {
-          setItemSize({ width: 400, height: 400 });
+          setItemSize({ width: 400, height: 400 })
         }
-      }, 100);
-    };
+      }, 100)
+    }
 
-    handleResize();
-    window.addEventListener("resize", handleResize);
+    handleResize()
+    window.addEventListener('resize', handleResize)
 
     return () => {
-      window.removeEventListener("resize", handleResize);
-      clearTimeout(timeoutId);
-    };
-  }, []);
+      window.removeEventListener('resize', handleResize)
+      clearTimeout(timeoutId)
+    }
+  }, [])
 
   const copyCommand = () => {
-    navigator.clipboard.writeText(installCommand);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
+    navigator.clipboard.writeText(installCommand)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
 
   const fadeUp: Variants = {
     hidden: {
       opacity: 0,
       y: 100,
-      filter: "blur(20px)",
+      filter: 'blur(20px)',
     },
     visible: {
       opacity: 1,
       y: 0,
-      filter: "blur(0px)",
+      filter: 'blur(0px)',
       transition: {
         duration: 0.5,
         ease: [0.22, 1, 0.36, 1],
       },
     },
-  };
+  }
 
   const staggerContainer: Variants = {
     hidden: { opacity: 0 },
@@ -148,7 +147,7 @@ export default function Home() {
         delayChildren: 0.1,
       },
     },
-  };
+  }
 
   return (
     <div className="m-shell">
@@ -179,7 +178,7 @@ export default function Home() {
                 Fluid, physical motion with zero layout shifts.
                 <HighlightWords
                   text="Built for the modern web with Motion and Tailwind."
-                  highlights={["Motion", "Tailwind"]}
+                  highlights={['Motion', 'Tailwind']}
                 />
               </motion.div>
 
@@ -203,7 +202,6 @@ export default function Home() {
                   onClick={copyCommand}
                   className=" flex gap-2 flex-row font-mono text-xs cursor-copy"
                 >
-
                   {copied ? (
                     <CircleCheck className="h-4 w-4" />
                   ) : (
@@ -226,8 +224,8 @@ export default function Home() {
                 viewport={{ once: true, amount: 0.5 }}
                 onViewportEnter={() => {
                   setTimeout(() => {
-                    setInitialIndex(5);
-                  }, 1200);
+                    setInitialIndex(5)
+                  }, 1200)
                 }}
                 transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
                 className="relative w-full h-[500px] sm:h-[620px] aspect-[16/9] md:aspect-[2/1] flex flex-col items-center justify-center"
@@ -251,7 +249,7 @@ export default function Home() {
                 }}
                 className="hidden sm:block text-center mt-8 text-sm font-semibold text-foreground tracking-wide"
               >
-               Horizontal Scroll • Drag • Keyboard
+                Horizontal Scroll • Drag • Keyboard
               </motion.div>
             </div>
           </div>
@@ -265,7 +263,7 @@ export default function Home() {
               id="features"
               initial="hidden"
               whileInView="visible"
-              viewport={{ once: true, margin: "-40px" }}
+              viewport={{ once: true, margin: '-40px' }}
               variants={staggerContainer}
             >
               <motion.div
@@ -368,7 +366,7 @@ export default function Home() {
             id="support"
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
+            viewport={{ once: true, margin: '-100px' }}
             variants={staggerContainer}
           >
             <div className="max-w-xl mx-auto px-6 text-center">
@@ -411,5 +409,5 @@ export default function Home() {
         </div>
       </main>
     </div>
-  );
+  )
 }

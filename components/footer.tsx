@@ -1,6 +1,6 @@
-"use client";
+'use client'
 
-import { motion } from "motion/react";
+import { motion } from 'motion/react'
 
 export function Footer() {
   return (
@@ -44,5 +44,5 @@ export function Footer() {
         </div>
       </div>
     </motion.footer>
-  );
+  )
 }

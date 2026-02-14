@@ -1,35 +1,35 @@
-"use client";
+'use client'
 
-import { useEffect, useState } from "react";
-import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
-import { CoverFlow, type CoverFlowItem } from "@/registry/coverflow/coverflow";
+import { useEffect, useState } from 'react'
+import { motion, useMotionValue, useSpring, useTransform } from 'motion/react'
+import { CoverFlow, type CoverFlowItem } from '@/registry/coverflow/coverflow'
 
 const playgroundItems: CoverFlowItem[] = [
-  { id: 1, image: "/anime/Sanemi.jpeg", title: "Sanemi Sanemi" },
-  { id: 2, image: "/anime/Obanai.jpeg", title: "Obanai Iguro" },
-  { id: 3, image: "/anime/Mitsuri.jpeg", title: "Mitsuri Kanroji" },
-  { id: 4, image: "/anime/giyu.jpeg", title: "Giyu Tomioka" },
-  { id: 5, image: "/anime/Shinobu.jpeg", title: "Shinobu Kocho" },
-  { id: 6, image: "/anime/kanao.jpeg", title: "Kanao Tsuyuri" },
-  { id: 7, image: "/anime/Tanjiro.jpeg", title: "Tanjiro Kamado" },
-  { id: 8, image: "/anime/Nezuko.jpeg", title: "Nezuko Kamado" },
-  { id: 9, image: "/anime/Zenitsu.jpeg", title: "Zenitsu Agatsuma" },
-  { id: 10, image: "/anime/InosukeH.jpeg", title: "Inosuke Hashibira" },
-  { id: 11, image: "/anime/tokitou.jpeg", title: "Muichiro Tokito" },
-];
+  { id: 1, image: '/anime/Sanemi.jpeg', title: 'Sanemi Sanemi' },
+  { id: 2, image: '/anime/Obanai.jpeg', title: 'Obanai Iguro' },
+  { id: 3, image: '/anime/Mitsuri.jpeg', title: 'Mitsuri Kanroji' },
+  { id: 4, image: '/anime/giyu.jpeg', title: 'Giyu Tomioka' },
+  { id: 5, image: '/anime/Shinobu.jpeg', title: 'Shinobu Kocho' },
+  { id: 6, image: '/anime/kanao.jpeg', title: 'Kanao Tsuyuri' },
+  { id: 7, image: '/anime/Tanjiro.jpeg', title: 'Tanjiro Kamado' },
+  { id: 8, image: '/anime/Nezuko.jpeg', title: 'Nezuko Kamado' },
+  { id: 9, image: '/anime/Zenitsu.jpeg', title: 'Zenitsu Agatsuma' },
+  { id: 10, image: '/anime/InosukeH.jpeg', title: 'Inosuke Hashibira' },
+  { id: 11, image: '/anime/tokitou.jpeg', title: 'Muichiro Tokito' },
+]
 
 type PlaygroundSettings = {
-  stackSpacing: number;
-  centerGap: number;
-  rotation: number;
-  initialIndex: number;
-  enableReflection: boolean;
-  enableClickToSnap: boolean;
-  enableScroll: boolean;
-  scrollSensitivity: number;
-};
+  stackSpacing: number
+  centerGap: number
+  rotation: number
+  initialIndex: number
+  enableReflection: boolean
+  enableClickToSnap: boolean
+  enableScroll: boolean
+  scrollSensitivity: number
+}
 
-type PresetKey = "modern" | "classic" | "apple";
+type PresetKey = 'modern' | 'classic' | 'apple'
 
 const MODERN_PRESET: PlaygroundSettings = {
   stackSpacing: 100,
@@ -40,7 +40,7 @@ const MODERN_PRESET: PlaygroundSettings = {
   enableClickToSnap: true,
   enableScroll: true,
   scrollSensitivity: 100,
-};
+}
 
 const CLASSIC_PRESET: PlaygroundSettings = {
   stackSpacing: 130,
@@ -51,7 +51,7 @@ const CLASSIC_PRESET: PlaygroundSettings = {
   enableClickToSnap: true,
   enableScroll: true,
   scrollSensitivity: 100,
-};
+}
 
 const APPLE_PRESET: PlaygroundSettings = {
   stackSpacing: 60,
@@ -62,39 +62,50 @@ const APPLE_PRESET: PlaygroundSettings = {
   enableClickToSnap: true,
   enableScroll: true,
   scrollSensitivity: 100,
-};
-
-const PRESETS: { key: PresetKey; label: string; settings: PlaygroundSettings }[] = [
-  { key: "modern", label: "Modern (Default)", settings: MODERN_PRESET },
-  { key: "classic", label: "Classic", settings: CLASSIC_PRESET },
-  { key: "apple", label: "Apple", settings: APPLE_PRESET },
-];
-
-interface SliderProps {
-  label: string;
-  min: number;
-  max: number;
-  step: number;
-  value: number;
-  onChange: (value: number) => void;
 }
 
-function SliderControl({ label, min, max, step, value, onChange }: SliderProps) {
-  const progress = useMotionValue(((value - min) / (max - min)) * 100);
+const PRESETS: {
+  key: PresetKey
+  label: string
+  settings: PlaygroundSettings
+}[] = [
+  { key: 'modern', label: 'Modern (Default)', settings: MODERN_PRESET },
+  { key: 'classic', label: 'Classic', settings: CLASSIC_PRESET },
+  { key: 'apple', label: 'Apple', settings: APPLE_PRESET },
+]
+
+interface SliderProps {
+  label: string
+  min: number
+  max: number
+  step: number
+  value: number
+  onChange: (value: number) => void
+}
+
+function SliderControl({
+  label,
+  min,
+  max,
+  step,
+  value,
+  onChange,
+}: SliderProps) {
+  const progress = useMotionValue(((value - min) / (max - min)) * 100)
   const smoothProgress = useSpring(progress, {
     stiffness: 280,
     damping: 30,
     mass: 0.25,
-  });
+  })
   const progressWidth = useTransform(
     smoothProgress,
     (v) => `${Math.min(100, Math.max(0, v))}%`,
-  );
+  )
 
   useEffect(() => {
-    const next = ((value - min) / (max - min)) * 100;
-    progress.set(Number.isFinite(next) ? next : 0);
-  }, [max, min, progress, value]);
+    const next = ((value - min) / (max - min)) * 100
+    progress.set(Number.isFinite(next) ? next : 0)
+  }, [max, min, progress, value])
 
   return (
     <label className="space-y-2">
@@ -125,13 +136,13 @@ function SliderControl({ label, min, max, step, value, onChange }: SliderProps) 
         />
       </div>
     </label>
-  );
+  )
 }
 
 interface ToggleProps {
-  label: string;
-  checked: boolean;
-  onChange: (checked: boolean) => void;
+  label: string
+  checked: boolean
+  onChange: (checked: boolean) => void
 }
 
 function ToggleControl({ label, checked, onChange }: ToggleProps) {
@@ -145,24 +156,24 @@ function ToggleControl({ label, checked, onChange }: ToggleProps) {
         className="h-4 w-4 rounded border-border accent-foreground"
       />
     </label>
-  );
+  )
 }
 
 export default function CoverFlowPlayground() {
-  const [stackSpacing, setStackSpacing] = useState(MODERN_PRESET.stackSpacing);
-  const [centerGap, setCenterGap] = useState(MODERN_PRESET.centerGap);
-  const [rotation, setRotation] = useState(MODERN_PRESET.rotation);
-  const [initialIndex, setInitialIndex] = useState(MODERN_PRESET.initialIndex);
+  const [stackSpacing, setStackSpacing] = useState(MODERN_PRESET.stackSpacing)
+  const [centerGap, setCenterGap] = useState(MODERN_PRESET.centerGap)
+  const [rotation, setRotation] = useState(MODERN_PRESET.rotation)
+  const [initialIndex, setInitialIndex] = useState(MODERN_PRESET.initialIndex)
   const [enableReflection, setEnableReflection] = useState(
     MODERN_PRESET.enableReflection,
-  );
+  )
   const [enableClickToSnap, setEnableClickToSnap] = useState(
     MODERN_PRESET.enableClickToSnap,
-  );
-  const [enableScroll, setEnableScroll] = useState(MODERN_PRESET.enableScroll);
+  )
+  const [enableScroll, setEnableScroll] = useState(MODERN_PRESET.enableScroll)
   const [scrollSensitivity, setScrollSensitivity] = useState(
     MODERN_PRESET.scrollSensitivity,
-  );
+  )
 
   const matchesSettings = (settings: PlaygroundSettings) =>
     stackSpacing === settings.stackSpacing &&
@@ -172,32 +183,32 @@ export default function CoverFlowPlayground() {
     enableReflection === settings.enableReflection &&
     enableClickToSnap === settings.enableClickToSnap &&
     enableScroll === settings.enableScroll &&
-    scrollSensitivity === settings.scrollSensitivity;
+    scrollSensitivity === settings.scrollSensitivity
 
   const applySettings = (settings: PlaygroundSettings) => {
-    setStackSpacing(settings.stackSpacing);
-    setCenterGap(settings.centerGap);
-    setRotation(settings.rotation);
-    setInitialIndex(settings.initialIndex);
-    setEnableReflection(settings.enableReflection);
-    setEnableClickToSnap(settings.enableClickToSnap);
-    setEnableScroll(settings.enableScroll);
-    setScrollSensitivity(settings.scrollSensitivity);
-  };
+    setStackSpacing(settings.stackSpacing)
+    setCenterGap(settings.centerGap)
+    setRotation(settings.rotation)
+    setInitialIndex(settings.initialIndex)
+    setEnableReflection(settings.enableReflection)
+    setEnableClickToSnap(settings.enableClickToSnap)
+    setEnableScroll(settings.enableScroll)
+    setScrollSensitivity(settings.scrollSensitivity)
+  }
 
   const activePreset: PresetKey | null =
-    PRESETS.find((preset) => matchesSettings(preset.settings))?.key ?? null;
-  const canReset = activePreset !== "modern";
+    PRESETS.find((preset) => matchesSettings(preset.settings))?.key ?? null
+  const canReset = activePreset !== 'modern'
   const presetIndicatorSpring = {
-    type: "spring",
+    type: 'spring',
     stiffness: 280,
     damping: 26,
     mass: 0.8,
-  } as const;
+  } as const
 
   const resetToDefaults = () => {
-    applySettings(MODERN_PRESET);
-  };
+    applySettings(MODERN_PRESET)
+  }
 
   return (
     <div className="overflow-hidden rounded-2xl border border-border/40 bg-card shadow-sm">
@@ -235,8 +246,8 @@ export default function CoverFlowPlayground() {
                   aria-pressed={activePreset === preset.key}
                   className={`relative overflow-hidden rounded-md border px-4 py-1.5 text-xs font-medium transition-colors ${
                     activePreset === preset.key
-                      ? "border-transparent"
-                      : "border-transparent bg-transparent text-muted-foreground"
+                      ? 'border-transparent'
+                      : 'border-transparent bg-transparent text-muted-foreground'
                   }`}
                 >
                   {activePreset === preset.key && (
@@ -249,8 +260,8 @@ export default function CoverFlowPlayground() {
                   <span
                     className={`relative z-10 ${
                       activePreset === preset.key
-                        ? "text-white dark:text-black"
-                        : "text-muted-foreground"
+                        ? 'text-white dark:text-black'
+                        : 'text-muted-foreground'
                     }`}
                   >
                     {preset.label}
@@ -264,8 +275,8 @@ export default function CoverFlowPlayground() {
               disabled={!canReset}
               className={`ml-auto shrink-0 rounded-md border px-3 py-1.5 text-xs font-medium transition-colors ${
                 canReset
-                  ? "border-black/90 bg-black text-white shadow-sm dark:border-white/90 dark:bg-white dark:text-black"
-                  : "border-border/60 bg-secondary/30 text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50"
+                  ? 'border-black/90 bg-black text-white shadow-sm dark:border-white/90 dark:bg-white dark:text-black'
+                  : 'border-border/60 bg-secondary/30 text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50'
               }`}
             >
               Reset to defaults
@@ -339,5 +350,5 @@ export default function CoverFlowPlayground() {
         </div>
       </div>
     </div>
-  );
+  )
 }

@@ -1,9 +1,9 @@
 # Cover Flow
+
 [![npm](https://img.shields.io/npm/v/@ashishgogula/coverflow?color=cb3837&logo=npm&logoColor=white)](https://www.npmjs.com/package/@ashishgogula/coverflow)
 [![npm downloads](https://img.shields.io/npm/dm/@ashishgogula/coverflow?color=cb3837&logo=npm&logoColor=white)](https://www.npmjs.com/package/@ashishgogula/coverflow)
 [![License](https://img.shields.io/badge/license-MIT-4c9aff?logo=opensourceinitiative&logoColor=white)](https://opensource.org/licenses/MIT)
 [![Deployed on Vercel](https://img.shields.io/badge/deployed-vercel-000000?logo=vercel&logoColor=white)](https://coverflow.ashishgogula.in)
-
 
 A high-fidelity recreation of the classic iTunes Cover Flow interaction, built for the modern web using React, Next.js, Tailwind and Motion.
 
@@ -30,6 +30,7 @@ All installation methods, usage examples, and configuration details are document
 👉 **https://coverflow.ashishgogula.in/get-started**
 
 This includes:
+
 - shadcn CLI installation
 - npm / pnpm / yarn / bun usage
 - Manual setup
@@ -39,7 +40,6 @@ This includes:
 ## Live Demo
 
 [coverflow.ashishgogula.in](https://coverflow.ashishgogula.in)
-
 
 ## Contributing
 

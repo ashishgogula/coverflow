@@ -1,4 +1,4 @@
-"use client";
+'use client'
 
 import {
   Github,
@@ -9,89 +9,89 @@ import {
   ChevronUp,
   Minimize2,
   Maximize2,
-} from "lucide-react";
-import { useState, useRef } from "react";
-import { Navbar } from "@/components/navbar";
-import { Footer } from "@/components/footer";
-import { motion, type Variants, AnimatePresence } from "motion/react";
-import { cn } from "@/lib/utils";
-import { CoverFlow, CoverFlowItem } from "@/registry/coverflow/coverflow";
-import CoverFlowPlayground from "./CoverFlowPlayground";
+} from 'lucide-react'
+import { useState, useRef } from 'react'
+import { Navbar } from '@/components/navbar'
+import { Footer } from '@/components/footer'
+import { motion, type Variants, AnimatePresence } from 'motion/react'
+import { cn } from '@/lib/utils'
+import { CoverFlow, CoverFlowItem } from '@/registry/coverflow/coverflow'
+import CoverFlowPlayground from './CoverFlowPlayground'
 
 const animeItems: CoverFlowItem[] = [
-  { id: 1, image: "/anime/Sanemi.jpeg", title: "Sanemi Sanemi" },
-  { id: 2, image: "/anime/Obanai.jpeg", title: "Obanai Iguro" },
-  { id: 3, image: "/anime/Mitsuri.jpeg", title: "Mitsuri Kanroji" },
-  { id: 4, image: "/anime/giyu.jpeg", title: "Giyu Tomioka" },
-  { id: 5, image: "/anime/Shinobu.jpeg", title: "Shinobu Kocho" },
-  { id: 6, image: "/anime/kanao.jpeg", title: "Kanao Tsuyuri" },
-  { id: 7, image: "/anime/Tanjiro.jpeg", title: "Tanjiro Kamado" },
-  { id: 8, image: "/anime/Nezuko.jpeg", title: "Nezuko Kamado" },
-  { id: 9, image: "/anime/Zenitsu.jpeg", title: "Zenitsu Agatsuma" },
-  { id: 10, image: "/anime/InosukeH.jpeg", title: "Inosuke Hashibira" },
-  { id: 11, image: "/anime/tokitou.jpeg", title: "Muichiro Tokito" },
-];
+  { id: 1, image: '/anime/Sanemi.jpeg', title: 'Sanemi Sanemi' },
+  { id: 2, image: '/anime/Obanai.jpeg', title: 'Obanai Iguro' },
+  { id: 3, image: '/anime/Mitsuri.jpeg', title: 'Mitsuri Kanroji' },
+  { id: 4, image: '/anime/giyu.jpeg', title: 'Giyu Tomioka' },
+  { id: 5, image: '/anime/Shinobu.jpeg', title: 'Shinobu Kocho' },
+  { id: 6, image: '/anime/kanao.jpeg', title: 'Kanao Tsuyuri' },
+  { id: 7, image: '/anime/Tanjiro.jpeg', title: 'Tanjiro Kamado' },
+  { id: 8, image: '/anime/Nezuko.jpeg', title: 'Nezuko Kamado' },
+  { id: 9, image: '/anime/Zenitsu.jpeg', title: 'Zenitsu Agatsuma' },
+  { id: 10, image: '/anime/InosukeH.jpeg', title: 'Inosuke Hashibira' },
+  { id: 11, image: '/anime/tokitou.jpeg', title: 'Muichiro Tokito' },
+]
 
 export default function GetStartedClient({
   componentCode,
 }: {
-  componentCode: string;
+  componentCode: string
 }) {
-  const [copied, setCopied] = useState(false);
-  const [packageManager, setPackageManager] = useState("pnpm");
-  const [installMethod, setInstallMethod] = useState<"shadcn" | "primitive">(
-    "shadcn",
-  );
-  const [manualCopied, setManualCopied] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [usageCopied, setUsageCopied] = useState(false);
-  const usageCodeRef = useRef<HTMLPreElement | null>(null);
+  const [copied, setCopied] = useState(false)
+  const [packageManager, setPackageManager] = useState('pnpm')
+  const [installMethod, setInstallMethod] = useState<'shadcn' | 'primitive'>(
+    'shadcn',
+  )
+  const [manualCopied, setManualCopied] = useState(false)
+  const [isExpanded, setIsExpanded] = useState(false)
+  const [usageCopied, setUsageCopied] = useState(false)
+  const usageCodeRef = useRef<HTMLPreElement | null>(null)
 
   const copyUsageCode = () => {
-    if (!usageCodeRef.current) return;
-    navigator.clipboard.writeText(usageCodeRef.current.innerText);
-    setUsageCopied(true);
-    setTimeout(() => setUsageCopied(false), 2000);
-  };
+    if (!usageCodeRef.current) return
+    navigator.clipboard.writeText(usageCodeRef.current.innerText)
+    setUsageCopied(true)
+    setTimeout(() => setUsageCopied(false), 2000)
+  }
 
   const copyManualCode = () => {
-    navigator.clipboard.writeText(componentCode);
-    setManualCopied(true);
-    setTimeout(() => setManualCopied(false), 2000);
-  };
+    navigator.clipboard.writeText(componentCode)
+    setManualCopied(true)
+    setTimeout(() => setManualCopied(false), 2000)
+  }
 
   const commands = {
-    pnpm: "pnpm dlx shadcn add https://ashishgogula.in/r/coverflow.json",
-    npm: "npx shadcn add https://ashishgogula.in/r/coverflow.json",
-    yarn: "npx shadcn add https://ashishgogula.in/r/coverflow.json",
-    bun: "bun x shadcn add https://ashishgogula.in/r/coverflow.json",
-  };
+    pnpm: 'pnpm dlx shadcn add https://ashishgogula.in/r/coverflow.json',
+    npm: 'npx shadcn add https://ashishgogula.in/r/coverflow.json',
+    yarn: 'npx shadcn add https://ashishgogula.in/r/coverflow.json',
+    bun: 'bun x shadcn add https://ashishgogula.in/r/coverflow.json',
+  }
 
   const primitiveCommands = {
-    pnpm: "pnpm add @ashishgogula/coverflow",
-    npm: "npm install @ashishgogula/coverflow",
-    yarn: "yarn add @ashishgogula/coverflow",
-    bun: "bun add @ashishgogula/coverflow",
-  };
+    pnpm: 'pnpm add @ashishgogula/coverflow',
+    npm: 'npm install @ashishgogula/coverflow',
+    yarn: 'yarn add @ashishgogula/coverflow',
+    bun: 'bun add @ashishgogula/coverflow',
+  }
 
   const copyCommand = () => {
-    const current = installMethod === "shadcn" ? commands : primitiveCommands;
+    const current = installMethod === 'shadcn' ? commands : primitiveCommands
     navigator.clipboard.writeText(
       current[packageManager as keyof typeof current],
-    );
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
+    )
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
 
   const fadeUp: Variants = {
-    hidden: { opacity: 0, y: 12, filter: "blur(4px)" },
+    hidden: { opacity: 0, y: 12, filter: 'blur(4px)' },
     visible: {
       opacity: 1,
       y: 0,
-      filter: "blur(0px)",
+      filter: 'blur(0px)',
       transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] },
     },
-  };
+  }
 
   const staggerContainer: Variants = {
     hidden: { opacity: 0 },
@@ -99,7 +99,7 @@ export default function GetStartedClient({
       opacity: 1,
       transition: { staggerChildren: 0.08, delayChildren: 0.1 },
     },
-  };
+  }
 
   return (
     <div className="m-shell">
@@ -140,7 +140,7 @@ export default function GetStartedClient({
               variants={staggerContainer}
               initial="hidden"
               whileInView="visible"
-              viewport={{ once: true, margin: "-50px" }}
+              viewport={{ once: true, margin: '-50px' }}
               className="space-y-8"
             >
               <motion.h3
@@ -230,7 +230,7 @@ export default function CoverFlowDemo() {
               variants={staggerContainer}
               initial="hidden"
               whileInView="visible"
-              viewport={{ once: true, margin: "-50px" }}
+              viewport={{ once: true, margin: '-50px' }}
               className="space-y-8"
             >
               <motion.h3
@@ -244,16 +244,16 @@ export default function CoverFlowDemo() {
                 <div className="flex items-center gap-4 border-b border-border/40 pb-2">
                   <motion.button
                     layout
-                    onClick={() => setInstallMethod("shadcn")}
+                    onClick={() => setInstallMethod('shadcn')}
                     className={cn(
-                      "text-sm font-medium transition-colors relative py-1",
-                      installMethod === "shadcn"
-                        ? "text-zinc-900 dark:text-zinc-100"
-                        : "text-muted-foreground hover:text-zinc-900 dark:hover:text-zinc-100",
+                      'text-sm font-medium transition-colors relative py-1',
+                      installMethod === 'shadcn'
+                        ? 'text-zinc-900 dark:text-zinc-100'
+                        : 'text-muted-foreground hover:text-zinc-900 dark:hover:text-zinc-100',
                     )}
                   >
                     Shadcn
-                    {installMethod === "shadcn" && (
+                    {installMethod === 'shadcn' && (
                       <motion.div
                         layoutId="activeInstallTab"
                         className="absolute -bottom-[9px] left-0 right-0 h-[2px] bg-zinc-900 dark:bg-zinc-100"
@@ -262,16 +262,16 @@ export default function CoverFlowDemo() {
                   </motion.button>
                   <motion.button
                     layout
-                    onClick={() => setInstallMethod("primitive")}
+                    onClick={() => setInstallMethod('primitive')}
                     className={cn(
-                      "text-sm font-medium transition-colors relative py-1",
-                      installMethod === "primitive"
-                        ? "text-zinc-900 dark:text-zinc-100"
-                        : "text-muted-foreground hover:text-zinc-900 dark:hover:text-zinc-100",
+                      'text-sm font-medium transition-colors relative py-1',
+                      installMethod === 'primitive'
+                        ? 'text-zinc-900 dark:text-zinc-100'
+                        : 'text-muted-foreground hover:text-zinc-900 dark:hover:text-zinc-100',
                     )}
                   >
                     Primitive
-                    {installMethod === "primitive" && (
+                    {installMethod === 'primitive' && (
                       <motion.div
                         layoutId="activeInstallTab"
                         className="absolute -bottom-[9px] left-0 right-0 h-[2px] bg-zinc-900 dark:bg-zinc-100"
@@ -286,15 +286,15 @@ export default function CoverFlowDemo() {
                         <LayoutGrid className="w-5 h-5" />
                       </div>
                       <div className="flex items-center gap-4">
-                        {["pnpm", "yarn", "npm", "bun"].map((pm) => (
+                        {['pnpm', 'yarn', 'npm', 'bun'].map((pm) => (
                           <button
                             key={pm}
                             onClick={() => setPackageManager(pm)}
                             className={cn(
-                              "text-sm font-medium transition-colors relative py-1",
+                              'text-sm font-medium transition-colors relative py-1',
                               packageManager === pm
-                                ? "text-zinc-900 dark:text-zinc-100"
-                                : "text-muted-foreground hover:text-zinc-900 dark:hover:text-zinc-100",
+                                ? 'text-zinc-900 dark:text-zinc-100'
+                                : 'text-muted-foreground hover:text-zinc-900 dark:hover:text-zinc-100',
                             )}
                           >
                             {pm}
@@ -330,90 +330,90 @@ export default function CoverFlowDemo() {
                         exit={{ opacity: 0, y: -5 }}
                         transition={{ duration: 0.2 }}
                       >
-                        {installMethod === "shadcn" ? (
+                        {installMethod === 'shadcn' ? (
                           <>
-                            {packageManager === "pnpm" && (
+                            {packageManager === 'pnpm' && (
                               <>
                                 <span className="text-blue-600 dark:text-blue-400">
                                   pnpm
-                                </span>{" "}
+                                </span>{' '}
                                 <span className="text-blue-600 dark:text-blue-400">
                                   dlx
-                                </span>{" "}
+                                </span>{' '}
                               </>
                             )}
-                            {packageManager === "npm" && (
+                            {packageManager === 'npm' && (
                               <span className="text-blue-600 dark:text-blue-400">
                                 npx
                               </span>
                             )}
-                            {packageManager === "yarn" && (
+                            {packageManager === 'yarn' && (
                               <span className="text-blue-600 dark:text-blue-400">
                                 npx
                               </span>
                             )}
-                            {packageManager === "bun" && (
+                            {packageManager === 'bun' && (
                               <>
                                 <span className="text-blue-600 dark:text-blue-400">
                                   bun
-                                </span>{" "}
+                                </span>{' '}
                                 <span className="text-blue-600 dark:text-blue-400">
                                   x
-                                </span>{" "}
+                                </span>{' '}
                               </>
-                            )}{" "}
+                            )}{' '}
                             <span className="text-teal-600 dark:text-cyan-400">
                               shadcn@latest
-                            </span>{" "}
+                            </span>{' '}
                             <span className="text-blue-600 dark:text-blue-400">
                               add
-                            </span>{" "}
+                            </span>{' '}
                             <span className="text-zinc-500 dark:text-zinc-400">
                               https://coverflow.ashishgogula.in/r/coverflow.json
                             </span>
                           </>
                         ) : (
                           <>
-                            {packageManager === "pnpm" && (
+                            {packageManager === 'pnpm' && (
                               <>
                                 <span className="text-blue-600 dark:text-blue-400">
                                   pnpm
-                                </span>{" "}
+                                </span>{' '}
                                 <span className="text-blue-600 dark:text-blue-400">
                                   add
-                                </span>{" "}
+                                </span>{' '}
                               </>
                             )}
-                            {packageManager === "npm" && (
+                            {packageManager === 'npm' && (
                               <>
                                 <span className="text-blue-600 dark:text-blue-400">
                                   npm
-                                </span>{" "}
+                                </span>{' '}
                                 <span className="text-blue-600 dark:text-blue-400">
                                   install
-                                </span>{" "}
+                                </span>{' '}
                               </>
                             )}
-                            {packageManager === "yarn" && (
+                            {packageManager === 'yarn' && (
                               <>
                                 <span className="text-blue-600 dark:text-blue-400">
                                   yarn
-                                </span>{" "}
+                                </span>{' '}
                                 <span className="text-blue-600 dark:text-blue-400">
                                   add
-                                </span>{" "}
+                                </span>{' '}
                               </>
                             )}
-                            {packageManager === "bun" && (
+                            {packageManager === 'bun' && (
                               <>
                                 <span className="text-blue-600 dark:text-blue-400">
                                   bun
-                                </span>{" "}
+                                </span>{' '}
                                 <span className="text-blue-600 dark:text-blue-400">
                                   add
-                                </span>{" "}
+                                </span>{' '}
                               </>
-                            )}{" "}
+                            )}{' '}
                             <span className="text-zinc-500 dark:text-zinc-400">
                               @ashishgogula/coverflow
                             </span>
@@ -438,7 +438,7 @@ export default function CoverFlowDemo() {
                       npm install motion
                     </div>
                     <p className="text-sm text-muted-foreground mb-4">
-                      2. Copy the component code into{" "}
+                      2. Copy the component code into{' '}
                       <code className="text-foreground bg-secondary/50 px-1 py-0.5 rounded">
                         components/coverflow.tsx
                       </code>
@@ -479,7 +479,7 @@ export default function CoverFlowDemo() {
                       <motion.div
                         initial={false}
                         animate={{
-                          height: isExpanded ? "auto" : 400,
+                          height: isExpanded ? 'auto' : 400,
                         }}
                         transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                         className="relative overflow-hidden"
@@ -521,7 +521,7 @@ export default function CoverFlowDemo() {
               variants={staggerContainer}
               initial="hidden"
               whileInView="visible"
-              viewport={{ once: true, margin: "-50px" }}
+              viewport={{ once: true, margin: '-50px' }}
               className="space-y-8"
             >
               <motion.h3
@@ -539,7 +539,7 @@ export default function CoverFlowDemo() {
               variants={staggerContainer}
               initial="hidden"
               whileInView="visible"
-              viewport={{ once: true, margin: "-50px" }}
+              viewport={{ once: true, margin: '-50px' }}
               className="space-y-8"
             >
               <motion.h3
@@ -683,7 +683,8 @@ export default function CoverFlowDemo() {
                         true
                       </td>
                       <td className="p-4 text-muted-foreground">
-                        Enable or disable clicking on items to snap them to the center.
+                        Enable or disable clicking on items to snap them to the
+                        center.
                       </td>
                     </tr>
                     <tr className="group hover:bg-secondary/20 transition-colors">
@@ -711,7 +712,8 @@ export default function CoverFlowDemo() {
                         100
                       </td>
                       <td className="p-4 text-muted-foreground">
-                        Wheel delta threshold required before snapping to next card.
+                        Wheel delta threshold required before snapping to next
+                        card.
                       </td>
                     </tr>
                     <tr className="group hover:bg-secondary/20 transition-colors">
@@ -752,5 +754,5 @@ export default function CoverFlowDemo() {
         </div>
       </main>
     </div>
-  );
+  )
 }

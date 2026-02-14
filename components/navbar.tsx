@@ -1,24 +1,24 @@
-"use client";
+'use client'
 
-import { ThemeToggle } from "@/components/theme-toggle";
-import { Plus, Star } from "lucide-react";
-import Link from "next/link";
-import { motion } from "motion/react";
-import { useEffect, useState } from "react";
+import { ThemeToggle } from '@/components/theme-toggle'
+import { Plus, Star } from 'lucide-react'
+import Link from 'next/link'
+import { motion } from 'motion/react'
+import { useEffect, useState } from 'react'
 
 export function Navbar() {
-  const [stars, setStars] = useState<number | null>(null);
+  const [stars, setStars] = useState<number | null>(null)
 
   useEffect(() => {
-    fetch("https://api.github.com/repos/ashishgogula/coverflow")
+    fetch('https://api.github.com/repos/ashishgogula/coverflow')
       .then((res) => res.json())
       .then((data) => {
-        if (typeof data.stargazers_count === "number") {
-          setStars(data.stargazers_count);
+        if (typeof data.stargazers_count === 'number') {
+          setStars(data.stargazers_count)
         }
       })
-      .catch(() => {});
-  }, []);
+      .catch(() => {})
+  }, [])
 
   return (
     <motion.header
@@ -104,5 +104,5 @@ export function Navbar() {
         </div>
       </div>
     </motion.header>
-  );
+  )
 }
