@@ -26,7 +26,7 @@ type PlaygroundSettings = {
   enableReflection: boolean
   enableClickToSnap: boolean
   enableScroll: boolean
-  scrollSensitivity: number
+  scrollThreshold: number
 }
 
 type PresetKey = 'modern' | 'classic' | 'apple'
@@ -39,7 +39,7 @@ const MODERN_PRESET: PlaygroundSettings = {
   enableReflection: true,
   enableClickToSnap: true,
   enableScroll: true,
-  scrollSensitivity: 100,
+  scrollThreshold: 100,
 }
 
 const CLASSIC_PRESET: PlaygroundSettings = {
@@ -50,7 +50,7 @@ const CLASSIC_PRESET: PlaygroundSettings = {
   enableReflection: false,
   enableClickToSnap: true,
   enableScroll: true,
-  scrollSensitivity: 100,
+  scrollThreshold: 100,
 }
 
 const APPLE_PRESET: PlaygroundSettings = {
@@ -61,7 +61,7 @@ const APPLE_PRESET: PlaygroundSettings = {
   enableReflection: true,
   enableClickToSnap: true,
   enableScroll: true,
-  scrollSensitivity: 100,
+  scrollThreshold: 100,
 }
 
 const PRESETS: {
@@ -171,8 +171,8 @@ export default function CoverFlowPlayground() {
     MODERN_PRESET.enableClickToSnap,
   )
   const [enableScroll, setEnableScroll] = useState(MODERN_PRESET.enableScroll)
-  const [scrollSensitivity, setScrollSensitivity] = useState(
-    MODERN_PRESET.scrollSensitivity,
+  const [scrollThreshold, setscrollThreshold] = useState(
+    MODERN_PRESET.scrollThreshold,
   )
 
   const matchesSettings = (settings: PlaygroundSettings) =>
@@ -183,7 +183,7 @@ export default function CoverFlowPlayground() {
     enableReflection === settings.enableReflection &&
     enableClickToSnap === settings.enableClickToSnap &&
     enableScroll === settings.enableScroll &&
-    scrollSensitivity === settings.scrollSensitivity
+    scrollThreshold === settings.scrollThreshold
 
   const applySettings = (settings: PlaygroundSettings) => {
     setStackSpacing(settings.stackSpacing)
@@ -193,7 +193,7 @@ export default function CoverFlowPlayground() {
     setEnableReflection(settings.enableReflection)
     setEnableClickToSnap(settings.enableClickToSnap)
     setEnableScroll(settings.enableScroll)
-    setScrollSensitivity(settings.scrollSensitivity)
+    setscrollThreshold(settings.scrollThreshold)
   }
 
   const activePreset: PresetKey | null =
@@ -223,7 +223,7 @@ export default function CoverFlowPlayground() {
             enableReflection={enableReflection}
             enableClickToSnap={enableClickToSnap}
             enableScroll={enableScroll}
-            scrollSensitivity={scrollSensitivity}
+            scrollThreshold={scrollThreshold}
             itemHeight={250}
             itemWidth={250}
           />
@@ -340,12 +340,12 @@ export default function CoverFlowPlayground() {
           />
 
           <SliderControl
-            label="scrollSensitivity"
+            label="scrollThreshold"
             min={30}
             max={220}
             step={5}
-            value={scrollSensitivity}
-            onChange={setScrollSensitivity}
+            value={scrollThreshold}
+            onChange={setscrollThreshold}
           />
         </div>
       </div>

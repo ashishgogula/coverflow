@@ -162,7 +162,7 @@ export default function GetStartedClient({
                     enableReflection={true}
                     enableClickToSnap={true}
                     enableScroll={true}
-                    scrollSensitivity={100}
+                    scrollThreshold={100}
                   />
                 </div>
                 <div className="p-6 overflow-x-auto">
@@ -215,7 +215,7 @@ export default function CoverFlowDemo() {
         initialIndex={3}
         enableReflection={true}
         enableScroll={true}
-        scrollSensitivity={100}
+        scrollThreshold={100}
       />
     </div>
   );
@@ -703,7 +703,7 @@ export default function CoverFlowDemo() {
                     </tr>
                     <tr className="group hover:bg-secondary/20 transition-colors">
                       <td className="p-4 font-mono text-foreground">
-                        scrollSensitivity
+                        scrollThreshold
                       </td>
                       <td className="p-4 font-mono text-xs text-blue-500">
                         number

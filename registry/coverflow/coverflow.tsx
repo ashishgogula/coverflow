@@ -26,7 +26,7 @@ export interface CoverFlowProps {
   enableReflection?: boolean
   enableClickToSnap?: boolean
   enableScroll?: boolean
-  scrollSensitivity?: number
+  scrollThreshold?: number
   className?: string
   onItemClick?: (item: CoverFlowItem, index: number) => void
   onIndexChange?: (index: number) => void
@@ -43,7 +43,7 @@ export function CoverFlow({
   enableReflection = false,
   enableClickToSnap = true,
   enableScroll = true,
-  scrollSensitivity = 100,
+  scrollThreshold = 100,
   className,
   onItemClick,
   onIndexChange,
@@ -52,7 +52,7 @@ export function CoverFlow({
   const [isDragging, setIsDragging] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
   const enableScrollRef = useRef(enableScroll)
-  const scrollSensitivityRef = useRef(scrollSensitivity)
+  const scrollThresholdRef = useRef(scrollThreshold)
   const scrollX = useMotionValue(initialIndex)
   const springX = useSpring(scrollX, {
     stiffness: 150,
@@ -76,8 +76,8 @@ export function CoverFlow({
   }, [enableScroll])
 
   useEffect(() => {
-    scrollSensitivityRef.current = scrollSensitivity
-  }, [scrollSensitivity])
+    scrollThresholdRef.current = scrollThreshold
+  }, [scrollThreshold])
 
   const jumpToIndex = useCallback(
     (index: number) => {
@@ -113,7 +113,7 @@ export function CoverFlow({
       lastWheelTime = now
       wheelAccumulator += e.deltaX
 
-      const threshold = scrollSensitivityRef.current
+      const threshold = scrollThresholdRef.current
 
       if (wheelAccumulator > threshold) {
         const currentIndex = Math.round(scrollX.get())
