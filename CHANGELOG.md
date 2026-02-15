@@ -6,12 +6,19 @@ This project follows semantic versioning.
 
 ---
 
+## [0.3.0] - 2026-02-15
+
+### Changed
+- Renamed `scrollSensitivity` to `scrollThreshold` for clarity.
+- `scrollThreshold` now clearly represents the wheel delta required before snapping.
+
+
 ## [0.2.0] - 2026-02-15
 
 ### Added
 
 - `enableScroll` prop (enabled by default) for horizontal wheel-based snapping
-- `scrollSensitivity` prop (default `90`) to control wheel delta threshold before snapping
+- `scrollSensitivity` prop (default `100`) to control wheel delta threshold before snapping
 
 ### Improved
 
