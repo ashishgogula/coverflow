@@ -54,7 +54,7 @@ export function Navbar() {
           </Link>
 
           <nav className="m-navLinks" aria-label="Primary">
-            <Link className="m-navLink" href="/get-started">
+            <Link className="m-navLink" href="/docs">
               Docs
             </Link>
             <Link className="m-navLink" href="/#features">

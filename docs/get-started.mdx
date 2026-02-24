@@ -1,0 +1,157 @@
+---
+title: Cover Flow
+description: Apple-style 3D Cover Flow component for React with spring motion, drag support, keyboard navigation, and horizontal wheel snapping.
+---
+
+# Cover Flow
+
+`CoverFlow` is a high-fidelity, 3D card carousel inspired by classic iTunes Cover Flow.
+It supports drag/touch, keyboard arrows, click-to-snap behavior, and optional horizontal wheel snapping.
+
+- Package: [`@ashishgogula/coverflow`](https://www.npmjs.com/package/@ashishgogula/coverflow)
+- Demo: [https://coverflow.ashishgogula.in](https://coverflow.ashishgogula.in)
+- GitHub: [https://github.com/ashishgogula/coverflow](https://github.com/ashishgogula/coverflow)
+
+## Installation
+
+### npm
+
+```bash
+npm install @ashishgogula/coverflow
+```
+
+### shadcn-style CLI (registry)
+
+```bash
+npx shadcn@latest add https://coverflow.ashishgogula.in/r/coverflow.json
+```
+
+Import from shadcn-installed local component:
+
+```tsx
+import { CoverFlow, type CoverFlowItem } from "@/components/ui/coverflow"
+```
+
+Import from npm package:
+
+```tsx
+import { CoverFlow, type CoverFlowItem } from "@ashishgogula/coverflow"
+```
+
+## Usage
+
+```tsx
+'use client'
+
+import { CoverFlow, type CoverFlowItem } from '@ashishgogula/coverflow'
+
+const items: CoverFlowItem[] = [
+  { id: 1, image: '/covers/cover-01.svg', title: 'After Hours', subtitle: 'The Weeknd' },
+  { id: 2, image: '/covers/cover-02.svg', title: 'Discovery', subtitle: 'Daft Punk' },
+  { id: 3, image: '/covers/cover-03.svg', title: 'Random Access Memories', subtitle: 'Daft Punk' },
+  { id: 4, image: '/covers/cover-04.svg', title: 'To Pimp a Butterfly', subtitle: 'Kendrick Lamar' },
+  { id: 5, image: '/covers/cover-05.svg', title: 'Blonde', subtitle: 'Frank Ocean' },
+]
+
+export default function CoverFlowDemo() {
+  return (
+    <div className="h-[420px] w-full">
+      <CoverFlow
+        items={items}
+        itemWidth={260}
+        itemHeight={260}
+        initialIndex={2}
+        enableReflection={true}
+        enableClickToSnap={true}
+        enableScroll={true}
+        scrollThreshold={100}
+      />
+    </div>
+  )
+}
+```
+
+## How the component is structured
+
+`CoverFlow` is composed of three main layers:
+
+1. A focusable, draggable root container that handles drag gestures, keyboard navigation, and wheel input.
+2. A spring-driven 3D item stack where each card is transformed with `x`, `z`, and `rotateY` based on distance from the active index.
+3. An active item label overlay (title/subtitle), plus optional reflection rendering under each card.
+
+```ts
+export type CoverFlowItem = {
+  id: string | number
+  image: string
+  title: string
+  subtitle?: string
+}
+```
+
+## Important props
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `items` | `CoverFlowItem[]` | - | Items rendered in the flow. |
+| `itemWidth` | `number` | `400` | Card width in pixels. |
+| `itemHeight` | `number` | `400` | Card height in pixels. |
+| `stackSpacing` | `number` | `100` | Spacing between off-center stacked cards. |
+| `centerGap` | `number` | `250` | Gap between center card and side stacks. |
+| `rotation` | `number` | `50` | Y-axis rotation (degrees) applied to side cards. |
+| `initialIndex` | `number` | `0` | Initially selected item index. |
+| `enableReflection` | `boolean` | `false` | Enables mirrored reflection under cards. |
+| `enableClickToSnap` | `boolean` | `true` | Clicking non-active cards snaps them to center. |
+| `enableScroll` | `boolean` | `true` | Enables horizontal wheel/trackpad snapping. |
+| `scrollThreshold` | `number` | `100` | Horizontal wheel delta required before snapping to next/prev item. |
+| `className` | `string` | `undefined` | Additional classes on the root container. |
+| `onItemClick` | `(item: CoverFlowItem, index: number) => void` | `undefined` | Called when the active card is clicked. |
+| `onIndexChange` | `(index: number) => void` | `undefined` | Called whenever active index changes. |
+
+## Examples
+
+### Minimal
+
+```tsx
+<CoverFlow items={items} />
+```
+
+### With TypeScript callbacks
+
+```tsx
+const handleItemClick = (item: CoverFlowItem, index: number) => {
+  console.log('clicked:', item.title, index)
+}
+
+const handleIndexChange = (index: number) => {
+  console.log('active index:', index)
+}
+
+<CoverFlow
+  items={items}
+  onItemClick={handleItemClick}
+  onIndexChange={handleIndexChange}
+/>
+```
+
+### Classic-style tuning
+
+```tsx
+<CoverFlow
+  items={items}
+  stackSpacing={130}
+  centerGap={280}
+  rotation={38}
+  enableReflection={false}
+/>
+```
+
+## Horizontal scroll and presets
+
+`enableScroll` responds to horizontal wheel movement (`deltaX`) and ignores pure vertical scrolling.
+If snapping feels too sensitive, increase `scrollThreshold`; if it feels too stiff, lower it.
+
+Useful preset values:
+
+- Modern: `stackSpacing=100`, `centerGap=250`, `rotation=50`, `initialIndex=3`, `enableReflection=true`
+- Classic: `stackSpacing=130`, `centerGap=280`, `rotation=38`, `initialIndex=4`, `enableReflection=false`
+- Apple: `stackSpacing=60`, `centerGap=180`, `rotation=67`, `initialIndex=5`, `enableReflection=true`

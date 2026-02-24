@@ -187,7 +187,7 @@ export default function Home() {
                 className="flex flex-col mb-8 items-center gap-8"
               >
                 <div className="flex flex-wrap items-center justify-center gap-4">
-                  <Link className="m-btn m-btnPrimary" href="/get-started">
+                  <Link className="m-btn m-btnPrimary" href="/docs">
                     Get Started
                   </Link>
                 </div>
