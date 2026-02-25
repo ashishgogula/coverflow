@@ -1,7 +1,6 @@
 'use client'
 
 import {
-  Github,
   CircleCheck,
   Copy,
   LayoutGrid,
@@ -10,7 +9,7 @@ import {
   Minimize2,
   Maximize2,
 } from 'lucide-react'
-import { useRef, useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { Navbar } from '@/components/navbar'
 import { Footer } from '@/components/footer'
 import { motion, type Variants, AnimatePresence } from 'motion/react'
@@ -167,7 +166,7 @@ function ProviderRow({
       <button
         type="button"
         onClick={onClick}
-        className="w-full text-left cursor-pointer"
+        className="w-full text-left cursor-pointer hover:bg-accent hover:text-accent-foreground"
       >
         <ProviderIcon provider={provider} />
         {label}
@@ -191,6 +190,14 @@ export default function GetStartedClient({
   const [usageCopied, setUsageCopied] = useState(false)
   const [pageCopied, setPageCopied] = useState(false)
   const usageCodeRef = useRef<HTMLPreElement | null>(null)
+  const [mdxContent, setMdxContent] = useState<string | null>(null)
+
+  useEffect(() => {
+    fetch('/docs/get-started.mdx')
+      .then((res) => res.text())
+      .then(setMdxContent)
+      .catch((err) => console.error('Failed to load MDX:', err))
+  }, [])
 
   const copyUsageCode = () => {
     if (!usageCodeRef.current) return
@@ -206,6 +213,13 @@ export default function GetStartedClient({
   }
 
   const copyPageMdx = async () => {
+    if (mdxContent) {
+      await navigator.clipboard.writeText(mdxContent)
+      setPageCopied(true)
+      setTimeout(() => setPageCopied(false), 2000)
+      return
+    }
+
     try {
       const response = await fetch('/docs/get-started.mdx')
       if (!response.ok) return
@@ -381,7 +395,7 @@ Be ready to answer follow-up questions and help debug issues based on the docume
                   <DropdownMenuContent
                     align="start"
                     sideOffset={10}
-                    className="w-[300px] max-w-[calc(100vw-2rem)] p-2 bg-secondary border-border/70 dark:border-white/15"
+                    className="w-[300px] max-w-[calc(100vw-2rem)] p-2 border-border/70 dark:border-white/15"
                   >
                     <DropdownMenuItem asChild>
                       <a
@@ -407,7 +421,6 @@ Be ready to answer follow-up questions and help debug issues based on the docume
                       provider="chatgpt"
                       label="Open in ChatGPT"
                       onClick={() => openInAssistant('chatgpt')}
-                      highlighted
                     />
 
                     <ProviderRow
