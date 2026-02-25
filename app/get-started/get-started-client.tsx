@@ -226,7 +226,7 @@ export default function GetStartedClient({
   const buildAssistantPrompt = (docsUrl: string) =>
     `I'm looking at this component documentation: ${docsUrl}
 I want to use it in a React (TypeScript) project.
-Help me understand how to use it step-by-step, including explaining key concepts, showing practical examples with TypeScript code, and pointing out common pitfalls.
+Help me understand how to use it step-by-step, including explaining key concepts, showing practical examples with TypeScript code.
 Be ready to answer follow-up questions and help debug issues based on the documentation.`
 
   const openInAssistant = async (
