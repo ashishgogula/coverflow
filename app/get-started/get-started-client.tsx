@@ -90,6 +90,17 @@ function ClaudeLogo() {
   )
 }
 
+function GeminiLogo(){
+  return(
+    <svg viewBox="0 0 24 24" aria-hidden="true" className="h-4 w-4">
+  <path
+    d="M12 3c.4 0 .7.3.9.7l2.1 5.3c.1.3.4.5.7.6l5.3 2.1c.4.1.7.5.7.9s-.3.7-.7.9l-5.3 2.1c-.3.1-.5.4-.6.7l-2.1 5.3c-.1.4-.5.7-.9.7s-.7-.3-.9-.7l-2.1-5.3c-.1-.3-.4-.5-.7-.6l-5.3-2.1c-.4-.1-.7-.5-.7-.9s.3-.7.7-.9l5.3-2.1c.3-.1.5-.4.6-.7l2.1-5.3c.1-.4.5-.7.9-.7z"
+    fill="currentColor"
+  />
+</svg>
+  )
+}
+
 function SciraLogo() {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true" className="h-4 w-4">
@@ -114,7 +125,7 @@ function SciraLogo() {
 function ProviderLogo({
   provider,
 }: {
-  provider: 'v0' | 'chatgpt' | 'claude' | 'scira'
+  provider: 'v0' | 'chatgpt' | 'claude' | 'gemini' | 'scira'
 }) {
   if (provider === 'v0') {
     return <V0Logo />
@@ -128,13 +139,17 @@ function ProviderLogo({
     return <ClaudeLogo />
   }
 
+  if (provider === 'gemini') {
+    return <GeminiLogo />
+  }
+
   return <SciraLogo />
 }
 
 function ProviderIcon({
   provider,
 }: {
-  provider: 'v0' | 'chatgpt' | 'claude' | 'scira'
+  provider: 'v0' | 'chatgpt' | 'claude' | 'gemini' | 'scira'
 }) {
   return (
     <span className="inline-flex h-4 w-4 items-center justify-center text-muted-foreground">
@@ -157,7 +172,7 @@ function ProviderRow({
   onClick,
   highlighted = false,
 }: {
-  provider: 'v0' | 'chatgpt' | 'claude' | 'scira'
+  provider: 'v0' | 'chatgpt' | 'claude' | 'gemini' | 'scira'
   label: string
   onClick: () => void
   highlighted?: boolean
@@ -230,13 +245,14 @@ Help me understand how to use it step-by-step, including explaining key concepts
 Be ready to answer follow-up questions and help debug issues based on the documentation.`
 
   const openInAssistant = async (
-    provider: 'v0' | 'chatgpt' | 'claude' | 'scira',
+    provider: 'v0' | 'chatgpt' | 'claude' | 'gemini' | 'scira',
   ) => {
     const prompt = buildAssistantPrompt(getDocsMdxUrl())
     const targetUrls = {
       v0: `https://v0.app/?q=${encodeURIComponent(prompt)}`,
       chatgpt: `https://chatgpt.com/?hints=search&q=${encodeURIComponent(prompt)}`,
       claude: `https://claude.ai/new?q=${encodeURIComponent(prompt)}`,
+      gemini: `https://gemini.google.com/new?q=${encodeURIComponent(prompt)}`,
       scira: `https://scira.ai/?q=${encodeURIComponent(prompt)}`,
     } as const
 
@@ -414,6 +430,12 @@ Be ready to answer follow-up questions and help debug issues based on the docume
                       provider="claude"
                       label="Open in Claude"
                       onClick={() => openInAssistant('claude')}
+                    />
+
+                    <ProviderRow
+                      provider="gemini"
+                      label="Open in Gemini"
+                      onClick={() => openInAssistant('gemini')}
                     />
 
                     <ProviderRow
