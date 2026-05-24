@@ -6,6 +6,26 @@ This project follows semantic versioning.
 
 ---
 
+## [1.0.0] - 2026-05-25
+
+### Added
+
+- `renderImage` prop for custom image rendering in the registry component
+- AI assistant dropdown for component documentation
+
+### Improved
+
+- Performance optimizations: `React.memo`, flattened `useTransform` chains, `useCallback`/`useMemo` on handlers, lazy image loading on non-active cards
+- `AnimatePresence` replaces key-based title remount for smoother transitions
+- Fixed `initialIndex` stale closure via ref
+- Docs page restructured from `/get-started` into a dedicated `/docs` route
+
+### Chore
+
+- Added `sync:npm` script to keep npm package in sync
+
+---
+
 ## [0.3.0] - 2026-02-15
 
 ### Changed
