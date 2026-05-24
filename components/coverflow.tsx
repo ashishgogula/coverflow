@@ -1,13 +1,14 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
+  AnimatePresence,
   motion,
   useMotionValue,
   useSpring,
-  PanInfo,
-  MotionValue,
   useTransform,
+  type PanInfo,
+  type MotionValue,
 } from 'motion/react'
 import Image from 'next/image'
 
@@ -56,7 +57,6 @@ export function CoverFlow({
   const containerRef = useRef<HTMLDivElement>(null)
   const enableScrollRef = useRef(enableScroll)
   const scrollThresholdRef = useRef(scrollThreshold)
-
   const scrollX = useMotionValue(initialIndex)
   const springX = useSpring(scrollX, {
     stiffness: 150,
@@ -65,23 +65,26 @@ export function CoverFlow({
   })
 
   useEffect(() => {
-    if (initialIndex !== activeIndex) {
-      setActiveIndex(initialIndex)
-      scrollX.set(initialIndex)
-    }
-  }, [initialIndex])
-
-  useEffect(() => {
-    onIndexChange?.(activeIndex)
-  }, [activeIndex, onIndexChange])
-
-  useEffect(() => {
     enableScrollRef.current = enableScroll
   }, [enableScroll])
 
   useEffect(() => {
     scrollThresholdRef.current = scrollThreshold
   }, [scrollThreshold])
+
+  // Use a ref to avoid stale closure on activeIndex inside the effect
+  const activeIndexRef = useRef(activeIndex)
+  activeIndexRef.current = activeIndex
+  useEffect(() => {
+    if (initialIndex !== activeIndexRef.current) {
+      setActiveIndex(initialIndex)
+      scrollX.set(initialIndex)
+    }
+  }, [initialIndex, scrollX])
+
+  useEffect(() => {
+    onIndexChange?.(activeIndex)
+  }, [activeIndex, onIndexChange])
 
   const jumpToIndex = useCallback(
     (index: number) => {
@@ -101,64 +104,54 @@ export function CoverFlow({
 
     const handleWheel = (e: WheelEvent) => {
       if (!enableScrollRef.current) return
-
       const isVerticalScroll = Math.abs(e.deltaY) > Math.abs(e.deltaX)
-
-      if (isVerticalScroll) {
-        return
-      }
+      if (isVerticalScroll) return
 
       e.preventDefault()
 
       const now = Date.now()
-      if (now - lastWheelTime > 200) {
-        wheelAccumulator = 0
-      }
+      if (now - lastWheelTime > 200) wheelAccumulator = 0
       lastWheelTime = now
-
       wheelAccumulator += e.deltaX
 
       const threshold = scrollThresholdRef.current
-
       if (wheelAccumulator > threshold) {
-        const currentIndex = Math.round(scrollX.get())
-        jumpToIndex(currentIndex + 1)
+        jumpToIndex(Math.round(scrollX.get()) + 1)
         wheelAccumulator = 0
       } else if (wheelAccumulator < -threshold) {
-        const currentIndex = Math.round(scrollX.get())
-        jumpToIndex(currentIndex - 1)
+        jumpToIndex(Math.round(scrollX.get()) - 1)
         wheelAccumulator = 0
       }
     }
 
     container.addEventListener('wheel', handleWheel, { passive: false })
-
-    return () => {
-      container.removeEventListener('wheel', handleWheel)
-    }
+    return () => container.removeEventListener('wheel', handleWheel)
   }, [jumpToIndex, scrollX])
 
-  const onDragStart = () => {
+  const onDragStart = useCallback(() => {
     setIsDragging(true)
-  }
+  }, [])
 
-  const onDrag = (event: any, info: PanInfo) => {
-    const deltaIndex = -info.delta.x / (centerGap * 0.8)
-    const current = springX.get()
-    scrollX.set(current + deltaIndex)
-  }
+  const onDrag = useCallback(
+    (_event: unknown, info: PanInfo) => {
+      scrollX.set(springX.get() + -info.delta.x / (centerGap * 0.8))
+    },
+    [centerGap, scrollX, springX],
+  )
 
-  const onDragEnd = (event: any, info: PanInfo) => {
-    setIsDragging(false)
-    const current = springX.get()
-    const velocity = info.velocity.x
-    const projected = current - velocity * 0.002
-    const targetIndex = Math.round(projected)
-    const clampedIndex = Math.min(Math.max(targetIndex, 0), items.length - 1)
-
-    setActiveIndex(clampedIndex)
-    scrollX.set(clampedIndex)
-  }
+  const onDragEnd = useCallback(
+    (_event: unknown, info: PanInfo) => {
+      setIsDragging(false)
+      const projected = springX.get() - info.velocity.x * 0.002
+      const clamped = Math.min(
+        Math.max(Math.round(projected), 0),
+        items.length - 1,
+      )
+      setActiveIndex(clamped)
+      scrollX.set(clamped)
+    },
+    [items.length, scrollX, springX],
+  )
 
   const onKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
@@ -172,6 +165,18 @@ export function CoverFlow({
       }
     },
     [activeIndex, jumpToIndex],
+  )
+
+  const clickHandlers = useMemo(
+    () =>
+      items.map((item, index) => () => {
+        if (index === activeIndex) {
+          onItemClick?.(item, index)
+        } else if (enableClickToSnap) {
+          jumpToIndex(index)
+        }
+      }),
+    [items, activeIndex, enableClickToSnap, jumpToIndex, onItemClick],
   )
 
   return (
@@ -212,34 +217,31 @@ export function CoverFlow({
             enableReflection={enableReflection}
             enableClickToSnap={enableClickToSnap}
             isDragging={isDragging}
-            onClick={() => {
-              if (index === activeIndex) {
-                onItemClick?.(item, index)
-              } else if (enableClickToSnap) {
-                jumpToIndex(index)
-              }
-            }}
+            onClick={clickHandlers[index]}
           />
         ))}
       </div>
 
       <div className="absolute bottom-8 left-0 right-0 flex flex-col items-center justify-center pointer-events-none z-40 transition-opacity duration-300">
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          key={activeIndex}
-          transition={{ duration: 0.4, ease: 'easeOut' }}
-          className="text-center"
-        >
-          <h3 className="text-2xl font-semibold text-foreground tracking-tight drop-shadow-md">
-            {items[activeIndex]?.title}
-          </h3>
-          {items[activeIndex]?.subtitle && (
-            <p className="text-foreground/60 text-sm mt-1 font-medium tracking-wide">
-              {items[activeIndex]?.subtitle}
-            </p>
-          )}
-        </motion.div>
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeIndex}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -6 }}
+            transition={{ duration: 0.25, ease: 'easeOut' }}
+            className="text-center"
+          >
+            <h3 className="text-2xl font-semibold text-foreground tracking-tight drop-shadow-md">
+              {items[activeIndex]?.title}
+            </h3>
+            {items[activeIndex]?.subtitle && (
+              <p className="text-foreground/60 text-sm mt-1 font-medium tracking-wide">
+                {items[activeIndex]?.subtitle}
+              </p>
+            )}
+          </motion.div>
+        </AnimatePresence>
       </div>
     </motion.div>
   )
@@ -261,7 +263,7 @@ interface CardProps {
   onClick: () => void
 }
 
-function CoverFlowItemCard({
+const CoverFlowItemCard = memo(function CoverFlowItemCard({
   item,
   index,
   scrollX,
@@ -276,55 +278,47 @@ function CoverFlowItemCard({
   isDragging,
   onClick,
 }: CardProps) {
-  const position = useTransform(scrollX, (value) => index - value)
-  const zIndex = useTransform(position, (pos) => 1000 - Math.abs(pos) * 10)
-
-  const t = useTransform(position, (pos) => {
+  const rotateY = useTransform(scrollX, (value) => {
+    const pos = index - value
     const absPos = Math.abs(pos)
-    const isCenter = absPos < 0.5
-
-    let rY = 0
-    if (pos < -0.5) rY = rotation
-    if (pos > 0.5) rY = -rotation
-    if (isCenter) rY = -pos * (rotation * 2)
-
-    let x = 0
-    if (pos < 0) {
-      const stackIndex = Math.max(0, absPos - 1)
-      x = -centerGap - stackIndex * stackSpacing
-      if (absPos < 1) x = pos * centerGap
-    } else {
-      const stackIndex = Math.max(0, absPos - 1)
-      x = centerGap + stackIndex * stackSpacing
-      if (absPos < 1) x = pos * centerGap
-    }
-
-    let z = 0
-    if (absPos > 0.5) {
-      z = -200
-    } else {
-      z = Math.abs(pos) * -400
-    }
-
-    return { rotateY: rY, x, z }
+    if (absPos < 0.5) return -pos * (rotation * 2)
+    return pos < 0 ? rotation : -rotation
   })
 
-  const rotateY = useTransform(t, (v) => v.rotateY)
-  const x = useTransform(t, (v) => v.x)
-  const z = useTransform(t, (v) => v.z)
-  const brightness = useTransform(position, (pos) =>
-    Math.abs(pos) < 0.5 ? 1 : 0.5,
+  const x = useTransform(scrollX, (value) => {
+    const pos = index - value
+    const absPos = Math.abs(pos)
+    if (absPos < 1) return pos * centerGap
+    const stackIndex = absPos - 1
+    return pos < 0
+      ? -centerGap - stackIndex * stackSpacing
+      : centerGap + stackIndex * stackSpacing
+  })
+
+  const z = useTransform(scrollX, (value) => {
+    const pos = index - value
+    const absPos = Math.abs(pos)
+    return absPos > 0.5 ? -200 : absPos * -400
+  })
+
+  const zIndex = useTransform(scrollX, (value) =>
+    1000 - Math.abs(index - value) * 10,
   )
 
-  const getCursorClass = () => {
+  const filterStyle = useTransform(
+    scrollX,
+    (value) => `brightness(${Math.abs(index - value) < 0.5 ? 1 : 0.5})`,
+  )
+
+  const cursorClass = useMemo(() => {
     if (isDragging) return 'cursor-grabbing'
     if (isActive || enableClickToSnap) return 'cursor-pointer'
     return 'cursor-grab'
-  }
+  }, [isDragging, isActive, enableClickToSnap])
 
   return (
     <motion.div
-      className={`absolute top-1/2 left-1/2 preserve-3d will-change-transform ${getCursorClass()}`}
+      className={`absolute top-1/2 left-1/2 preserve-3d will-change-transform ${cursorClass}`}
       style={{
         width,
         height,
@@ -334,7 +328,7 @@ function CoverFlowItemCard({
         z,
         rotateY,
         zIndex,
-        filter: useTransform(brightness, (b) => `brightness(${b})`),
+        filter: filterStyle,
         pointerEvents: 'auto',
       }}
       onClick={onClick}
@@ -358,12 +352,7 @@ function CoverFlowItemCard({
       {enableReflection && (
         <div
           className="absolute left-0 right-0 overflow-hidden pointer-events-none"
-          style={{
-            top: '100%',
-            width: width,
-            height: height * 0.35,
-            marginTop: '2px',
-          }}
+          style={{ top: '100%', width, height: height * 0.35, marginTop: '2px' }}
         >
           <div
             className="relative w-full h-full opacity-40"
@@ -382,4 +371,4 @@ function CoverFlowItemCard({
       )}
     </motion.div>
   )
-}
+})

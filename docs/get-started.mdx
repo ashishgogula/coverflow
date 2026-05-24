@@ -106,6 +106,7 @@ export type CoverFlowItem = {
 | `className` | `string` | `undefined` | Additional classes on the root container. |
 | `onItemClick` | `(item: CoverFlowItem, index: number) => void` | `undefined` | Called when the active card is clicked. |
 | `onIndexChange` | `(index: number) => void` | `undefined` | Called whenever active index changes. |
+| `renderImage` | `(props: RenderImageProps) => ReactNode` | `undefined` | Custom image renderer. Use this to pass Next.js `<Image>` or any other optimized image component. Defaults to a plain `<img>` with lazy loading. |
 
 ## Examples
 
@@ -143,6 +144,56 @@ const handleIndexChange = (index: number) => {
   rotation={38}
   enableReflection={false}
 />
+```
+
+### Next.js — using `next/image`
+
+Pass Next.js `<Image>` via the `renderImage` prop to get automatic optimization, lazy loading, and format negotiation:
+
+```tsx
+'use client'
+
+import Image from 'next/image'
+import { CoverFlow, type CoverFlowItem, type RenderImageProps } from '@ashishgogula/coverflow'
+
+function renderNextImage(props: RenderImageProps) {
+  return (
+    <Image
+      src={props.src}
+      alt={props.alt}
+      fill
+      className={props.className}
+      sizes={props.sizes}
+      priority={props.priority}
+      quality={100}
+      draggable={false}
+    />
+  )
+}
+
+export default function CoverFlowDemo() {
+  return (
+    <div className="h-[420px] w-full">
+      <CoverFlow items={items} renderImage={renderNextImage} />
+    </div>
+  )
+}
+```
+
+The `RenderImageProps` type:
+
+```ts
+export type RenderImageProps = {
+  src: string
+  alt: string
+  width: number
+  height: number
+  className: string
+  draggable: boolean
+  sizes: string
+  priority?: boolean
+  loading?: 'eager' | 'lazy'
+}
 ```
 
 ## Horizontal scroll and presets
