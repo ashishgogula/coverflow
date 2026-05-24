@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { memo, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import {
   AnimatePresence,
   motion,
@@ -16,6 +16,18 @@ export interface CoverFlowItem {
   subtitle?: string
 }
 
+export interface RenderImageProps {
+  src: string
+  alt: string
+  width: number
+  height: number
+  className: string
+  draggable: boolean
+  sizes: string
+  priority?: boolean
+  loading?: 'eager' | 'lazy'
+}
+
 export interface CoverFlowProps {
   items: CoverFlowItem[]
   itemWidth?: number
@@ -31,6 +43,7 @@ export interface CoverFlowProps {
   className?: string
   onItemClick?: (item: CoverFlowItem, index: number) => void
   onIndexChange?: (index: number) => void
+  renderImage?: (props: RenderImageProps) => ReactNode
 }
 
 export function CoverFlow({
@@ -48,6 +61,7 @@ export function CoverFlow({
   className,
   onItemClick,
   onIndexChange,
+  renderImage,
 }: CoverFlowProps) {
   const [activeIndex, setActiveIndex] = useState(initialIndex)
   const [isDragging, setIsDragging] = useState(false)
@@ -213,6 +227,7 @@ export function CoverFlow({
             enableReflection={enableReflection}
             enableClickToSnap={enableClickToSnap}
             isDragging={isDragging}
+            renderImage={renderImage}
             onClick={clickHandlers[index]}
           />
         ))}
@@ -256,6 +271,7 @@ interface CardProps {
   enableReflection: boolean
   enableClickToSnap: boolean
   isDragging: boolean
+  renderImage?: (props: RenderImageProps) => ReactNode
   onClick: () => void
 }
 
@@ -272,6 +288,7 @@ const CoverFlowItemCard = memo(function CoverFlowItemCard({
   enableReflection,
   enableClickToSnap,
   isDragging,
+  renderImage,
   onClick,
 }: CardProps) {
   const rotateY = useTransform(scrollX, (value) => {
@@ -306,6 +323,24 @@ const CoverFlowItemCard = memo(function CoverFlowItemCard({
     (value) => `brightness(${Math.abs(index - value) < 0.5 ? 1 : 0.5})`,
   )
 
+  const defaultRenderImage = useCallback(
+    (props: RenderImageProps) => (
+      <img
+        src={props.src}
+        alt={props.alt}
+        width={props.width}
+        height={props.height}
+        className={props.className}
+        draggable={props.draggable}
+        sizes={props.sizes}
+        loading={props.loading}
+      />
+    ),
+    [],
+  )
+
+  const imageRenderer = renderImage ?? defaultRenderImage
+
   const cursorClass = useMemo(() => {
     if (isDragging) return 'cursor-grabbing'
     if (isActive || enableClickToSnap) return 'cursor-pointer'
@@ -332,16 +367,17 @@ const CoverFlowItemCard = memo(function CoverFlowItemCard({
       <div className="relative w-full h-full rounded-xl shadow-2xl bg-black">
         <div className="absolute inset-0 rounded-xl border border-white/10 z-20 pointer-events-none" />
         <div className="relative w-full h-full overflow-hidden rounded-xl">
-          <img
-            src={item.image}
-            alt={item.title}
-            width={width}
-            height={height}
-            className="object-cover select-none pointer-events-none w-full h-full"
-            draggable={false}
-            sizes={`${width}px`}
-            loading={isActive ? 'eager' : 'lazy'}
-          />
+          {imageRenderer({
+            src: item.image,
+            alt: item.title,
+            width,
+            height,
+            className: 'object-cover select-none pointer-events-none w-full h-full',
+            draggable: false,
+            sizes: `${width}px`,
+            priority: isActive,
+            loading: isActive ? 'eager' : 'lazy',
+          })}
           <div className="absolute inset-0 bg-linear-to-tr from-white/10 to-transparent opacity-0 dark:opacity-20 pointer-events-none z-10" />
         </div>
       </div>
@@ -355,16 +391,16 @@ const CoverFlowItemCard = memo(function CoverFlowItemCard({
             className="relative w-full h-full opacity-40"
             style={{ transform: 'scaleY(-1)' }}
           >
-            <img
-              src={item.image}
-              alt=""
-              width={width}
-              height={height}
-              className="object-cover blur-[1px] w-full h-full"
-              draggable={false}
-              sizes={`${width}px`}
-              loading="lazy"
-            />
+            {imageRenderer({
+              src: item.image,
+              alt: '',
+              width,
+              height,
+              className: 'object-cover blur-[1px] w-full h-full',
+              draggable: false,
+              sizes: `${width}px`,
+              loading: 'lazy',
+            })}
             <div className="absolute inset-0 bg-linear-to-b from-background/90 to-transparent" />
           </div>
         </div>

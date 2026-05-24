@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "registry:build": "shadcn build",
+    "sync:npm": "cp registry/coverflow/coverflow.tsx ../npm-coverflow/coverflow-npm/src/index.tsx",
     "format": "prettier --write ."
   },
   "dependencies": {
