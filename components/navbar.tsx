@@ -57,10 +57,7 @@ export function Navbar() {
             <Link className="m-navLink" href="/docs">
               Docs
             </Link>
-            <Link className="m-navLink" href="/changelog">
-              Changelog
-            </Link>
-            <Link className="m-navLink" href="/#features">
+<Link className="m-navLink" href="/#features">
               Features
             </Link>
 

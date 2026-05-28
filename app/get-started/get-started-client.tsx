@@ -8,6 +8,7 @@ import {
   ChevronUp,
   Minimize2,
   Maximize2,
+  Plus,
 } from 'lucide-react'
 import { useRef, useState, useEffect } from 'react'
 import { Navbar } from '@/components/navbar'
@@ -191,6 +192,27 @@ export default function GetStartedClient({
   const [pageCopied, setPageCopied] = useState(false)
   const usageCodeRef = useRef<HTMLPreElement | null>(null)
   const [mdxContent, setMdxContent] = useState<string | null>(null)
+  const [activeSection, setActiveSection] = useState('get-started')
+
+  useEffect(() => {
+    const ids = ['get-started', 'installation', 'interactive-example', 'props']
+    const observers: IntersectionObserver[] = []
+
+    ids.forEach((id) => {
+      const el = document.getElementById(id)
+      if (!el) return
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) setActiveSection(id)
+        },
+        { rootMargin: '-20% 0px -70% 0px' },
+      )
+      observer.observe(el)
+      observers.push(observer)
+    })
+
+    return () => observers.forEach((o) => o.disconnect())
+  }, [])
 
   useEffect(() => {
     fetch('/docs/get-started.mdx')
@@ -315,8 +337,9 @@ Be ready to answer follow-up questions and help debug issues based on the docume
 
           <section
             id="get-started"
-            className="max-w-4xl mx-auto space-y-16 py-12 relative z-10 px-6 overflow-visible"
+            className="space-y-0 py-0 relative z-10 overflow-visible scroll-mt-24"
           >
+            <div className="max-w-4xl mx-auto px-6 py-12">
             <motion.div
               initial="hidden"
               animate="visible"
@@ -438,15 +461,17 @@ Be ready to answer follow-up questions and help debug issues based on the docume
                 </DropdownMenu>
               </motion.div>
             </motion.div>
+            </div>
 
             <motion.div
               variants={staggerContainer}
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, margin: '-50px' }}
-              className="space-y-8"
+              className="space-y-8 max-w-4xl mx-auto px-6 py-12"
             >
               <motion.h3
+                id="usage"
                 variants={fadeUp}
                 className="text-2xl font-medium tracking-tight"
               >
@@ -511,8 +536,9 @@ const animeItems: CoverFlowItem[] = [
 
 export default function CoverFlowDemo() {
   return (
-    <div className="h-[400px] w-full border-b border-border/40 relative bg-background">
-      items={animeItems}
+    <div className="h-[400px] w-full relative bg-background">
+      <CoverFlow
+        items={animeItems}
         itemWidth={250}
         itemHeight={250}
         initialIndex={5}
@@ -520,7 +546,11 @@ export default function CoverFlowDemo() {
         scrollThreshold={60}
         centerGap={180}
         stackSpacing={60}
+        rotation={50}
         enableReflection={true}
+        enableClickToSnap={true}
+        enableAudio={false}
+      />
     </div>
   );
 }
@@ -530,16 +560,22 @@ export default function CoverFlowDemo() {
               </motion.div>
             </motion.div>
 
+            <div className="relative border-y border-dashed border-border py-12">
+              <Plus className="m-plusIcon m-plusIcon-tl" />
+              <Plus className="m-plusIcon m-plusIcon-tr" />
+              <Plus className="m-plusIcon m-plusIcon-bl" />
+              <Plus className="m-plusIcon m-plusIcon-br" />
             <motion.div
               variants={staggerContainer}
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, margin: '-50px' }}
-              className="space-y-8"
+              className="space-y-8 max-w-4xl mx-auto px-6"
             >
               <motion.h3
+                id="installation"
                 variants={fadeUp}
-                className="text-2xl font-medium tracking-tight"
+                className="text-2xl font-medium tracking-tight scroll-mt-24"
               >
                 Installation
               </motion.h3>
@@ -820,17 +856,24 @@ export default function CoverFlowDemo() {
                 </div>
               </motion.div>
             </motion.div>
+            </div>
 
+            <div className="relative border-y border-dashed border-border py-12">
+              <Plus className="m-plusIcon m-plusIcon-tl" />
+              <Plus className="m-plusIcon m-plusIcon-tr" />
+              <Plus className="m-plusIcon m-plusIcon-bl" />
+              <Plus className="m-plusIcon m-plusIcon-br" />
             <motion.div
               variants={staggerContainer}
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, margin: '-50px' }}
-              className="space-y-8"
+              className="space-y-8 max-w-4xl mx-auto px-6"
             >
               <motion.h3
+                id="interactive-example"
                 variants={fadeUp}
-                className="text-2xl font-medium tracking-tight"
+                className="text-2xl font-medium tracking-tight scroll-mt-24"
               >
                 Interactive Example
               </motion.h3>
@@ -838,17 +881,24 @@ export default function CoverFlowDemo() {
                 <CoverFlowPlayground />
               </motion.div>
             </motion.div>
+            </div>
 
+            <div className="relative border-y border-dashed border-border py-12">
+              <Plus className="m-plusIcon m-plusIcon-tl" />
+              <Plus className="m-plusIcon m-plusIcon-tr" />
+              <Plus className="m-plusIcon m-plusIcon-bl" />
+              <Plus className="m-plusIcon m-plusIcon-br" />
             <motion.div
               variants={staggerContainer}
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, margin: '-50px' }}
-              className="space-y-8"
+              className="space-y-8 max-w-4xl mx-auto px-6"
             >
               <motion.h3
+                id="props"
                 variants={fadeUp}
-                className="text-2xl font-medium tracking-tight"
+                className="text-2xl font-medium tracking-tight scroll-mt-24"
               >
                 Props
               </motion.h3>
@@ -1116,7 +1166,30 @@ export default function CoverFlowDemo() {
                 </table>
               </motion.div>
             </motion.div>
+            </div>
           </section>
+
+          <aside className="hidden xl:block fixed top-24 right-8 w-44 z-20">
+            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">
+              On this page
+            </p>
+            <nav className="flex flex-col gap-1">
+              {[
+                { href: '#get-started', label: 'Get Started' },
+                { href: '#installation', label: 'Installation' },
+                { href: '#interactive-example', label: 'Interactive Example' },
+                { href: '#props', label: 'Props' },
+              ].map(({ href, label }) => (
+                <a
+                  key={href}
+                  href={href}
+                  className={`text-sm transition-colors py-1 ${activeSection === href.slice(1) ? 'text-foreground font-medium' : 'text-muted-foreground hover:text-foreground'}`}
+                >
+                  {label}
+                </a>
+              ))}
+            </nav>
+          </aside>
 
           <Footer />
         </div>
