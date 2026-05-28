@@ -6,6 +6,23 @@ This project follows semantic versioning.
 
 ---
 
+## [1.1.0] - 2026-05-28
+
+### Added
+
+- `enableAudio` prop — procedural click sound with stereo panning and velocity sensitivity
+- `reduceMotion` prop — pass `true` to disable all 3D transforms and animations, `false` to always enable them, or omit to let the OS accessibility setting decide
+- SSR-safe `AudioContext` with webkit fallback
+
+### Improved
+
+- Smoother drag tracking during fast swipes
+- Debounced wheel scroll to prevent multi-step skipping
+- Drag handlers now use `scrollX.get()` instead of `springX.get()` for more accurate position tracking during fast drags
+- `onIndexChange` no longer fires on initial mount
+
+---
+
 ## [1.0.0] - 2026-05-25
 
 ### Added

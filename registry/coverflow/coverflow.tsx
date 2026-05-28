@@ -1,13 +1,108 @@
-import { memo, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
+'use client'
+
+import { memo, useCallback, useEffect, useId, useRef, useState, type ReactNode } from 'react'
 import {
   AnimatePresence,
   motion,
   useMotionValue,
+  useReducedMotion,
   useSpring,
   useTransform,
   type PanInfo,
   type MotionValue,
 } from 'motion/react'
+
+type Direction = 'left' | 'right'
+
+const AudioCtx: typeof AudioContext | null =
+  typeof window !== 'undefined'
+    ? (window.AudioContext ?? (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext ?? null)
+    : null
+
+function useTickAudio(enabled: boolean) {
+  const ctxRef = useRef<AudioContext | null>(null)
+
+  useEffect(() => () => { ctxRef.current?.close().catch(() => {}); ctxRef.current = null }, [])
+
+  useEffect(() => {
+    if (!enabled || !AudioCtx) return
+    const warm = () => {
+      if (!ctxRef.current) ctxRef.current = new AudioCtx!()
+      if (ctxRef.current.state === 'suspended') ctxRef.current.resume().catch(() => {})
+    }
+    window.addEventListener('pointerdown', warm, { once: true })
+    return () => window.removeEventListener('pointerdown', warm)
+  }, [enabled])
+
+  return useCallback(
+    (direction: Direction, velocity = 1) => {
+      if (!enabled || !AudioCtx) return
+
+      const getCtx = async () => {
+        if (!ctxRef.current) ctxRef.current = new AudioCtx!()
+        if (ctxRef.current.state === 'suspended') await ctxRef.current.resume()
+        return ctxRef.current
+      }
+
+      getCtx().then((ctx) => {
+        const t = ctx.currentTime
+        const vn = Math.min(Math.abs(velocity) / 300, 1)
+        const peakGain = 0.28 * (0.55 + vn * 0.45)
+        const freq = 1600 * (0.88 + vn * 0.24)
+        const bodyDur = 0.022 - vn * 0.008
+        const clickDur = bodyDur * 0.3
+        const panStart = direction === 'left' ? 0.7 : -0.7
+        const panEnd = direction === 'left' ? -0.7 : 0.7
+
+        const panner = ctx.createStereoPanner()
+        panner.pan.setValueAtTime(panStart, t)
+        panner.pan.linearRampToValueAtTime(panEnd, t + bodyDur)
+        panner.connect(ctx.destination)
+
+        const bodyGain = ctx.createGain()
+        bodyGain.gain.setValueAtTime(peakGain, t)
+        bodyGain.gain.exponentialRampToValueAtTime(0.0001, t + bodyDur)
+        bodyGain.connect(panner)
+
+        const filter = ctx.createBiquadFilter()
+        filter.type = 'bandpass'
+        filter.frequency.value = freq
+        filter.Q.value = 6
+        filter.connect(bodyGain)
+
+        const osc = ctx.createOscillator()
+        osc.type = 'triangle'
+        osc.frequency.setValueAtTime(freq * 1.25, t)
+        osc.frequency.exponentialRampToValueAtTime(freq * 0.65, t + bodyDur)
+        osc.connect(filter)
+        osc.start(t)
+        osc.stop(t + bodyDur)
+
+        const nSamples = Math.ceil(ctx.sampleRate * clickDur)
+        const noiseBuf = ctx.createBuffer(1, nSamples, ctx.sampleRate)
+        const d = noiseBuf.getChannelData(0)
+        for (let i = 0; i < nSamples; i++) d[i] = (Math.random() * 2 - 1) * Math.exp(-i / (nSamples * 0.2))
+
+        const noiseGain = ctx.createGain()
+        noiseGain.gain.setValueAtTime(peakGain * 0.35, t)
+        noiseGain.gain.exponentialRampToValueAtTime(0.0001, t + clickDur)
+        noiseGain.connect(panner)
+
+        const noiseHp = ctx.createBiquadFilter()
+        noiseHp.type = 'highpass'
+        noiseHp.frequency.value = 2400
+        noiseHp.connect(noiseGain)
+
+        const noise = ctx.createBufferSource()
+        noise.buffer = noiseBuf
+        noise.connect(noiseHp)
+        noise.start(t)
+        noise.stop(t + clickDur)
+      }).catch(() => {})
+    },
+    [enabled],
+  )
+}
 
 export interface CoverFlowItem {
   id: string | number
@@ -39,11 +134,29 @@ export interface CoverFlowProps {
   enableReflection?: boolean
   enableClickToSnap?: boolean
   enableScroll?: boolean
+  enableAudio?: boolean
   scrollThreshold?: number
   className?: string
   onItemClick?: (item: CoverFlowItem, index: number) => void
   onIndexChange?: (index: number) => void
   renderImage?: (props: RenderImageProps) => ReactNode
+}
+
+const defaultRenderImage = (props: RenderImageProps) => (
+  <img
+    src={props.src}
+    alt={props.alt}
+    width={props.width}
+    height={props.height}
+    className={props.className}
+    draggable={props.draggable}
+    sizes={props.sizes}
+    loading={props.loading}
+  />
+)
+
+function clampIndex(index: number, length: number) {
+  return Math.min(Math.max(index, 0), Math.max(length - 1, 0))
 }
 
 export function CoverFlow({
@@ -57,80 +170,96 @@ export function CoverFlow({
   enableReflection = false,
   enableClickToSnap = true,
   enableScroll = true,
+  enableAudio = false,
   scrollThreshold = 100,
   className,
   onItemClick,
   onIndexChange,
   renderImage,
 }: CoverFlowProps) {
-  const [activeIndex, setActiveIndex] = useState(initialIndex)
+  const safeInitial = clampIndex(initialIndex, items.length)
+  const [activeIndex, setActiveIndex] = useState(safeInitial)
   const [isDragging, setIsDragging] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
+  const instanceId = useId().replace(/:/g, 'x')
+  const [isMounted, setIsMounted] = useState(false)
+  useEffect(() => { setIsMounted(true) }, [])
+  const reflectionFilterId = (isMounted && enableReflection) ? `${instanceId}-rf` : undefined
+  const activeIndexRef = useRef(activeIndex)
   const enableScrollRef = useRef(enableScroll)
   const scrollThresholdRef = useRef(scrollThreshold)
-  const scrollX = useMotionValue(initialIndex)
-  const springX = useSpring(scrollX, {
-    stiffness: 150,
-    damping: 30,
-    mass: 1,
-  })
+  const onItemClickRef = useRef(onItemClick)
+  const enableClickToSnapRef = useRef(enableClickToSnap)
+  const onIndexChangeRef = useRef(onIndexChange)
+  const isMountedForCallbackRef = useRef(false)
 
-  useEffect(() => {
-    enableScrollRef.current = enableScroll
-  }, [enableScroll])
-
-  useEffect(() => {
-    scrollThresholdRef.current = scrollThreshold
-  }, [scrollThreshold])
-
-  const activeIndexRef = useRef(activeIndex)
   activeIndexRef.current = activeIndex
-  useEffect(() => {
-    if (initialIndex !== activeIndexRef.current) {
-      setActiveIndex(initialIndex)
-      scrollX.set(initialIndex)
-    }
-  }, [initialIndex, scrollX])
+  enableScrollRef.current = enableScroll
+  scrollThresholdRef.current = scrollThreshold
+  onItemClickRef.current = onItemClick
+  enableClickToSnapRef.current = enableClickToSnap
+  onIndexChangeRef.current = onIndexChange
+
+  const prefersReducedMotion = useReducedMotion()
+  const scrollX = useMotionValue(safeInitial)
+  const springX = useSpring(scrollX, { stiffness: 150, damping: 30, mass: 1 })
+  const effectiveScrollX = prefersReducedMotion ? scrollX : springX
+  const tick = useTickAudio(enableAudio)
 
   useEffect(() => {
-    onIndexChange?.(activeIndex)
-  }, [activeIndex, onIndexChange])
-
-  const jumpToIndex = useCallback(
-    (index: number) => {
-      const clamped = Math.min(Math.max(index, 0), items.length - 1)
+    const clamped = clampIndex(initialIndex, items.length)
+    if (clamped !== activeIndexRef.current) {
       setActiveIndex(clamped)
       scrollX.set(clamped)
+    }
+  }, [initialIndex, items.length, scrollX])
+
+  useEffect(() => {
+    if (!isMountedForCallbackRef.current) { isMountedForCallbackRef.current = true; return }
+    onIndexChangeRef.current?.(activeIndex)
+  }, [activeIndex])
+
+  const jumpToIndex = useCallback(
+    (index: number, velocity = 0, direction?: Direction) => {
+      const clamped = clampIndex(index, items.length)
+      const prev = activeIndexRef.current
+      if (clamped === prev) return
+      const dir: Direction = direction ?? (clamped > prev ? 'right' : 'left')
+      setActiveIndex(clamped)
+      scrollX.set(clamped)
+      tick(dir, velocity)
     },
-    [items.length, scrollX],
+    [items.length, scrollX, tick],
   )
 
   useEffect(() => {
     const container = containerRef.current
     if (!container) return
 
-    let wheelAccumulator = 0
-    let lastWheelTime = Date.now()
+    let accumulator = 0
+    let lastTime = Date.now()
+    let lastJump = 0
 
     const handleWheel = (e: WheelEvent) => {
       if (!enableScrollRef.current) return
-      const isVerticalScroll = Math.abs(e.deltaY) > Math.abs(e.deltaX)
-      if (isVerticalScroll) return
-
+      if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) return
       e.preventDefault()
 
       const now = Date.now()
-      if (now - lastWheelTime > 200) wheelAccumulator = 0
-      lastWheelTime = now
-      wheelAccumulator += e.deltaX
+      if (now - lastTime > 200) accumulator = 0
+      lastTime = now
+      accumulator += e.deltaX
 
       const threshold = scrollThresholdRef.current
-      if (wheelAccumulator > threshold) {
-        jumpToIndex(Math.round(scrollX.get()) + 1)
-        wheelAccumulator = 0
-      } else if (wheelAccumulator < -threshold) {
-        jumpToIndex(Math.round(scrollX.get()) - 1)
-        wheelAccumulator = 0
+      const shouldJump =
+        (accumulator > threshold || accumulator < -threshold) &&
+        now - lastJump > 150
+
+      if (shouldJump) {
+        const dir = accumulator > 0 ? 'right' : 'left'
+        jumpToIndex(Math.round(scrollX.get()) + (dir === 'right' ? 1 : -1), Math.abs(e.deltaX), dir)
+        accumulator = 0
+        lastJump = now
       }
     }
 
@@ -138,123 +267,129 @@ export function CoverFlow({
     return () => container.removeEventListener('wheel', handleWheel)
   }, [jumpToIndex, scrollX])
 
-  const onDragStart = useCallback(() => {
-    setIsDragging(true)
-  }, [])
+  const handleCardClick = useCallback(
+    (item: CoverFlowItem, index: number) => {
+      if (index === activeIndexRef.current) {
+        onItemClickRef.current?.(item, index)
+      } else if (enableClickToSnapRef.current) {
+        jumpToIndex(index)
+      }
+    },
+    [jumpToIndex],
+  )
+
+  const onDragStart = useCallback(() => setIsDragging(true), [])
 
   const onDrag = useCallback(
-    (_event: unknown, info: PanInfo) => {
-      scrollX.set(springX.get() + -info.delta.x / (centerGap * 0.8))
+    (_: unknown, info: PanInfo) => {
+      scrollX.set(scrollX.get() - info.delta.x / (centerGap * 0.8))
     },
-    [centerGap, scrollX, springX],
+    [centerGap, scrollX],
   )
 
   const onDragEnd = useCallback(
-    (_event: unknown, info: PanInfo) => {
+    (_: unknown, info: PanInfo) => {
       setIsDragging(false)
-      const projected = springX.get() - info.velocity.x * 0.002
-      const clamped = Math.min(
-        Math.max(Math.round(projected), 0),
-        items.length - 1,
-      )
+      const projected = scrollX.get() - info.velocity.x * 0.002
+      const clamped = clampIndex(Math.round(projected), items.length)
+      const prev = activeIndexRef.current
+      const dir: Direction = clamped >= prev ? 'right' : 'left'
       setActiveIndex(clamped)
       scrollX.set(clamped)
+      if (clamped !== prev) tick(dir, Math.abs(info.velocity.x))
     },
-    [items.length, scrollX, springX],
+    [items.length, scrollX, tick],
   )
 
   const onKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
-      if (e.key === 'ArrowLeft') {
-        e.preventDefault()
-        jumpToIndex(activeIndex - 1)
-      }
-      if (e.key === 'ArrowRight') {
-        e.preventDefault()
-        jumpToIndex(activeIndex + 1)
-      }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); jumpToIndex(activeIndexRef.current - 1, 120, 'left') }
+      if (e.key === 'ArrowRight') { e.preventDefault(); jumpToIndex(activeIndexRef.current + 1, 120, 'right') }
     },
-    [activeIndex, jumpToIndex],
+    [jumpToIndex],
   )
 
-  const clickHandlers = useMemo(
-    () =>
-      items.map((item, index) => () => {
-        if (index === activeIndex) {
-          onItemClick?.(item, index)
-        } else if (enableClickToSnap) {
-          jumpToIndex(index)
-        }
-      }),
-    [items, activeIndex, enableClickToSnap, jumpToIndex, onItemClick],
-  )
+  if (items.length === 0) return null
 
   return (
-    <motion.div
-      ref={containerRef}
-      className={`relative w-full h-full flex flex-col justify-center items-center overflow-hidden bg-transparent focus:outline-none touch-none ${
-        isDragging ? 'cursor-grabbing' : 'cursor-grab'
-      } ${className ?? ''}`}
-      style={{ perspective: 1000 }}
-      role="region"
-      aria-label="Cover Flow"
-      tabIndex={0}
-      onKeyDown={onKeyDown}
-      drag="x"
-      dragConstraints={{ left: 0, right: 0 }}
-      dragElastic={0}
-      dragMomentum={false}
-      onDragStart={onDragStart}
-      onDrag={onDrag}
-      onDragEnd={onDragEnd}
-    >
-      <div
-        className="relative w-full h-full flex items-center justify-center pointer-events-none"
-        style={{ transformStyle: 'preserve-3d' }}
+    <>
+      {reflectionFilterId && (
+        <svg aria-hidden="true" focusable="false" style={{ position: 'absolute', width: 0, height: 0, overflow: 'hidden' }}>
+          <defs>
+            <filter id={reflectionFilterId} x="-3%" y="-3%" width="106%" height="106%" colorInterpolationFilters="sRGB">
+              <feTurbulence type="fractalNoise" baseFrequency="0.018 0.065" numOctaves="3" seed="8" result="noise" />
+              <feDisplacementMap in="SourceGraphic" in2="noise" scale="5" xChannelSelector="R" yChannelSelector="G" result="displaced" />
+              <feGaussianBlur in="displaced" stdDeviation="0.4 1.8" />
+            </filter>
+          </defs>
+        </svg>
+      )}
+      <motion.div
+        ref={containerRef}
+        className={`group/cf relative w-full h-full flex flex-col justify-center items-center overflow-hidden bg-transparent focus:outline-none touch-pan-y ${
+          isDragging ? 'is-dragging cursor-grabbing' : 'cursor-grab'
+        } ${className ?? ''}`}
+        style={{ perspective: 1000 }}
+        role="region"
+        aria-label="Cover Flow"
+        tabIndex={0}
+        onKeyDown={onKeyDown}
+        drag="x"
+        dragConstraints={{ left: 0, right: 0 }}
+        dragElastic={0}
+        dragMomentum={false}
+        onDragStart={onDragStart}
+        onDrag={onDrag}
+        onDragEnd={onDragEnd}
       >
-        {items.map((item, index) => (
-          <CoverFlowItemCard
-            key={item.id}
-            item={item}
-            index={index}
-            scrollX={springX}
-            width={itemWidth}
-            height={itemHeight}
-            stackSpacing={stackSpacing}
-            centerGap={centerGap}
-            rotation={rotation}
-            isActive={index === activeIndex}
-            enableReflection={enableReflection}
-            enableClickToSnap={enableClickToSnap}
-            isDragging={isDragging}
-            renderImage={renderImage}
-            onClick={clickHandlers[index]}
-          />
-        ))}
-      </div>
+        <div
+          className="relative w-full h-full flex items-center justify-center pointer-events-none"
+          style={{ transformStyle: 'preserve-3d' }}
+        >
+          {items.map((item, index) => (
+            <CoverFlowItemCard
+              key={item.id}
+              item={item}
+              index={index}
+              scrollX={effectiveScrollX}
+              width={itemWidth}
+              height={itemHeight}
+              stackSpacing={stackSpacing}
+              centerGap={centerGap}
+              rotation={rotation}
+              isActive={index === activeIndex}
+              reflectionFilterId={reflectionFilterId}
+              enableClickToSnap={enableClickToSnap}
+              reduceMotion={prefersReducedMotion ?? false}
+              renderImage={renderImage}
+              onCardClick={handleCardClick}
+            />
+          ))}
+        </div>
 
-      <div className="absolute bottom-8 left-0 right-0 flex flex-col items-center justify-center pointer-events-none z-40 transition-opacity duration-300">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={activeIndex}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -6 }}
-            transition={{ duration: 0.25, ease: 'easeOut' }}
-            className="text-center"
-          >
-            <h3 className="text-2xl font-semibold text-foreground tracking-tight drop-shadow-md">
-              {items[activeIndex]?.title}
-            </h3>
-            {items[activeIndex]?.subtitle && (
-              <p className="text-foreground/60 text-sm mt-1 font-medium tracking-wide">
-                {items[activeIndex]?.subtitle}
-              </p>
-            )}
-          </motion.div>
-        </AnimatePresence>
-      </div>
-    </motion.div>
+        <div className="absolute bottom-8 left-0 right-0 flex flex-col items-center justify-center pointer-events-none z-40">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeIndex}
+              initial={{ opacity: 0, y: prefersReducedMotion ? 0 : 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: prefersReducedMotion ? 0 : -6 }}
+              transition={{ duration: prefersReducedMotion ? 0 : 0.25, ease: 'easeOut' }}
+              className="text-center"
+            >
+              <h3 className="text-2xl font-semibold text-foreground tracking-tight drop-shadow-md">
+                {items[activeIndex]?.title}
+              </h3>
+              {items[activeIndex]?.subtitle && (
+                <p className="text-foreground/60 text-sm mt-1 font-medium tracking-wide">
+                  {items[activeIndex]?.subtitle}
+                </p>
+              )}
+            </motion.div>
+          </AnimatePresence>
+        </div>
+      </motion.div>
+    </>
   )
 }
 
@@ -268,11 +403,11 @@ interface CardProps {
   centerGap: number
   rotation: number
   isActive: boolean
-  enableReflection: boolean
+  reflectionFilterId?: string
   enableClickToSnap: boolean
-  isDragging: boolean
+  reduceMotion: boolean
   renderImage?: (props: RenderImageProps) => ReactNode
-  onClick: () => void
+  onCardClick: (item: CoverFlowItem, index: number) => void
 }
 
 const CoverFlowItemCard = memo(function CoverFlowItemCard({
@@ -285,71 +420,47 @@ const CoverFlowItemCard = memo(function CoverFlowItemCard({
   centerGap,
   rotation,
   isActive,
-  enableReflection,
+  reflectionFilterId,
   enableClickToSnap,
-  isDragging,
+  reduceMotion,
   renderImage,
-  onClick,
+  onCardClick,
 }: CardProps) {
   const rotateY = useTransform(scrollX, (value) => {
+    if (reduceMotion) return 0
     const pos = index - value
     const absPos = Math.abs(pos)
-    if (absPos < 0.5) return -pos * (rotation * 2)
-    return pos < 0 ? rotation : -rotation
+    return absPos < 0.5 ? -pos * (rotation * 2) : pos < 0 ? rotation : -rotation
   })
 
   const x = useTransform(scrollX, (value) => {
     const pos = index - value
     const absPos = Math.abs(pos)
     if (absPos < 1) return pos * centerGap
-    const stackIndex = absPos - 1
     return pos < 0
-      ? -centerGap - stackIndex * stackSpacing
-      : centerGap + stackIndex * stackSpacing
+      ? -centerGap - (absPos - 1) * stackSpacing
+      : centerGap + (absPos - 1) * stackSpacing
   })
 
   const z = useTransform(scrollX, (value) => {
-    const pos = index - value
-    const absPos = Math.abs(pos)
+    if (reduceMotion) return 0
+    const absPos = Math.abs(index - value)
     return absPos > 0.5 ? -200 : absPos * -400
   })
 
-  const zIndex = useTransform(scrollX, (value) =>
-    1000 - Math.abs(index - value) * 10,
-  )
+  const zIndex = useTransform(scrollX, (value) => 1000 - Math.abs(index - value) * 10)
 
   const filterStyle = useTransform(
     scrollX,
     (value) => `brightness(${Math.abs(index - value) < 0.5 ? 1 : 0.5})`,
   )
 
-  const defaultRenderImage = useCallback(
-    (props: RenderImageProps) => (
-      <img
-        src={props.src}
-        alt={props.alt}
-        width={props.width}
-        height={props.height}
-        className={props.className}
-        draggable={props.draggable}
-        sizes={props.sizes}
-        loading={props.loading}
-      />
-    ),
-    [],
-  )
-
   const imageRenderer = renderImage ?? defaultRenderImage
-
-  const cursorClass = useMemo(() => {
-    if (isDragging) return 'cursor-grabbing'
-    if (isActive || enableClickToSnap) return 'cursor-pointer'
-    return 'cursor-grab'
-  }, [isDragging, isActive, enableClickToSnap])
+  const cursorClass = isActive || enableClickToSnap ? 'cursor-pointer' : 'cursor-grab'
 
   return (
     <motion.div
-      className={`absolute top-1/2 left-1/2 preserve-3d will-change-transform ${cursorClass}`}
+      className={`absolute top-1/2 left-1/2 preserve-3d will-change-transform group-[.is-dragging]/cf:!cursor-grabbing ${cursorClass}`}
       style={{
         width,
         height,
@@ -362,7 +473,7 @@ const CoverFlowItemCard = memo(function CoverFlowItemCard({
         filter: filterStyle,
         pointerEvents: 'auto',
       }}
-      onClick={onClick}
+      onClick={() => onCardClick(item, index)}
     >
       <div className="relative w-full h-full rounded-xl shadow-2xl bg-black">
         <div className="absolute inset-0 rounded-xl border border-white/10 z-20 pointer-events-none" />
@@ -382,26 +493,46 @@ const CoverFlowItemCard = memo(function CoverFlowItemCard({
         </div>
       </div>
 
-      {enableReflection && (
+      {reflectionFilterId && (
         <div
-          className="absolute left-0 right-0 overflow-hidden pointer-events-none"
-          style={{ top: '100%', width, height: height * 0.35, marginTop: '2px' }}
+          aria-hidden="true"
+          className="absolute left-0 pointer-events-none overflow-hidden"
+          style={{
+            top: '100%',
+            width,
+            height: height * 0.42,
+            marginTop: 1,
+            transformOrigin: 'top center',
+            transform: 'rotateX(12deg)',
+            WebkitMaskImage: 'linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.22) 55%, transparent 100%)',
+            maskImage: 'linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.22) 55%, transparent 100%)',
+          }}
         >
           <div
-            className="relative w-full h-full opacity-40"
-            style={{ transform: 'scaleY(-1)' }}
+            style={{
+              width: '100%',
+              height: '100%',
+              transform: 'scaleY(-1)',
+              filter: `url(#${reflectionFilterId})`,
+              mixBlendMode: 'screen',
+              opacity: 0.55,
+            }}
           >
-            {imageRenderer({
-              src: item.image,
-              alt: '',
-              width,
-              height,
-              className: 'object-cover blur-[1px] w-full h-full',
-              draggable: false,
-              sizes: `${width}px`,
-              loading: 'lazy',
-            })}
-            <div className="absolute inset-0 bg-linear-to-b from-background/90 to-transparent" />
+            <div className="relative w-full h-full rounded-xl shadow-2xl bg-black">
+              <div className="absolute inset-0 rounded-xl border border-white/10 z-20 pointer-events-none" />
+              <div className="relative w-full h-full overflow-hidden rounded-xl">
+                {imageRenderer({
+                  src: item.image,
+                  alt: '',
+                  width,
+                  height,
+                  className: 'object-cover w-full h-full',
+                  draggable: false,
+                  sizes: `${width}px`,
+                  loading: 'lazy',
+                })}
+              </div>
+            </div>
           </div>
         </div>
       )}

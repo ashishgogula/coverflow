@@ -1022,16 +1022,63 @@ export default function CoverFlowDemo() {
                     </tr>
                     <tr className="group hover:bg-secondary/20 transition-colors">
                       <td className="p-4 font-mono text-foreground">
-                        onItemClick
+                        enableAudio
                       </td>
                       <td className="p-4 font-mono text-xs text-blue-500">
-                        function
+                        boolean
+                      </td>
+                      <td className="p-4 font-mono text-xs text-muted-foreground">
+                        false
+                      </td>
+                      <td className="p-4 text-muted-foreground">
+                        Enable procedural spatial audio — a crisp stereo tick
+                        plays on every index change, panned and pitched by
+                        direction and velocity.
+                      </td>
+                    </tr>
+                    <tr className="group hover:bg-secondary/20 transition-colors">
+                      <td className="p-4 font-mono text-foreground">
+                        reduceMotion
+                      </td>
+                      <td className="p-4 font-mono text-xs text-blue-500">
+                        boolean
                       </td>
                       <td className="p-4 font-mono text-xs text-muted-foreground">
                         -
                       </td>
                       <td className="p-4 text-muted-foreground">
-                        Callback when an item is clicked.
+                        Pass <code>true</code> to disable all 3D transforms and
+                        animations. Pass <code>false</code> to always enable
+                        them. Omit to let the user{"'"}s OS accessibility
+                        setting decide.
+                      </td>
+                    </tr>
+                    <tr className="group hover:bg-secondary/20 transition-colors">
+                      <td className="p-4 font-mono text-foreground">
+                        className
+                      </td>
+                      <td className="p-4 font-mono text-xs text-blue-500">
+                        string
+                      </td>
+                      <td className="p-4 font-mono text-xs text-muted-foreground">
+                        -
+                      </td>
+                      <td className="p-4 text-muted-foreground">
+                        Additional class names applied to the root container.
+                      </td>
+                    </tr>
+                    <tr className="group hover:bg-secondary/20 transition-colors">
+                      <td className="p-4 font-mono text-foreground">
+                        onItemClick
+                      </td>
+                      <td className="p-4 font-mono text-xs text-blue-500">
+                        {"(item, index) => void"}
+                      </td>
+                      <td className="p-4 font-mono text-xs text-muted-foreground">
+                        -
+                      </td>
+                      <td className="p-4 text-muted-foreground">
+                        Callback fired when the active center card is clicked.
                       </td>
                     </tr>
                     <tr className="group hover:bg-secondary/20 transition-colors">
@@ -1039,13 +1086,30 @@ export default function CoverFlowDemo() {
                         onIndexChange
                       </td>
                       <td className="p-4 font-mono text-xs text-blue-500">
-                        function
+                        {"(index) => void"}
                       </td>
                       <td className="p-4 font-mono text-xs text-muted-foreground">
                         -
                       </td>
                       <td className="p-4 text-muted-foreground">
-                        Callback when the active index changes.
+                        Callback fired whenever the active index changes.
+                      </td>
+                    </tr>
+                    <tr className="group hover:bg-secondary/20 transition-colors">
+                      <td className="p-4 font-mono text-foreground">
+                        renderImage
+                      </td>
+                      <td className="p-4 font-mono text-xs text-blue-500">
+                        {"(props: RenderImageProps) => ReactNode"}
+                      </td>
+                      <td className="p-4 font-mono text-xs text-muted-foreground">
+                        -
+                      </td>
+                      <td className="p-4 text-muted-foreground">
+                        Custom image renderer — use this to pass a Next.js{" "}
+                        <code className="font-mono text-xs">&lt;Image&gt;</code>{" "}
+                        or any other component in place of the default{" "}
+                        <code className="font-mono text-xs">&lt;img&gt;</code>.
                       </td>
                     </tr>
                   </tbody>
