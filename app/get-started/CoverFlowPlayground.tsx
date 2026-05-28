@@ -1,8 +1,9 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { motion, useMotionValue, useSpring, useTransform } from 'motion/react'
-import { CoverFlow, type CoverFlowItem } from '@/registry/coverflow/coverflow'
+import { CoverFlow, type CoverFlowItem, type RenderImageProps } from '../../components/coverflow'
+import Image from 'next/image'
 
 const playgroundItems: CoverFlowItem[] = [
   { id: 1, image: '/anime/Sanemi.jpeg', title: 'Sanemi Sanemi' },
@@ -171,6 +172,8 @@ export default function CoverFlowPlayground() {
     MODERN_PRESET.enableClickToSnap,
   )
   const [enableScroll, setEnableScroll] = useState(MODERN_PRESET.enableScroll)
+  const [enableAudio, setEnableAudio] = useState(true)
+  const [reduceMotion, setReduceMotion] = useState(false)
   const [scrollThreshold, setscrollThreshold] = useState(
     MODERN_PRESET.scrollThreshold,
   )
@@ -226,6 +229,9 @@ export default function CoverFlowPlayground() {
             scrollThreshold={scrollThreshold}
             itemHeight={250}
             itemWidth={250}
+            enableAudio={enableAudio}
+            reduceMotion={reduceMotion}
+            renderImage={useCallback((props: RenderImageProps) => <Image {...props} />, [])}
           />
         </div>
       </div>
@@ -301,6 +307,18 @@ export default function CoverFlowPlayground() {
             label="enableScroll"
             checked={enableScroll}
             onChange={setEnableScroll}
+          />
+
+          <ToggleControl
+            label="enableAudio"
+            checked={enableAudio}
+            onChange={setEnableAudio}
+          />
+
+          <ToggleControl
+            label="reduceMotion"
+            checked={reduceMotion}
+            onChange={setReduceMotion}
           />
 
           <SliderControl
