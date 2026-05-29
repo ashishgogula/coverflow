@@ -185,8 +185,18 @@ export function CoverFlow({
   const containerRef = useRef<HTMLDivElement>(null)
   const instanceId = useId().replace(/:/g, 'x')
   const [isMounted, setIsMounted] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
   useEffect(() => { setIsMounted(true) }, [])
-  const reflectionFilterId = (isMounted && enableReflection) ? `${instanceId}-rf` : undefined
+  useEffect(() => {
+    if (typeof window === 'undefined' || !window.matchMedia) return
+    const mql = window.matchMedia('(max-width: 768px), (pointer: coarse)')
+    const apply = () => setIsMobile(mql.matches)
+    apply()
+    mql.addEventListener?.('change', apply)
+    return () => mql.removeEventListener?.('change', apply)
+  }, [])
+  const reflectionFilterId = (isMounted && enableReflection && !isMobile) ? `${instanceId}-rf` : undefined
+  const showReflection = isMounted && enableReflection
   const activeIndexRef = useRef(activeIndex)
   const enableScrollRef = useRef(enableScroll)
   const scrollThresholdRef = useRef(scrollThreshold)
@@ -360,6 +370,7 @@ export function CoverFlow({
               centerGap={centerGap}
               rotation={rotation}
               isActive={index === activeIndex}
+              showReflection={showReflection}
               reflectionFilterId={reflectionFilterId}
               enableClickToSnap={enableClickToSnap}
               reduceMotion={prefersReducedMotion ?? false}
@@ -405,6 +416,7 @@ interface CardProps {
   centerGap: number
   rotation: number
   isActive: boolean
+  showReflection: boolean
   reflectionFilterId?: string
   enableClickToSnap: boolean
   reduceMotion: boolean
@@ -422,6 +434,7 @@ const CoverFlowItemCard = memo(function CoverFlowItemCard({
   centerGap,
   rotation,
   isActive,
+  showReflection,
   reflectionFilterId,
   enableClickToSnap,
   reduceMotion,
@@ -495,7 +508,7 @@ const CoverFlowItemCard = memo(function CoverFlowItemCard({
         </div>
       </div>
 
-      {reflectionFilterId && (
+      {showReflection && (
         <div
           aria-hidden="true"
           className="absolute left-0 pointer-events-none overflow-hidden"
@@ -515,12 +528,12 @@ const CoverFlowItemCard = memo(function CoverFlowItemCard({
               width: '100%',
               height: '100%',
               transform: 'scaleY(-1)',
-              filter: `url(#${reflectionFilterId})`,
-              mixBlendMode: 'screen',
-              opacity: 0.55,
+              filter: reflectionFilterId ? `url(#${reflectionFilterId})` : undefined,
+              mixBlendMode: reflectionFilterId ? 'screen' : undefined,
+              opacity: reflectionFilterId ? 0.55 : 0.4,
             }}
           >
-            <div className="relative w-full h-full rounded-xl shadow-2xl bg-black">
+            <div className={`relative w-full h-full rounded-xl bg-black ${reflectionFilterId ? 'shadow-2xl' : ''}`}>
               <div className="absolute inset-0 rounded-xl border border-white/10 z-20 pointer-events-none" />
               <div className="relative w-full h-full overflow-hidden rounded-xl">
                 {imageRenderer({

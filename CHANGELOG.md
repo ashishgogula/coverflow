@@ -6,6 +6,15 @@ This project follows semantic versioning.
 
 ---
 
+## [1.1.1] - 2026-05-29
+
+### Fixed
+
+- Major mobile lag on iOS Safari/Brave caused by the SVG `feTurbulence` reflection filter — now auto-disabled on touch/narrow screens
+- Mobile still renders a CSS-only mirrored reflection (gradient mask, no SVG filter, no blend mode) when `enableReflection` is on
+
+---
+
 ## [1.1.0] - 2026-05-28
 
 ### Added
