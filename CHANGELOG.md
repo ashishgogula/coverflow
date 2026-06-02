@@ -6,6 +6,17 @@ This project follows semantic versioning.
 
 ---
 
+## [1.1.2] - 2026-06-02
+
+### Fixed
+
+- Reflection jank on Safari desktop — reflection container is now promoted to a GPU compositing layer via `translateZ(0)` and `will-change: transform`, eliminating per-frame rasterization of the gradient mask
+- SVG reflection filter (`feTurbulence`) auto-disabled on Safari to avoid GPU stall
+- Cards overflow on mobile — the component now measures its container via `ResizeObserver` and auto-scales `itemWidth`, `itemHeight`, `stackSpacing`, and `centerGap` proportionally so the carousel fits within the available width. Desktop layout is unchanged (`scale` is capped at 1).
+- Division-by-zero guard added to the scale calculation when `itemWidth={0}` is passed.
+
+---
+
 ## [1.1.1] - 2026-05-29
 
 ### Fixed

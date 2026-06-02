@@ -186,7 +186,19 @@ export function CoverFlow({
   const instanceId = useId().replace(/:/g, 'x')
   const [isMounted, setIsMounted] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
+  const [isSafari, setIsSafari] = useState(false)
+  const [containerWidth, setContainerWidth] = useState(0)
   useEffect(() => { setIsMounted(true) }, [])
+
+  useEffect(() => {
+    const container = containerRef.current
+    if (!container) return
+    const ro = new ResizeObserver(([entry]) => {
+      setContainerWidth(entry.contentRect.width)
+    })
+    ro.observe(container)
+    return () => ro.disconnect()
+  }, [])
   useEffect(() => {
     if (typeof window === 'undefined' || !window.matchMedia) return
     const mql = window.matchMedia('(max-width: 768px), (pointer: coarse)')
@@ -195,7 +207,17 @@ export function CoverFlow({
     mql.addEventListener?.('change', apply)
     return () => mql.removeEventListener?.('change', apply)
   }, [])
-  const reflectionFilterId = (isMounted && enableReflection && !isMobile) ? `${instanceId}-rf` : undefined
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    setIsSafari(/^((?!chrome|android).)*safari/i.test(window.navigator.userAgent))
+  }, [])
+  const scale = containerWidth > 0 && itemWidth > 0 ? Math.min(1, (containerWidth * 0.78) / itemWidth) : 1
+  const effectiveWidth = Math.round(itemWidth * scale)
+  const effectiveHeight = Math.round(itemHeight * scale)
+  const effectiveStackSpacing = Math.round(stackSpacing * scale)
+  const effectiveCenterGap = Math.round(centerGap * scale)
+
+  const reflectionFilterId = (isMounted && enableReflection && !isMobile && !isSafari) ? `${instanceId}-rf` : undefined
   const showReflection = isMounted && enableReflection
   const activeIndexRef = useRef(activeIndex)
   const enableScrollRef = useRef(enableScroll)
@@ -294,9 +316,9 @@ export function CoverFlow({
 
   const onDrag = useCallback(
     (_: unknown, info: PanInfo) => {
-      scrollX.set(scrollX.get() - info.delta.x / (centerGap * 0.8))
+      scrollX.set(scrollX.get() - info.delta.x / (effectiveCenterGap * 0.8))
     },
-    [centerGap, scrollX],
+    [effectiveCenterGap, scrollX],
   )
 
   const onDragEnd = useCallback(
@@ -364,10 +386,10 @@ export function CoverFlow({
               item={item}
               index={index}
               scrollX={effectiveScrollX}
-              width={itemWidth}
-              height={itemHeight}
-              stackSpacing={stackSpacing}
-              centerGap={centerGap}
+              width={effectiveWidth}
+              height={effectiveHeight}
+              stackSpacing={effectiveStackSpacing}
+              centerGap={effectiveCenterGap}
               rotation={rotation}
               isActive={index === activeIndex}
               showReflection={showReflection}
@@ -518,9 +540,8 @@ const CoverFlowItemCard = memo(function CoverFlowItemCard({
             height: height * 0.42,
             marginTop: 1,
             transformOrigin: 'top center',
-            transform: 'rotateX(12deg)',
-            WebkitMaskImage: 'linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.22) 55%, transparent 100%)',
-            maskImage: 'linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.22) 55%, transparent 100%)',
+            transform: 'rotateX(12deg) translateZ(0)',
+            willChange: 'transform',
           }}
         >
           <div
@@ -549,6 +570,12 @@ const CoverFlowItemCard = memo(function CoverFlowItemCard({
               </div>
             </div>
           </div>
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background: 'linear-gradient(to top, hsl(var(--background)) 0%, hsl(var(--background) / 0.7) 40%, transparent 100%)',
+            }}
+          />
         </div>
       )}
     </motion.div>
