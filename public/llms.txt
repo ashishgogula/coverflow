@@ -1,0 +1,27 @@
+# Cover Flow
+
+> Cover Flow (coverflow) is an open-source, iOS-style coverflow carousel component for React. It recreates the classic iTunes/iPhone Cover Flow interaction with real-time spring physics via Motion (Framer Motion), Tailwind CSS styling, and zero layout shift. It supports drag, touch, click-to-snap, horizontal scroll-wheel, and keyboard interactions, works with Next.js App Router and shadcn/ui conventions, and is MIT-licensed. Built by Ashish Gogula.
+
+Install with the shadcn CLI:
+
+    npx shadcn add https://ashishgogula.in/r/coverflow.json
+
+Or from npm:
+
+    npm install @ashishgogula/coverflow
+
+## Docs
+
+- [Get started](https://coverflow.ashishgogula.in/docs): installation (shadcn CLI, npm, pnpm, yarn, bun, manual), usage examples, live playground with presets, and the full props reference
+- [Get started (raw MDX)](https://coverflow.ashishgogula.in/docs/get-started.mdx): the same documentation as plain text for language models
+- [Changelog](https://coverflow.ashishgogula.in/changelog): release notes for every version
+
+## Source
+
+- [GitHub repository](https://github.com/ashishgogula/coverflow): TypeScript source, issues, and discussions
+- [npm package](https://www.npmjs.com/package/@ashishgogula/coverflow): @ashishgogula/coverflow
+
+## Notes
+
+- Keywords: coverflow, cover flow, react coverflow component, iOS cover flow, iTunes cover flow, 3D carousel, shadcn carousel, framer motion carousel
+- License: MIT — free for personal and commercial use

@@ -709,7 +709,7 @@ export default function CoverFlowDemo() {
                               add
                             </span>{' '}
                             <span className="text-zinc-500 dark:text-zinc-400">
-                              https://coverflow.ashishgogula.in/r/coverflow.json
+                              https://ashishgogula.in/r/coverflow.json
                             </span>
                           </>
                         ) : (

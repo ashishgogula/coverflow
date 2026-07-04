@@ -1,6 +1,7 @@
 /.agents
 /.trae
 /.vercel
+/.claude
 
 # dependencies
 /node_modules

@@ -235,11 +235,11 @@
   }
 
   .m-btn {
-    @apply inline-flex h-12 items-center justify-center gap-2 rounded-full px-8 text-[15px] font-medium transition-all duration-300 active:scale-[0.98] focus-visible:outline-none;
+    @apply inline-flex h-12 items-center justify-center gap-2 rounded-full px-8 text-[15px] font-medium transition-colors duration-300 focus-visible:outline-none;
   }
 
   .m-btnPrimary {
-    @apply bg-foreground text-background hover:opacity-90 hover:scale-[1.02] shadow-xl shadow-foreground/5;
+    @apply bg-foreground text-background shadow-xl shadow-foreground/5;
   }
 
   .m-btnSecondary {
@@ -269,6 +269,29 @@
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* Animated <details> expansion; browsers without interpolate-size toggle instantly */
+@supports (interpolate-size: allow-keywords) {
+  .faq-item {
+    interpolate-size: allow-keywords;
+  }
+  .faq-item::details-content {
+    block-size: 0;
+    overflow: hidden;
+    transition:
+      block-size 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+      content-visibility 0.3s allow-discrete;
+  }
+  .faq-item[open]::details-content {
+    block-size: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .faq-item::details-content {
+    transition: none;
+  }
 }
 
 @layer base {

@@ -1,7 +1,23 @@
 import fs from 'fs'
 import path from 'path'
+import type { Metadata } from 'next'
 import { Navbar } from '@/components/navbar'
 import ChangelogClient from './changelog-client'
+
+export const metadata: Metadata = {
+  title: 'Changelog',
+  description:
+    'Release notes for Cover Flow, the iOS-style coverflow component for React — new features, fixes, and improvements in every version.',
+  alternates: {
+    canonical: '/changelog',
+  },
+  openGraph: {
+    title: 'Cover Flow Changelog',
+    description:
+      'Release notes for Cover Flow, the iOS-style coverflow component for React.',
+    url: 'https://coverflow.ashishgogula.in/changelog',
+  },
+}
 
 type Section = { type: string; items: string[] }
 type Entry = { version: string; date: string; sections: Section[] }

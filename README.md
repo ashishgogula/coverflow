@@ -5,7 +5,7 @@
 [![License](https://img.shields.io/badge/license-MIT-4c9aff?logo=opensourceinitiative&logoColor=white)](https://opensource.org/licenses/MIT)
 [![Deployed on Vercel](https://img.shields.io/badge/deployed-vercel-000000?logo=vercel&logoColor=white)](https://coverflow.ashishgogula.in)
 
-A high-fidelity recreation of the classic iTunes Cover Flow interaction, built for the modern web using React, Next.js, Tailwind and Motion.
+A high-fidelity recreation of the classic iTunes Cover Flow interaction — an iOS-style coverflow carousel component for React, built for the modern web with Next.js, Tailwind and Motion.
 
 This project focuses on motion feel, spatial depth, and interaction fidelity rather than recreating visuals pixel-for-pixel.
 
@@ -27,7 +27,7 @@ If this component helped you or inspired an interaction idea, a GitHub star is a
 
 All installation methods, usage examples, and configuration details are documented here:
 
-👉 **https://coverflow.ashishgogula.in/get-started**
+👉 **https://coverflow.ashishgogula.in/docs**
 
 This includes:
 
