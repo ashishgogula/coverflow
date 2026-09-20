@@ -86,7 +86,7 @@
   }
 
   .m-nav {
-    @apply sticky top-0 z-[100];
+    @apply sticky top-9 z-[100];
   }
 
   .m-navInner {
