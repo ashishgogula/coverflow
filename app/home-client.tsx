@@ -94,7 +94,7 @@ export default function HomeClient({ faq }: { faq?: React.ReactNode }) {
   const [itemSize, setItemSize] = useState({ width: 400, height: 400 })
   const [initialIndex, setInitialIndex] = useState(0)
   const installCommand = useMemo(
-    () => 'npx shadcn add https://ashishgogula.in/r/coverflow.json',
+    () => 'npx shadcn add https://useplanes.com/r/cover-flow.json',
     [],
   )
 
@@ -225,7 +225,7 @@ export default function HomeClient({ faq }: { faq?: React.ReactNode }) {
 
           <div className="w-full border-dashed border-border/70 relative">
             <div
-              className="max-w-[1400px] mx-auto px-4 md:px-8 pb-20 scroll-mt-18"
+              className="max-w-[1400px] mx-auto px-4 md:px-8 pb-20 scroll-mt-28"
               id="demo"
             >
               <motion.div
@@ -269,7 +269,7 @@ export default function HomeClient({ faq }: { faq?: React.ReactNode }) {
             <Plus className="m-plusIcon m-plusIcon-br" />
 
             <motion.div
-              className="m-bentoGrid px-6 scroll-mt-24"
+              className="m-bentoGrid px-6 scroll-mt-32"
               id="features"
               initial="hidden"
               whileInView="visible"
@@ -426,7 +426,7 @@ export default function HomeClient({ faq }: { faq?: React.ReactNode }) {
           </div>
 
           <motion.div
-            className="py-16 relative border-dashed border-border/70 scroll-mt-24"
+            className="py-16 relative border-dashed border-border/70 scroll-mt-32"
             id="support"
             initial="hidden"
             whileInView="visible"

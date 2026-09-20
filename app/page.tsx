@@ -17,7 +17,7 @@ const faqs = [
   {
     question: 'How do I add a coverflow carousel to a React app?',
     answer:
-      'Install the Cover Flow component with the shadcn CLI — npx shadcn add https://ashishgogula.in/r/coverflow.json — or from npm as @ashishgogula/coverflow. Then render the CoverFlow component with your items. It works in any modern React or Next.js App Router project.',
+      'Install the Cover Flow component with the shadcn CLI — npx shadcn add https://useplanes.com/r/cover-flow.json — or from npm as @ashishgogula/coverflow. Then render the CoverFlow component with your items. It works in any modern React or Next.js App Router project.',
   },
   {
     question: 'Does it work with Next.js, Tailwind CSS, and shadcn/ui?',
@@ -58,7 +58,7 @@ function FaqSection() {
   return (
     <section
       id="faq"
-      className="py-16 relative border-t border-dashed border-border/70 scroll-mt-24"
+      className="py-16 relative border-t border-dashed border-border/70 scroll-mt-32"
     >
       <div className="max-w-3xl mx-auto px-6">
         <h2 className="text-2xl md:text-3xl font-semibold tracking-tight mb-3 text-center">

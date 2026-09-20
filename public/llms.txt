@@ -4,13 +4,15 @@
 
 Install with the shadcn CLI:
 
-    npx shadcn add https://ashishgogula.in/r/coverflow.json
+    npx shadcn add https://useplanes.com/r/cover-flow.json
 
 Or from npm:
 
     npm install @ashishgogula/coverflow
 
 ## Docs
+
+- [Cover Flow on Planes](https://useplanes.com/components/cover-flow): the maintained registry build (free), props reference and live demo
 
 - [Get started](https://coverflow.ashishgogula.in/docs): installation (shadcn CLI, npm, pnpm, yarn, bun, manual), usage examples, live playground with presets, and the full props reference
 - [Get started (raw MDX)](https://coverflow.ashishgogula.in/docs/get-started.mdx): the same documentation as plain text for language models

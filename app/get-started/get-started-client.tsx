@@ -284,10 +284,10 @@ Be ready to answer follow-up questions and help debug issues based on the docume
   }
 
   const commands = {
-    pnpm: 'pnpm dlx shadcn add https://ashishgogula.in/r/coverflow.json',
-    npm: 'npx shadcn add https://ashishgogula.in/r/coverflow.json',
-    yarn: 'npx shadcn add https://ashishgogula.in/r/coverflow.json',
-    bun: 'bun x shadcn add https://ashishgogula.in/r/coverflow.json',
+    pnpm: 'pnpm dlx shadcn add https://useplanes.com/r/cover-flow.json',
+    npm: 'npx shadcn add https://useplanes.com/r/cover-flow.json',
+    yarn: 'npx shadcn add https://useplanes.com/r/cover-flow.json',
+    bun: 'bun x shadcn add https://useplanes.com/r/cover-flow.json',
   }
 
   const primitiveCommands = {
@@ -337,7 +337,7 @@ Be ready to answer follow-up questions and help debug issues based on the docume
 
           <section
             id="get-started"
-            className="space-y-0 py-0 relative z-10 overflow-visible scroll-mt-24"
+            className="space-y-0 py-0 relative z-10 overflow-visible scroll-mt-32"
           >
             <div className="max-w-4xl mx-auto px-6 py-12">
             <motion.div
@@ -518,7 +518,7 @@ Be ready to answer follow-up questions and help debug issues based on the docume
                     className="text-sm font-mono text-muted-foreground leading-relaxed"
                   >
                     {`
-import { CoverFlow, type CoverFlowItem } from "@/components/ui/coverflow";
+import { CoverFlow, type CoverFlowItem } from "@/components/ui/CoverFlow";
 
 const animeItems: CoverFlowItem[] = [
   { id: 1, image: "/anime/Sanemi.jpeg", title: "Sanemi Sanemi" },
@@ -575,7 +575,7 @@ export default function CoverFlowDemo() {
               <motion.h3
                 id="installation"
                 variants={fadeUp}
-                className="text-2xl font-medium tracking-tight scroll-mt-24"
+                className="text-2xl font-medium tracking-tight scroll-mt-32"
               >
                 Installation
               </motion.h3>
@@ -709,7 +709,7 @@ export default function CoverFlowDemo() {
                               add
                             </span>{' '}
                             <span className="text-zinc-500 dark:text-zinc-400">
-                              https://ashishgogula.in/r/coverflow.json
+                              https://useplanes.com/r/cover-flow.json
                             </span>
                           </>
                         ) : (
@@ -780,14 +780,14 @@ export default function CoverFlowDemo() {
                     <p className="text-sm text-muted-foreground mb-4">
                       2. Copy the component code into{' '}
                       <code className="text-foreground bg-secondary/50 px-1 py-0.5 rounded">
-                        components/coverflow.tsx
+                        components/ui/CoverFlow.tsx
                       </code>
                     </p>
 
                     <div className="relative rounded-lg bg-secondary/50 border border-border/50 overflow-hidden">
                       <div className="flex items-center justify-between px-4 py-2 border-b border-border/50 bg-secondary/30">
                         <span className="text-xs font-medium text-muted-foreground">
-                          coverflow.tsx
+                          CoverFlow.tsx
                         </span>
                         <div className="flex items-center gap-2">
                           <motion.button
@@ -873,7 +873,7 @@ export default function CoverFlowDemo() {
               <motion.h3
                 id="interactive-example"
                 variants={fadeUp}
-                className="text-2xl font-medium tracking-tight scroll-mt-24"
+                className="text-2xl font-medium tracking-tight scroll-mt-32"
               >
                 Interactive Example
               </motion.h3>
@@ -898,7 +898,7 @@ export default function CoverFlowDemo() {
               <motion.h3
                 id="props"
                 variants={fadeUp}
-                className="text-2xl font-medium tracking-tight scroll-mt-24"
+                className="text-2xl font-medium tracking-tight scroll-mt-32"
               >
                 Props
               </motion.h3>

@@ -1,3 +1,4 @@
+import { PlanesBanner } from '@/components/planes-banner'
 import type { Metadata, Viewport } from 'next'
 import { ThemeProvider } from '@/components/theme-provider'
 import './globals.css'
@@ -160,6 +161,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Analytics />
+          <PlanesBanner />
           {children}
         </ThemeProvider>
       </body>

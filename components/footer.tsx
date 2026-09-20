@@ -33,6 +33,15 @@ export function Footer() {
           >
             Vercel
           </a>
+          <span>· Part of</span>
+          <a
+            href="https://useplanes.com/?utm_source=coverflow"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-foreground underline underline-offset-4 font-semibold hover:underline"
+          >
+            Planes
+          </a>
           <span>· Source code on</span>
           <a
             href="https://github.com/ashishgogula/coverflow"

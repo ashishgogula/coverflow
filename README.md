@@ -42,6 +42,16 @@ This includes:
 
 [coverflow.ashishgogula.in](https://coverflow.ashishgogula.in)
 
+## Part of Planes
+
+Cover Flow is the free component in [Planes](https://useplanes.com), a registry of animated React components. The maintained build installs with one command:
+
+```bash
+npx shadcn add https://useplanes.com/r/cover-flow.json
+```
+
+Docs and props: https://useplanes.com/components/cover-flow
+
 ## Contributing
 
 Please read the [contributing guide](https://github.com/ashishgogula/coverflow/blob/main/CONTRIBUTING.md)
