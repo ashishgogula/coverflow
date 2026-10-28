@@ -56,7 +56,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Analytics />
+          {process.env.NEXT_PUBLIC_CLOUDFLARE !== "1" && <Analytics />}
           {children}
         </ThemeProvider>
       </body>
