@@ -1,17 +1,21 @@
 {
   "name": "coverflow",
-  "version": "0.1.0",
+  "version": "1.1.1",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --turbopack -H 0.0.0.0",
+    "prebuild": "shadcn build",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "registry:build": "shadcn build",
-    "cf:build": "bash worker/build.sh"
+    "cf:build": "bash worker/build.sh",
+    "sync:npm": "cp registry/coverflow/coverflow.tsx ../npm-coverflow/coverflow-npm/src/index.tsx",
+    "format": "prettier --write ."
   },
   "dependencies": {
     "@ashishgogula/coverflow": "^0.1.2",
+    "@radix-ui/react-dropdown-menu": "^2.1.16",
     "@vercel/analytics": "^1.6.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -33,6 +37,7 @@
     "eslint": "^9.39.2",
     "eslint-config-next": "16.1.6",
     "postcss": "^8",
+    "prettier": "^3.8.1",
     "tailwindcss": "^3.4.1",
     "tsx": "^4.23.15",
     "typescript": "^5"

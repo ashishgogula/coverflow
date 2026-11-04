@@ -1,6 +1,7 @@
-"use client";
+'use client'
 
-import { motion } from "motion/react";
+import { motion } from 'motion/react'
+import Link from 'next/link'
 
 export function Footer() {
   return (
@@ -12,7 +13,7 @@ export function Footer() {
       viewport={{ once: true }}
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
     >
-      <div className="m-footInner px-6">
+      <div className="m-footInner px-6 flex items-center justify-between">
         <div className="text-sm font-medium flex flex-wrap gap-1">
           <span>Built by</span>
           <a
@@ -32,6 +33,15 @@ export function Footer() {
           >
             Vercel
           </a>
+          <span>· Part of</span>
+          <a
+            href="https://useplanes.com/?utm_source=coverflow"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-foreground underline underline-offset-4 font-semibold hover:underline"
+          >
+            Planes
+          </a>
           <span>· Source code on</span>
           <a
             href="https://github.com/ashishgogula/coverflow"
@@ -42,7 +52,13 @@ export function Footer() {
             GitHub
           </a>
         </div>
+        <Link
+          href="/changelog"
+          className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+        >
+          Changelog
+        </Link>
       </div>
     </motion.footer>
-  );
+  )
 }

@@ -69,8 +69,8 @@
   body {
     @apply bg-background text-foreground;
     font-family:
-      -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
-      sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+      -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial,
+      sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -86,7 +86,7 @@
   }
 
   .m-nav {
-    @apply sticky top-0 z-[100];
+    @apply sticky top-9 z-[100];
   }
 
   .m-navInner {
@@ -221,7 +221,7 @@
   }
 
   .m-h1 {
-    font-variation-settings: "opsz" 32;
+    font-variation-settings: 'opsz' 32;
     letter-spacing: -0.04em;
     @apply text-[34px] leading-[1.18] font-semibold md:text-[68px] md:leading-[0.98] tracking-tight;
   }
@@ -235,11 +235,11 @@
   }
 
   .m-btn {
-    @apply inline-flex h-12 items-center justify-center gap-2 rounded-full px-8 text-[15px] font-medium transition-all duration-300 active:scale-[0.98] focus-visible:outline-none;
+    @apply inline-flex h-12 items-center justify-center gap-2 rounded-full px-8 text-[15px] font-medium transition-colors duration-300 focus-visible:outline-none;
   }
 
   .m-btnPrimary {
-    @apply bg-foreground text-background hover:opacity-90 hover:scale-[1.02] shadow-xl shadow-foreground/5;
+    @apply bg-foreground text-background shadow-xl shadow-foreground/5;
   }
 
   .m-btnSecondary {
@@ -269,6 +269,29 @@
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* Animated <details> expansion; browsers without interpolate-size toggle instantly */
+@supports (interpolate-size: allow-keywords) {
+  .faq-item {
+    interpolate-size: allow-keywords;
+  }
+  .faq-item::details-content {
+    block-size: 0;
+    overflow: hidden;
+    transition:
+      block-size 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+      content-visibility 0.3s allow-discrete;
+  }
+  .faq-item[open]::details-content {
+    block-size: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .faq-item::details-content {
+    transition: none;
+  }
 }
 
 @layer base {

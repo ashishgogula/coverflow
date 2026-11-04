@@ -1,20 +1,20 @@
 # Cover Flow
+
 [![npm](https://img.shields.io/npm/v/@ashishgogula/coverflow?color=cb3837&logo=npm&logoColor=white)](https://www.npmjs.com/package/@ashishgogula/coverflow)
 [![npm downloads](https://img.shields.io/npm/dm/@ashishgogula/coverflow?color=cb3837&logo=npm&logoColor=white)](https://www.npmjs.com/package/@ashishgogula/coverflow)
 [![License](https://img.shields.io/badge/license-MIT-4c9aff?logo=opensourceinitiative&logoColor=white)](https://opensource.org/licenses/MIT)
 [![Deployed on Vercel](https://img.shields.io/badge/deployed-vercel-000000?logo=vercel&logoColor=white)](https://coverflow.ashishgogula.in)
 
-
-A high-fidelity recreation of the classic iTunes Cover Flow interaction, built for the modern web using React, Next.js, Tailwind and Motion.
+A high-fidelity recreation of the classic iTunes Cover Flow interaction — an iOS-style coverflow carousel component for React, built for the modern web with Next.js, Tailwind and Motion.
 
 This project focuses on motion feel, spatial depth, and interaction fidelity rather than recreating visuals pixel-for-pixel.
 
 ![Cover Flow Preview](public/coverflow.png)
 ![Cover Flow Example](public/example.png)
 
+- Supports click, drag, touch, keyboard, and horizontal wheel interactions with velocity-aware dragging and arrow-key navigation.
 - Driven by motion springs for weighty, responsive, and fully interruptible animations.
 - Uses hardware-accelerated CSS 3D transforms for smooth, refresh-rate-independent performance.
-- Supports mouse, touch, and keyboard interactions with velocity-aware dragging and arrow-key navigation.
 - Drops cleanly into shadcn-based projects via the CLI or manual install, following the same conventions and structure.
 - Works seamlessly in modern React and Next.js environments, including App Router setups.
 - Adapts gracefully to different container sizes and layouts by default.
@@ -27,19 +27,30 @@ If this component helped you or inspired an interaction idea, a GitHub star is a
 
 All installation methods, usage examples, and configuration details are documented here:
 
-👉 **https://coverflow.ashishgogula.in/get-started**
+👉 **https://coverflow.ashishgogula.in/docs**
 
 This includes:
+
 - shadcn CLI installation
 - npm / pnpm / yarn / bun usage
 - Manual setup
 - Live examples
+- Interactive playground with presets and real-time prop controls
 - Props reference
 
 ## Live Demo
 
 [coverflow.ashishgogula.in](https://coverflow.ashishgogula.in)
 
+## Part of Planes
+
+Cover Flow is the free component in [Planes](https://useplanes.com), a registry of animated React components. The maintained build installs with one command:
+
+```bash
+npx shadcn add https://useplanes.com/r/cover-flow.json
+```
+
+Docs and props: https://useplanes.com/components/cover-flow
 
 ## Contributing
 
